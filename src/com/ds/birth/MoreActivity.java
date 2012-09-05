@@ -1,0 +1,59 @@
+package com.ds.birth;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+public class MoreActivity extends Activity {
+	private static String[] datas = new String[] { "设置", "我的示例", "我的示例",
+			"关于我们", "我的示例", "我的示例", "我的示例", "我的示例", "我的示例", "我的示例", "我的示例", "我的示例" };
+
+	ListView mineListView;
+	TextView title;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.birth_more);
+		initViews();
+	}
+
+	private void initViews() {
+		mineListView = (ListView) findViewById(R.id.phoneMyMainListView);
+		mineListView.setAdapter(mAdapter);
+		title =(TextView)findViewById(R.id.module_title_text_view);
+		title.setText(R.string.more);
+	}
+
+	private BaseAdapter mAdapter = new BaseAdapter() {
+
+		public int getCount() {
+			return datas.length;
+		}
+
+		public Object getItem(int position) {
+			return null;
+		}
+
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View retval = LayoutInflater.from(parent.getContext()).inflate(
+					R.layout.phone_adapter_my_main, null);
+			TextView title = (TextView) retval
+					.findViewById(R.id.phoneMyMainText);
+			title.setText(datas[position]);
+
+			return retval;
+		}
+
+	};
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="back_text">返回</string>
+    <string name="birth_title">生日</string>
+    <string name="rank_title">排序</string>
+    <string name="mine_title">个人中心</string>
+    <string name="more_title">更多</string>
+    <string name="app_name">生日管家</string>
+    <string name="star_birth">重要生日</string>
+    <string name="all_birth">全部生日</string>
+    <string name="empty">没有生日</string>
+    <string name="more">更多</string>
+
+</resources>

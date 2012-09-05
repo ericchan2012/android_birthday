@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="70.0dip"
+        android:layout_height="75.0dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15.0dip"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/birth_default_avatar"
+        android:paddingBottom="6.0dip"
+        android:paddingLeft="2.0dip"
+        android:paddingRight="2.0dip"
+        android:paddingTop="2.0dip" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="110.0dip"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/avatar"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginTop="5.0dip"
+        android:layout_toRightOf="@+id/avatar"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="18.0sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/candle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/avatar"
+        android:layout_alignLeft="@+id/name"
+        android:layout_marginBottom="5.0dip"
+        android:src="@drawable/birth_solar" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/candle"
+        android:layout_marginLeft="5.0dip"
+        android:layout_toRightOf="@+id/candle"
+        android:text="日期"
+        android:textColor="#ff808080"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/countdown_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/day"
+        android:layout_alignTop="@+id/name"
+        android:text="距离1岁公历生日"
+        android:textColor="#ff808080"
+        android:textSize="12.0sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/date"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15.0dip"
+        android:paddingRight="2.0dip"
+        android:text="天"
+        android:textColor="#ff808080"
+        android:textSize="14.0sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/countdown_day"
+        android:layout_width="60.0dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/day"
+        android:layout_marginRight="5.0dip"
+        android:layout_toLeftOf="@+id/day"
+        android:background="@drawable/countdays_bg"
+        android:gravity="bottom|center"
+        android:text="1"
+        android:textColor="#ffffffff"
+        android:textSize="26.0dip" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/avatar"
+        android:layout_marginTop="5.0dip"
+        android:background="@drawable/divider" />
+
+</RelativeLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#ffffffff</color>
+    <color name="green">#ff0cc054</color>
+    <color name="gray">#ff8d8d8d</color>
+    <color name="orange">#ffdf8326</color>
+    <color name="red">#ffff0000</color>
+    <color name="black">#ff000000</color>
+    <color name="brown">#ff887055</color>
+    <color name="qiyi_green">#ff78a22f</color>
+    <color name="qiyi_grey">#ff9b9b9b</color>
+    <color name="qiyi_main">#ffdcdcdc</color>
+
+</resources>

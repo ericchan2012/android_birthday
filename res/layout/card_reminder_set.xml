@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10.0dip"
+    android:layout_marginRight="10.0dip"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="52.0dip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="9.0dip"
+            android:gravity="center_vertical"
+            android:text="提醒方式："
+            android:textColor="#ff333333"
+            android:textSize="16.0dip" />
+
+        <TextView
+            android:id="@+id/tv_doublering"
+            android:layout_width="160.0dip"
+            android:layout_height="fill_parent"
+            android:clickable="false"
+            android:gravity="center"
+            android:hint="请先设置生日"
+            android:textColor="#ff104984"
+            android:textSize="16.0dip" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:background="#ffe3e3e3" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10.0dip"
+        android:minHeight="36.0dip"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9.0dip"
+            android:text="提醒天数："
+            android:textColor="#ff333333"
+            android:textSize="16.0dip" />
+
+        <TextView
+            android:id="@+id/tv_ringtype"
+            android:layout_width="100.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="25.0dip"
+            android:gravity="left"
+            android:lineSpacingExtra="3.0dip"
+            android:text="生日当天"
+            android:textColor="#ff104984"
+            android:textSize="16.0dip" />
+    </LinearLayout>
+
+</LinearLayout>
