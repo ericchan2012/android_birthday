@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/phone_bg"
+    android:fillViewport="true" >
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/header_layout" />
+
+    <ListView
+        android:id="@+id/phoneMyMainListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@drawable/phone_my_main_line"
+        android:listSelector="@drawable/phone_my_main_item_bg" />
+
+</RelativeLayout>

@@ -14,19 +14,6 @@
         android:text="@string/back_text"
         android:visibility="visible" />
 
-    <Button
-        android:id="@+id/right_btn"
-        android:layout_width="80.0dip"
-        android:layout_height="30.0dip"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="5.0dip"
-        android:background="@drawable/import_btn_bg"
-        android:text="批量导入"
-        android:textColor="#ffffffff"
-        android:textSize="16.0sp"
-        android:textStyle="bold" />
-
     <TextView
         android:id="@+id/tittle"
         android:layout_width="wrap_content"

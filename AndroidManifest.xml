@@ -51,6 +51,8 @@
         </activity>
         <activity android:name=".BirthActivity" >
         </activity>
+        <activity android:name=".AppStoreActivity" >
+        </activity>
         <activity android:name=".RankingActivity" >
         </activity>
         <activity android:name=".MineActivity" >

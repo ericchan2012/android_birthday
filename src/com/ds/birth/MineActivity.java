@@ -29,7 +29,6 @@ public class MineActivity extends Activity {
 			public void onClick(View v) {
 				// add my reference or view it
 			}
-
 		});
 	}
 

@@ -1,34 +1,40 @@
 package com.ds.birth;
 
+import com.ds.iphone.BirthDialogBuilder;
+
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MoreActivity extends Activity {
-	private static String[] datas = new String[] { "设置", "我的示例", "我的示例",
-			"关于我们", "我的示例", "我的示例", "我的示例", "我的示例", "我的示例", "我的示例", "我的示例", "我的示例" };
+public class MoreActivity extends Activity implements OnItemClickListener {
+	private String[] datas = null;
 
 	ListView mineListView;
 	TextView title;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.birth_more);
+		datas = getResources().getStringArray(R.array.set);
 		initViews();
 	}
 
 	private void initViews() {
 		mineListView = (ListView) findViewById(R.id.phoneMyMainListView);
 		mineListView.setAdapter(mAdapter);
-		title =(TextView)findViewById(R.id.module_title_text_view);
+		title = (TextView) findViewById(R.id.module_title_text_view);
 		title.setText(R.string.more);
+		mineListView.setOnItemClickListener(this);
 	}
 
 	private BaseAdapter mAdapter = new BaseAdapter() {
@@ -56,4 +62,39 @@ public class MoreActivity extends Activity {
 		}
 
 	};
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
+		switch (position) {
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			Intent intent = new Intent(this, AppStoreActivity.class);
+			startActivity(intent);
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			showAboutDialog();
+			break;
+		}
+	}
+
+	private void showAboutDialog() {
+		BirthDialogBuilder idb = new BirthDialogBuilder(this);
+		idb.setTitle(R.string.about);
+		idb.setMessage("测试内容");
+		idb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		idb.show();
+	}
 }

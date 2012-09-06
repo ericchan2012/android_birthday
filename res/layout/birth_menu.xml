@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/brand_list_menu"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/brand_list_menu_bg" >
+
+    <TextView
+        android:id="@+id/select_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10.0dip"
+        android:gravity="center"
+        android:text="@string/select_photo"
+        android:textColor="@android:color/white"
+        android:textSize="17.0dip"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/takepic_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/select_text_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5.0dip"
+        android:background="@drawable/menu_red_button_bg"
+        android:text="@string/take_picture"
+        android:textColor="@android:color/white"
+        android:textSize="20.0dip" />
+
+    <Button
+        android:id="@+id/gallery_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/takepic_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/menu_white_button_bg"
+        android:text="@string/select_picture"
+        android:textSize="20.0dip" />
+
+    <Button
+        android:id="@+id/default_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gallery_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/menu_white_button_bg"
+        android:text="@string/default_picture"
+        android:textSize="20.0dip" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/default_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10.0dip"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/menu_black_button_bg"
+        android:text="@string/cancel"
+        android:textColor="@android:color/white"
+        android:textSize="20.0dip" />
+
+</RelativeLayout>

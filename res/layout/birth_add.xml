@@ -12,25 +12,31 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2.0"
-        >
+        android:layout_weight="2.0" >
 
         <include layout="@layout/birth_add_child" />
     </ScrollView>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="60.0dip"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/save"
-            android:layout_width="140.0dip"
-            android:layout_height="40.0dip"
-            android:background="@drawable/birth_add_btn_bg"
-            android:layout_centerHorizontal="true"
-            android:text="保存"
-            android:textColor="#ffffffff" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60.0dip"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="140.0dip"
+                android:layout_height="40.0dip"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/birth_add_btn_bg"
+                android:text="@string/save"
+                android:textColor="#ffffffff" />
+        </RelativeLayout>
+
+       
+    </FrameLayout>
 
 </LinearLayout>

@@ -6,27 +6,55 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 public class RankingActivity extends Activity {
 
-	RadioButton leftRadioBtn;
-	RadioButton rightRadioBtn;
+	private static String[] datas = null;
+
+	ListView mineListView;
+	TextView title;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.rank_inc_top);
-//		initViews();
+		setContentView(R.layout.birth_rank);
+		initViews();
 	}
 
 	private void initViews() {
-
-		leftRadioBtn = (RadioButton) findViewById(R.id.top_left_radio);
-		rightRadioBtn = (RadioButton) findViewById(R.id.top_right_radio);
-		// leftRadioBtn.setText(R.string.brand);
-		// rightRadioBtn.setText(R.string.shopping_mall);
-
+		datas = getResources().getStringArray(R.array.rankData);
+		mineListView = (ListView) findViewById(R.id.phoneMyMainListView);
+		mineListView.setAdapter(mAdapter);
+		title = (TextView) findViewById(R.id.module_title_text_view);
+		title.setText(R.string.rank_title);
 	}
+
+	private BaseAdapter mAdapter = new BaseAdapter() {
+
+		public int getCount() {
+			return datas.length;
+		}
+
+		public Object getItem(int position) {
+			return null;
+		}
+
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View retval = LayoutInflater.from(parent.getContext()).inflate(
+					R.layout.phone_adapter_my_main, null);
+			TextView title = (TextView) retval
+					.findViewById(R.id.phoneMyMainText);
+			title.setText(datas[position]);
+
+			return retval;
+		}
+
+	};
 
 }
