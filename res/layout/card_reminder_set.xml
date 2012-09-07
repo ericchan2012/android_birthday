@@ -22,7 +22,7 @@
             android:textSize="16.0dip" />
 
         <TextView
-            android:id="@+id/tv_doublering"
+            android:id="@+id/tv_ringtype"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:clickable="false"
@@ -55,7 +55,7 @@
             android:textSize="16.0dip" />
 
         <TextView
-            android:id="@+id/tv_ringtype"
+            android:id="@+id/tv_ringdays"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"

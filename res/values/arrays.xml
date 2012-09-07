@@ -36,12 +36,9 @@
         <item>邀请好友</item>
         <item>关于我们</item>
     </string-array>
-    <string-array name="hotcity">
-        <item>北京</item>
-        <item>上海</item>
-        <item>广州</item>
-         <item>深圳</item>
-        <item>南京</item>
-        <item>杭州</item>
+    <string-array name="ringtypes">
+         <item>仅提醒公历生日</item>
+        <item>仅提醒农历生日</item>
+        <item>公历农历生日都提醒</item>
     </string-array>
 </resources>

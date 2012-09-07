@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="45.0dip"
+    android:background="#ff48403e"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center"
+        android:layout_marginLeft="4.0dip"
+        android:background="@drawable/bell" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="4.0dip"
+        android:layout_weight="0.11"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/alarmsolar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:singleLine="true"
+            android:text="提醒时间：生日管家会在"
+            android:textSize="12.0sp" />
+
+        <TextView
+            android:id="@+id/alarmlunar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="2.0dip"
+            android:singleLine="true"
+            android:text="提醒时间：生日管家会在"
+            android:textSize="12.0sp" />
+    </LinearLayout>
+
+</LinearLayout>

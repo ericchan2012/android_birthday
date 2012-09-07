@@ -48,8 +48,20 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.ds.birth.edit_birth" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity android:name=".BirthActivity" >
+        </activity>
+        <activity android:name=".BirthDetailActivity" >
+            <intent-filter>
+                <action android:name="com.ds.birth.view_birth" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity android:name=".AppStoreActivity" >
         </activity>

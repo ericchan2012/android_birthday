@@ -10,6 +10,7 @@
     <string name="star_birth">重要生日</string>
     <string name="all_birth">全部生日</string>
     <string name="empty">没有生日</string>
+    <string name="empty_star">没有重要的生日!</string>
     <string name="more">更多</string>
     <string name="ringtype">提醒方式:</string>
     <string name="ringtype_hint">请先设置生日</string>
@@ -29,5 +30,7 @@
     <string name="ring_title">"提醒天数设置"</string>
     <string name="save">保存</string>
     <string name="select_photo">选择头像</string>
+    <string name="detail_title">生日详情</string>
+    <string name="modify">修改</string>
 
 </resources>
