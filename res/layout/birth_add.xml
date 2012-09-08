@@ -3,6 +3,7 @@
     android:id="@+id/add_birthday_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/birth_detail_bg"
     android:orientation="vertical" >
 
     <include
@@ -11,32 +12,9 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2.0" >
+        android:layout_height="match_parent" >
 
         <include layout="@layout/birth_add_child" />
     </ScrollView>
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="60.0dip"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/save"
-                android:layout_width="140.0dip"
-                android:layout_height="40.0dip"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/birth_add_btn_bg"
-                android:text="@string/save"
-                android:textColor="#ffffffff" />
-        </RelativeLayout>
-
-       
-    </FrameLayout>
 
 </LinearLayout>

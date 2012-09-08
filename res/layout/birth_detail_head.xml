@@ -5,8 +5,19 @@
     android:layout_height="wrap_content"
     android:background="@drawable/birth_detail_head_bg" >
 
+    <Button
+        android:id="@+id/back"
+        style="@style/top_left_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:onClick="topLeftButtonClicked"
+        android:text="@string/back_text"
+        android:visibility="visible" />
+
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -15,7 +26,7 @@
         android:textSize="20.0sp" />
 
     <Button
-        android:id="@+id/birth_info_correct"
+        android:id="@+id/edit"
         style="@style/top_right_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

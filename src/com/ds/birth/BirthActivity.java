@@ -22,7 +22,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,6 +54,9 @@ public class BirthActivity extends Activity {
 	int defaultRadioBtn = 0;// 0 left,1 right
 	private static final String BIRTH_PREFERENCE = "birth_setting";
 	private static final String RADIO_BTN = "radio_btn";
+	int radiobtn;
+	boolean leftClick = false;
+	boolean rightClick = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,48 +72,40 @@ public class BirthActivity extends Activity {
 		super.onStop();
 		mCursor.close();
 		mDbHelper.close();
+		mEmptyView.setVisibility(View.GONE);
 	}
 
 	private void initViews() {
 		settings = getSharedPreferences(BIRTH_PREFERENCE, 0);
-		defaultRadioBtn = settings.getInt(RADIO_BTN, 0);
 		leftRadioBtn = (RadioButton) findViewById(R.id.top_left_radio);
 		rightRadioBtn = (RadioButton) findViewById(R.id.top_right_radio);
 		leftRadioBtn.setText(R.string.star_birth);
 		rightRadioBtn.setText(R.string.all_birth);
-		leftRadioBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		leftRadioBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				Log.i(TAG, "left ischecked:" + isChecked);
-				if (isChecked) {
-					defaultRadioBtn = 0;
-					settings.edit().putInt(RADIO_BTN, defaultRadioBtn).commit();
-					update(defaultRadioBtn);
-				}
+			public void onClick(View arg0) {
+				defaultRadioBtn = 0;
+				settings.edit().putInt(RADIO_BTN, defaultRadioBtn).commit();
+				update(defaultRadioBtn);
+				leftClick = false;
+				rightClick = true;
+				updateRadioClick();
 			}
 		});
-		rightRadioBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		rightRadioBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				Log.i(TAG, "right ischecked:" + isChecked);
-				if (isChecked) {
-					defaultRadioBtn = 1;
-					settings.edit().putInt(RADIO_BTN, defaultRadioBtn).commit();
-					update(defaultRadioBtn);
-				}
+			public void onClick(View view) {
+				defaultRadioBtn = 1;
+				settings.edit().putInt(RADIO_BTN, defaultRadioBtn).commit();
+				update(defaultRadioBtn);
+				leftClick = true;
+				rightClick = false;
+				updateRadioClick();
 			}
 		});
-		if (defaultRadioBtn == 0) {
-			leftRadioBtn.setChecked(true);
-			queryStarData();
-		} else {
-			rightRadioBtn.setChecked(true);
-			queryAllData();
-		}
+
 		mListView = (ListView) findViewById(R.id.listview);
 		mEmptyView = (TextView) findViewById(R.id.emptyview);
 		mEmptyView.setVisibility(View.GONE);
@@ -141,6 +135,11 @@ public class BirthActivity extends Activity {
 
 	}
 
+	private void updateRadioClick() {
+		leftRadioBtn.setClickable(leftClick);
+		rightRadioBtn.setClickable(rightClick);
+	}
+
 	private void update(int radioBtn) {
 		if (radioBtn == 0) {
 			queryStarData();
@@ -167,20 +166,35 @@ public class BirthActivity extends Activity {
 	private void updateListView() {
 		if (mBirthAdapter != null) {
 			mBirthAdapter.changeCursor(mCursor);
-			mListView.setAdapter(mBirthAdapter);
-			mListView.invalidate();
 		}
+		mListView.setAdapter(mBirthAdapter);
+		mListView.invalidate();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		defaultRadioBtn = settings.getInt(RADIO_BTN, 0);
+		Log.i(TAG, "defaultRadioBtn==" + defaultRadioBtn);
+		if (defaultRadioBtn == 0) {
+			leftRadioBtn.setChecked(true);
+			leftClick = false;
+			rightClick = true;
+			queryStarData();
+		} else {
+			rightRadioBtn.setChecked(true);
+			leftClick = true;
+			rightClick = false;
+			queryAllData();
+		}
+		updateRadioClick();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		mCursor.close();
+		mDbHelper.close();
 	}
 
 	private void queryAllData() {
@@ -204,7 +218,9 @@ public class BirthActivity extends Activity {
 		case QUERY:
 			return mDbHelper.queryAll();
 		case UPDATE:
-			int radiobtn = settings.getInt(RADIO_BTN, 0);
+			Log.i(TAG, "---update---");
+			radiobtn = settings.getInt(RADIO_BTN, 0);
+			Log.i(TAG, "---radiobtn===" + radiobtn);
 			if (radiobtn == 0) {
 				leftRadioBtn.setChecked(true);
 				return mDbHelper.queryStar();
@@ -221,7 +237,9 @@ public class BirthActivity extends Activity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case QUERY_SUCCESS:
+				Log.i(TAG, "---handler success----");
 				mProgressDialog.dismiss();
+				mEmptyView.setVisibility(View.GONE);
 				mBirthAdapter = new BirthCursorAdapter(BirthActivity.this,
 						R.layout.birth_list_item, mCursor);
 				mListView.setAdapter(mBirthAdapter);
@@ -236,14 +254,21 @@ public class BirthActivity extends Activity {
 				if (arg1 == QUERY_STAR) {
 					mEmptyView.setText(R.string.empty_star);
 				} else {
-					mEmptyView.setText(R.string.empty);
+					if (radiobtn == 0) {
+						mEmptyView.setText(R.string.empty_star);
+					} else {
+						mEmptyView.setText(R.string.empty);
+					}
 				}
-				mListView.setAdapter(null);
+				mBirthAdapter = null;
+				mListView.setAdapter(mBirthAdapter);
 				mListView.setEmptyView(mEmptyView);
 				mListView.invalidate();
 				break;
 			case QUERY_UPDATE:
+				Log.i(TAG, "---handler update----");
 				mProgressDialog.dismiss();
+				mEmptyView.setVisibility(View.GONE);
 				updateListView();
 				break;
 			}
@@ -259,7 +284,9 @@ public class BirthActivity extends Activity {
 
 		public void run() {
 			mCursor = startBackgroundQuery(mState);
+
 			if (mCursor != null && mCursor.getCount() > 0) {
+				Log.i(TAG, "--cursor not null---");
 				if (mState == 0) {
 					mHandler.sendEmptyMessage(QUERY_SUCCESS);
 				} else {

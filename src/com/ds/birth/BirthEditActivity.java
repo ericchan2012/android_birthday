@@ -1,6 +1,7 @@
 package com.ds.birth;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,25 +12,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
-import com.ds.iphone.BirthDialogBuilder;
 import com.ds.utility.BirthConstants;
+import com.ds.utility.Person;
+import com.ds.widget.NumericWheelAdapter;
+import com.ds.widget.OnWheelChangedListener;
+import com.ds.widget.OnWheelScrollListener;
+import com.ds.widget.WheelView;
 
 public class BirthEditActivity extends Activity implements OnClickListener {
 	private static final String TAG = "BirthEditActivity";
@@ -71,11 +76,17 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	String phoneNum;
 	ContentValues contentValues;
 
+	int mId = -1;
+	private Cursor mCursor;
+	private TextView titleTextView;
+	private LinearLayout datePickerLayout;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.birth_add);
 		mRes = getResources();
+		mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mInflater = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		ringItems = mRes.getStringArray(R.array.selectDays);
@@ -95,7 +106,45 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			mMode = MODE_ADD;
 		} else {
 			mMode = MODE_EDIT;
+			mId = intent.getExtras().getInt(BirthConstants.ID);
 		}
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		mDbHelper.close();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.i(TAG, "mMode:" + mMode);
+		if (mMode == MODE_EDIT) {
+			Log.i(TAG, "mId:" + mId);
+			initEdit();
+		}
+	}
+
+	private void initEdit() {
+		if (mId != -1) {
+			mCursor = mDbHelper.queryId(mId);
+			if (mCursor != null && mCursor.getCount() > 0) {
+				Person person = new Person();
+				if (mCursor.moveToFirst()) {
+					do {
+						person.setName(mCursor
+								.getString(DatabaseHelper.NAME_INDEX));
+						updateEdit(person);
+					} while (mCursor.moveToNext());
+				}
+			}
+		}
+	}
+
+	private void updateEdit(Person p) {
+		nameEdit.setText(p.getName());
 	}
 
 	private void initViews() {
@@ -106,7 +155,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		ringTypeText = (TextView) findViewById(R.id.tv_ringtype);
 		headerImage = (ImageView) findViewById(R.id.img_icon);
 		mBirthdayTextView = (TextView) findViewById(R.id.tv_birthday);
-		mStar = (CheckBox)findViewById(R.id.star);
+		mStar = (CheckBox) findViewById(R.id.star);
 		noteEdit = (EditText) findViewById(R.id.tv_note);
 		phoneNumEdit = (EditText) findViewById(R.id.tv_number);
 		saveBtn = (Button) findViewById(R.id.save);
@@ -117,11 +166,29 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		saveBtn.setOnClickListener(this);
 		ringTypeText.setOnClickListener(this);
 		mBirthdayTextView.setOnClickListener(this);
+		titleTextView = (TextView) findViewById(R.id.title);
+		switch (mMode) {
+		case MODE_ADD:
+			titleTextView.setText(R.string.add_title);
+			break;
+		case MODE_EDIT:
+			titleTextView.setText(R.string.edit_title);
+			break;
+		}
+	}
+
+	private void hideSoftKeypad() {
+		((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+				.hideSoftInputFromWindow(BirthEditActivity.this
+						.getCurrentFocus().getWindowToken(),
+						InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.top_left_btton:
+			hideSoftKeypad();
+			setResult(Activity.RESULT_CANCELED);
 			finish();
 			break;
 		case R.id.tv_gender:
@@ -144,57 +211,146 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			loadMenu();
 			break;
 		case R.id.save:
-			if (mMode == 0) {
-				insertData();
-			} else {
-				updateData();
-			}
+			hideSoftKeypad();
+			updateData(mMode);
 			break;
 		case R.id.tv_birthday:
-
+			datePickerLayout = (LinearLayout) mInflater.inflate(
+					R.layout.date_picker, null);
+			initDatePickerView();
+			showPickViewDialog();
 			break;
 		}
 	}
 
-	private void insertData() {
+	private void showPickViewDialog() {
+		final AlertDialog dialog = new AlertDialog.Builder(this).create();
+		// dialog.setTitle("选择分类");
+		dialog.setButton("确定", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				// 实现下ui的刷新
+			}
+
+		});
+		dialog.setButton2("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		dialog.setView(datePickerLayout);
+		dialog.show();
+	}
+
+	private void initDatePickerView() {
+		Calendar calendar = Calendar.getInstance();
+		int currentYear = calendar.get(Calendar.YEAR);
+		int currentMonth = calendar.get(Calendar.MONTH);
+		int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+		Log.i(TAG, "year:" + currentYear + "  month:" + currentMonth + " day:"
+				+ currentDay);
+		WheelView year = (WheelView) datePickerLayout.findViewById(R.id.year);
+		year.setAdapter(new NumericWheelAdapter(2000, 2112));
+		year.setLabel("年");
+		year.setCurrentItem(1902);
+		WheelView month = (WheelView) datePickerLayout.findViewById(R.id.month);
+		month.setAdapter(new NumericWheelAdapter(1, 12));
+		month.setLabel("月");
+		month.setCurrentItem(currentMonth);
+		final WheelView day = (WheelView) datePickerLayout
+				.findViewById(R.id.day);
+		if (currentMonth == 1) {
+			day.setAdapter(new NumericWheelAdapter(1, 28));
+		} else {
+			day.setAdapter(new NumericWheelAdapter(1, 31));
+		}
+		day.setLabel("日");
+		day.setCurrentItem(currentDay - 1);
+		year.addChangingListener(new OnWheelChangedListener() {
+			@Override
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
+				// TODO Auto-generated method stub
+				Log.i(TAG, "year oldValue:" + oldValue);
+				Log.i(TAG, "year newValue:" + newValue);
+			}
+		});
+		month.addChangingListener(new OnWheelChangedListener() {
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
+				Log.i(TAG, "oldValue:" + oldValue);
+				Log.i(TAG, "newValue:" + newValue);
+				if (newValue == 1) {
+					day.setAdapter(new NumericWheelAdapter(1, 28));
+				} else {
+					day.setAdapter(new NumericWheelAdapter(1, 31));
+				}
+			}
+		});
+	}
+
+	/**
+	 * Adds changing listener for wheel that updates the wheel label
+	 * 
+	 * @param wheel
+	 *            the wheel
+	 * @param label
+	 *            the wheel label
+	 */
+	private void addChangingListener(final WheelView wheel, final String label) {
+		wheel.addChangingListener(new OnWheelChangedListener() {
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
+				wheel.setLabel(newValue != 1 ? label + "s" : label);
+			}
+		});
+	}
+
+	private void updateData(int mode) {
 		long id = -1;
+		int returnUpdateId = -1;
 		name = nameEdit.getText().toString();
 		if (name == null || name.equals("")) {
-
-		} else {
-			gender = defaultSexSelect;
-			isStar = mStar.isChecked() ? 1 : 0;
-			birthday = "2009-09-09";
-			ringtype = defaultRingType;
-			ringdays = "hello";
-			note = noteEdit.getText().toString();
-			phoneNum = phoneNumEdit.getText().toString();
-			contentValues.clear();
-			contentValues.put(DatabaseHelper.NAME, name);
-			contentValues.put(DatabaseHelper.SEX, gender);
-			contentValues.put(DatabaseHelper.ISSTAR, isStar);
-			contentValues.put(DatabaseHelper.BIRTHDAY, birthday);
-			contentValues.put(DatabaseHelper.RINGTYPE, ringtype);
-			contentValues.put(DatabaseHelper.RINGDAY, ringdays);
-			if (null == note || note.equals("")) {
-				note = "";
-			}
-			if (null == phoneNum || phoneNum.equals("")) {
-				phoneNum = "";
-			}
-			contentValues.put(DatabaseHelper.NOTE, note);
-			contentValues.put(DatabaseHelper.PHONE_NUMBER, phoneNum);
-			id = mDbHelper.insert(contentValues);
+			// show dialog
+			return;
 		}
-		Log.i(TAG,"id:" + id);
-		if (id > 0) {
+		generateData();
+		if (mode == MODE_ADD) {
+			id = mDbHelper.insert(contentValues);
+		} else if (mode == MODE_EDIT) {
+			String where = "_id = " + mId;
+			returnUpdateId = mDbHelper.update(contentValues, where);
+		}
+
+		Log.i(TAG, "id:" + id);
+		if (id > 0 || returnUpdateId > 0) {
 			setResult(Activity.RESULT_OK);
 			BirthEditActivity.this.finish();
 		}
 	}
 
-	private void updateData() {
-
+	private void generateData() {
+		gender = defaultSexSelect;
+		isStar = mStar.isChecked() ? 1 : 0;
+		birthday = "2009-09-09";
+		ringtype = defaultRingType;
+		ringdays = "hello";
+		note = noteEdit.getText().toString();
+		phoneNum = phoneNumEdit.getText().toString();
+		contentValues.clear();
+		contentValues.put(DatabaseHelper.NAME, name);
+		contentValues.put(DatabaseHelper.SEX, gender);
+		contentValues.put(DatabaseHelper.ISSTAR, isStar);
+		contentValues.put(DatabaseHelper.BIRTHDAY, birthday);
+		contentValues.put(DatabaseHelper.RINGTYPE, ringtype);
+		contentValues.put(DatabaseHelper.RINGDAY, ringdays);
+		if (null == note || note.equals("")) {
+			note = "";
+		}
+		if (null == phoneNum || phoneNum.equals("")) {
+			phoneNum = "";
+		}
+		contentValues.put(DatabaseHelper.NOTE, note);
+		contentValues.put(DatabaseHelper.PHONE_NUMBER, phoneNum);
 	}
 
 	private void loadMenu() {
@@ -273,7 +429,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		builder.setPositiveButton(" 确 定 ",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						ringTypeText.setText(mRingList.toString());
+						ringDaysText.setText(mRingList.toString());
 						dialog.dismiss();
 					}
 				});

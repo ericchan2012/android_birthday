@@ -32,5 +32,7 @@
     <string name="select_photo">选择头像</string>
     <string name="detail_title">生日详情</string>
     <string name="modify">修改</string>
+    <string name="add_title">添加生日</string>
+    <string name="edit_title">编辑生日</string>
 
 </resources>

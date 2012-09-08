@@ -56,7 +56,8 @@
         </activity>
         <activity android:name=".BirthActivity" >
         </activity>
-        <activity android:name=".BirthDetailActivity" >
+        <activity android:name=".BirthDetailActivity" 
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="com.ds.birth.view_birth" />
 
