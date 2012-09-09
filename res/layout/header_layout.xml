@@ -26,7 +26,7 @@
         android:gravity="center"
         android:text="@string/mine_title"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="#ffffffff"
+        android:textColor="#2475b6"
         android:textSize="25.0dip" />
 
     <Button

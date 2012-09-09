@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -254,6 +252,7 @@ public class BirthActivity extends Activity {
 				if (arg1 == QUERY_STAR) {
 					mEmptyView.setText(R.string.empty_star);
 				} else {
+					radiobtn=settings.getInt(RADIO_BTN, 0);
 					if (radiobtn == 0) {
 						mEmptyView.setText(R.string.empty_star);
 					} else {

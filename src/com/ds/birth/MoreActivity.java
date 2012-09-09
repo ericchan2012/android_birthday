@@ -53,11 +53,18 @@ public class MoreActivity extends Activity implements OnItemClickListener {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View retval = LayoutInflater.from(parent.getContext()).inflate(
-					R.layout.phone_adapter_my_main, null);
+					R.layout.more_adapter, null);
 			TextView title = (TextView) retval
 					.findViewById(R.id.phoneMyMainText);
 			title.setText(datas[position]);
-
+			if(position == 0){
+				retval.setBackgroundResource(R.drawable.moreitem_bg_top);
+			}else if(position == (datas.length-1)){
+				retval.setBackgroundResource(R.drawable.moreitem_bg_bottom);
+				
+			}else {
+				retval.setBackgroundResource(R.drawable.moreitem_bg_middle);
+			}
 			return retval;
 		}
 

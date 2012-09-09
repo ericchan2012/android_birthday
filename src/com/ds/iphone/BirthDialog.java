@@ -1,4 +1,5 @@
 package com.ds.iphone;
+
 import com.ds.birth.R;
 
 import android.app.AlertDialog;
@@ -8,11 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-/**
- * 主对话框[仿Iphone风格]
- * @author fiker
- *
- */
 public class BirthDialog extends AlertDialog {
 
 	private BirthDialogView view;

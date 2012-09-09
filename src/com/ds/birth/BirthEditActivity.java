@@ -33,7 +33,6 @@ import com.ds.utility.BirthConstants;
 import com.ds.utility.Person;
 import com.ds.widget.NumericWheelAdapter;
 import com.ds.widget.OnWheelChangedListener;
-import com.ds.widget.OnWheelScrollListener;
 import com.ds.widget.WheelView;
 
 public class BirthEditActivity extends Activity implements OnClickListener {
@@ -187,7 +186,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.top_left_btton:
-			hideSoftKeypad();
+			if (BirthEditActivity.this.getCurrentFocus() != null) {
+				hideSoftKeypad();
+			}
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 			break;
@@ -211,7 +212,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			loadMenu();
 			break;
 		case R.id.save:
-			hideSoftKeypad();
+			if (BirthEditActivity.this.getCurrentFocus() != null) { 
+				hideSoftKeypad();
+			}
 			updateData(mMode);
 			break;
 		case R.id.tv_birthday:

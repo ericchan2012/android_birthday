@@ -3,7 +3,7 @@
     android:id="@+id/relativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/birth_add_head_bg" >
+    android:background="@drawable/header_bg" >
 
     <Button
         android:id="@+id/top_left_btton"
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textColor="@color/white"
+        android:textColor="#2475b6"
         android:textSize="20.0sp" />
     <Button
         android:id="@+id/save"

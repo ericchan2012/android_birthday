@@ -13,9 +13,10 @@
         android:id="@+id/phoneMyMainListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:padding="15dip"
         android:layout_below="@+id/header"
         android:cacheColorHint="@android:color/transparent"
-        android:divider="@drawable/phone_my_main_line"
-        android:listSelector="@drawable/phone_my_main_item_bg" />
+        android:divider="@drawable/item_line"
+        android:listSelector="@drawable/item_bg" />
 
 </RelativeLayout>
