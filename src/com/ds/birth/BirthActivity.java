@@ -94,7 +94,6 @@ public class BirthActivity extends Activity {
 		rightRadioBtn.setText(R.string.all_birth);
 		leftRadioBtn.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View arg0) {
 				defaultRadioBtn = 0;
 				settings.edit().putInt(RADIO_BTN, defaultRadioBtn).commit();
@@ -106,7 +105,6 @@ public class BirthActivity extends Activity {
 		});
 		rightRadioBtn.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View view) {
 				defaultRadioBtn = 1;
 				settings.edit().putInt(RADIO_BTN, defaultRadioBtn).commit();
@@ -131,7 +129,6 @@ public class BirthActivity extends Activity {
 		});
 
 		mListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
 			public void onItemClick(AdapterView<?> adapter, View view,
 					int position, long arg3) {
 				Cursor cursor = (Cursor) adapter.getItemAtPosition(position);

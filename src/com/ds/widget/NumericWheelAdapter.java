@@ -63,7 +63,7 @@ public class NumericWheelAdapter implements WheelAdapter {
 		this.format = format;
 	}
 
-	@Override
+	
 	public String getItem(int index) {
 		if (index >= 0 && index < getItemsCount()) {
 			int value = minValue + index;
@@ -72,12 +72,12 @@ public class NumericWheelAdapter implements WheelAdapter {
 		return null;
 	}
 
-	@Override
+	
 	public int getItemsCount() {
 		return maxValue - minValue + 1;
 	}
 	
-	@Override
+	
 	public int getMaximumLength() {
 		int max = Math.max(Math.abs(maxValue), Math.abs(minValue));
 		int maxLen = Integer.toString(max).length();

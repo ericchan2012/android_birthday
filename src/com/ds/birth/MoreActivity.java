@@ -21,7 +21,7 @@ public class MoreActivity extends Activity implements OnItemClickListener {
 	ListView mineListView;
 	TextView title;
 
-	@Override
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.birth_more);
@@ -70,7 +70,7 @@ public class MoreActivity extends Activity implements OnItemClickListener {
 
 	};
 
-	@Override
+	
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		switch (position) {
@@ -97,7 +97,7 @@ public class MoreActivity extends Activity implements OnItemClickListener {
 		idb.setTitle(R.string.about);
 		idb.setMessage("测试内容");
 		idb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
+			
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
 			}

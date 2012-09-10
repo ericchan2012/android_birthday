@@ -80,7 +80,6 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		nameTextView.setText(p.getName());
 	}
 
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.back:

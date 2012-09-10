@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
 import com.ds.utility.BirthConstants;
+import com.ds.utility.ChineseCalendar;
 import com.ds.utility.Lunar;
 import com.ds.utility.Person;
 import com.ds.widget.ArrayWheelAdapter;
@@ -90,7 +91,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	ImageView pickerLunar;
 	ImageView pickerSolar;
 	int isLunar = 0;
-	int mType = 0;//1 is me ,0 is not me
+	int mType = 0;// 1 is me ,0 is not me
 	boolean isShowYear = true;
 	WheelView year;
 	WheelView month;
@@ -108,8 +109,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	String months[] = null;
 	String days[] = null;
 	boolean showLunar = false;
+	private static final int START_YEAR = 1901;
+	private static final int END_YEAR = 2050;
 
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.birth_add);
@@ -138,14 +140,12 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
 		mDbHelper.close();
 	}
 
-	@Override
 	protected void onResume() {
 		super.onResume();
 		Log.i(TAG, "mMode:" + mMode);
@@ -235,7 +235,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		case R.id.tv_ringdays:
 			mRingList.clear();
 			for (int i = 0; i < flags.length; i++) {
-				if(flags[i]){
+				if (flags[i]) {
 					mRingList.add(ringItems[i]);
 				}
 			}
@@ -290,14 +290,13 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		// dialog.setTitle("选择分类");
 		dialog.setButton(mRes.getString(R.string.confirm),
 				new DialogInterface.OnClickListener() {
-					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 						Log.i(TAG, "cur year:" + year.getCurrentItem());
 						Log.i(TAG, "cur month:" + month.getCurrentItem());
 						Log.i(TAG, "cur day:" + day.getCurrentItem());
 						Calendar cal = Calendar.getInstance();
-						int solarYear = 1900 + year.getCurrentItem();
+						int solarYear = START_YEAR + year.getCurrentItem();
 						cal.set(Calendar.YEAR, solarYear);
 						cal.set(Calendar.MONTH, month.getCurrentItem());
 						cal.set(Calendar.DAY_OF_MONTH,
@@ -315,7 +314,11 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 									+ monthstr[month.getCurrentItem()]
 									+ daystr[day.getCurrentItem()]);
 							if (isShowYear) {
-								mBirthAttach.setText("");
+								mBirthAttach.setText(ChineseCalendar
+												.sCalendarLundarToSolar(
+														solarYear,
+														month.getCurrentItem()+1,
+														day.getCurrentItem()+1));
 							} else {
 								mBirthAttach.setText("");
 							}
@@ -335,19 +338,18 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 								mBirthAttach.setText("");
 							}
 						}
-						if(isShowYear){
+						if (isShowYear) {
 							settingYear = solarYear;
-						}else{
+						} else {
 							settingYear = 0;
 						}
-						settingMonth = month.getCurrentItem()+1;
+						settingMonth = month.getCurrentItem() + 1;
 						settingDay = day.getCurrentItem() + 1;
 					}
 
 				});
 		dialog.setButton2(mRes.getString(R.string.cancel),
 				new DialogInterface.OnClickListener() {
-					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
@@ -370,9 +372,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		showLunar = false;
 		pickerSelectYear.setImageResource(R.drawable.ignoreyear);
 		year = (WheelView) datePickerLayout.findViewById(R.id.year);
-		years = new String[2100 - 1900 + 1];
-		for (int i = 0; i < (2100 - 1900 + 1); i++) {
-			years[i] = String.valueOf(1900 + i) + "   "
+		years = new String[END_YEAR - START_YEAR + 1];
+		for (int i = 0; i < (END_YEAR - START_YEAR + 1); i++) {
+			years[i] = String.valueOf(START_YEAR + i) + "   "
 					+ mRes.getString(R.string.year);
 		}
 		yearAdapter = new ArrayWheelAdapter<String>(years);
@@ -414,7 +416,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		monthAdapter = new ArrayWheelAdapter<String>(months);
 		month.setAdapter(monthAdapter);
 
-		year.setCurrentItem(currentYear - 1900);
+		year.setCurrentItem(currentYear - START_YEAR);
 		Log.i(TAG, "after lunarStr[0]:" + lunarStr[0]);
 		Log.i(TAG, "currentMonth:" + currentMonth);
 		month.setCurrentItem(currentMonth);
@@ -436,7 +438,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		day.setCurrentItem(currentDay);
 
 		year.addChangingListener(new OnWheelChangedListener() {
-			@Override
 			public void onChanged(WheelView wheel, int oldValue, int newValue) {
 				Log.i(TAG, "year oldValue:" + oldValue);
 				Log.i(TAG, "year newValue:" + newValue);
@@ -481,7 +482,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		monthAdapter = new ArrayWheelAdapter<String>(months);
 		month.setAdapter(monthAdapter);
 
-		year.setCurrentItem(currentYear - 1900);
+		year.setCurrentItem(currentYear - START_YEAR);
 		month.setCurrentItem(currentMonth);
 		if (currentMonth == 1) {
 			days = new String[28];
@@ -499,7 +500,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		day.setCurrentItem(currentDay - 1);
 
 		year.addChangingListener(new OnWheelChangedListener() {
-			@Override
 			public void onChanged(WheelView wheel, int oldValue, int newValue) {
 				Log.i(TAG, "year oldValue:" + oldValue);
 				Log.i(TAG, "year newValue:" + newValue);
@@ -579,7 +579,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		dialog.show();
 	}
 
-	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 		}
@@ -607,24 +606,26 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					}
 				});
 
-		builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				switch (id) {
-				case R.id.tv_gender:
-					genderText.setText(items[defaultSexSelect]);
-					break;
-				case R.id.tv_ringtype:
-					ringTypeText.setText(items[defaultRingType]);
-					break;
-				}
-			}
-		});
+		builder.setPositiveButton(R.string.confirm,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						switch (id) {
+						case R.id.tv_gender:
+							genderText.setText(items[defaultSexSelect]);
+							break;
+						case R.id.tv_ringtype:
+							ringTypeText.setText(items[defaultRingType]);
+							break;
+						}
+					}
+				});
 
-		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				dialog.dismiss();
-			}
-		});
+		builder.setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+					}
+				});
 		builder.create().show();
 	}
 
@@ -676,7 +677,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			this.mCon = context;
 		}
 
-		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.birth_menu);
@@ -690,28 +690,28 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			cancelBtn = (Button) findViewById(R.id.cancel_button);
 			takePicBtn
 					.setOnClickListener(new android.view.View.OnClickListener() {
-						@Override
+
 						public void onClick(View v) {
 
 						}
 					});
 			gallaryBtn
 					.setOnClickListener(new android.view.View.OnClickListener() {
-						@Override
+
 						public void onClick(View v) {
 
 						}
 					});
 			defaultBtn
 					.setOnClickListener(new android.view.View.OnClickListener() {
-						@Override
+
 						public void onClick(View v) {
 
 						}
 					});
 			cancelBtn
 					.setOnClickListener(new android.view.View.OnClickListener() {
-						@Override
+
 						public void onClick(View v) {
 							MyDialog.this.dismiss();
 						}
