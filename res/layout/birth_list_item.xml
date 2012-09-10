@@ -46,12 +46,11 @@
         android:layout_alignBottom="@+id/candle"
         android:layout_marginLeft="5.0dip"
         android:layout_toRightOf="@+id/candle"
-        android:text="日期"
         android:textColor="#ff808080"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/countdown_year"
+        android:id="@+id/yearcnt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/day"
@@ -75,7 +74,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/countdown_day"
+        android:id="@+id/daycnt"
         android:layout_width="60.0dip"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/day"

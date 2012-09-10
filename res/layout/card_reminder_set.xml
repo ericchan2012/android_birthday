@@ -27,6 +27,7 @@
             android:layout_height="fill_parent"
             android:clickable="false"
             android:gravity="center"
+            android:layout_marginLeft="25.0dip"
             android:hint="@string/ringtype_hint"
             android:textColor="#ff104984"
             android:textSize="16.0dip" />

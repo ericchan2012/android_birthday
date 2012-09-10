@@ -3,17 +3,6 @@
     <string-array name="roboguice_modules">
         <item>cn.ishengsheng.discount.ServiceModuleBound</item>
     </string-array>
-    <string-array name="UMageList">
-        <item>年龄</item>
-        <item>18岁以下</item>
-        <item>18-24岁</item>
-        <item>25-30岁</item>
-        <item>31-35岁</item>
-        <item>36-40岁</item>
-        <item>41-50岁</item>
-        <item>51-59岁</item>
-        <item>60岁及以上</item>
-    </string-array>
     <string-array name="UMgenderList">
         <item>男</item>
         <item>女</item>
@@ -23,7 +12,7 @@
         <item>从QQ空间导入好友生日</item>
     </string-array>
     <string-array name="selectDays">
-        <item>当天提醒</item>
+        <item>生日当天提醒</item>
         <item>提前一天提醒</item>
         <item>提前三天提醒</item>
         <item>提前一周提醒</item>
@@ -40,5 +29,82 @@
          <item>仅提醒公历生日</item>
         <item>仅提醒农历生日</item>
         <item>公历农历生日都提醒</item>
+    </string-array>
+    <string-array name="lunarMonths">
+        <item>正月</item>
+        <item>二月</item>
+        <item>三月</item>
+        <item>四月</item>
+        <item>五月</item>
+        <item>六月</item>
+        <item>七月</item>
+        <item>八月</item>
+        <item>九月</item>
+        <item>十月</item>
+        <item>冬月</item>
+        <item>腊月</item>
+    </string-array>
+    <string-array name="lunarDays">
+        <item>初一</item>
+        <item>初二</item>
+        <item>初三</item>
+        <item>初四</item>
+        <item>初五</item>
+        <item>初六</item>
+        <item>初七</item>
+        <item>初八</item>
+        <item>初九</item>
+        <item>初十</item>
+        <item>十一</item>
+        <item>十二</item>
+        <item>十三</item>
+        <item>十四</item>
+        <item>十五</item>
+        <item>十六</item>
+        <item>十七</item>
+        <item>十八</item>
+        <item>十九</item>
+        <item>廿十</item>
+        <item>廿一</item>
+        <item>廿二</item>
+        <item>廿三</item>
+        <item>廿四</item>
+        <item>廿五</item>
+        <item>廿六</item>
+        <item>廿七</item>
+        <item>廿八</item>
+        <item>廿九</item>
+    </string-array>
+     <string-array name="lunarDaysLong">
+         <item>初一</item>
+        <item>初二</item>
+        <item>初三</item>
+        <item>初四</item>
+        <item>初五</item>
+        <item>初六</item>
+        <item>初七</item>
+        <item>初八</item>
+        <item>初九</item>
+        <item>初十</item>
+        <item>十一</item>
+        <item>十二</item>
+        <item>十三</item>
+        <item>十四</item>
+        <item>十五</item>
+        <item>十六</item>
+        <item>十七</item>
+        <item>十八</item>
+        <item>十九</item>
+        <item>廿十</item>
+        <item>廿一</item>
+        <item>廿二</item>
+        <item>廿三</item>
+        <item>廿四</item>
+        <item>廿五</item>
+        <item>廿六</item>
+        <item>廿七</item>
+        <item>廿八</item>
+        <item>廿九</item>
+        <item>三十</item>
     </string-array>
 </resources>

@@ -12,16 +12,15 @@
     <string name="empty">没有生日</string>
     <string name="empty_star">没有重要的生日!</string>
     <string name="more">更多</string>
-    <string name="ringtype">提醒方式:</string>
+    <string name="ringtype">提醒方式</string>
     <string name="ringtype_hint">请先设置生日</string>
     <string name="ringdays">提醒天数:</string>
-    <string name="ringdays_hint">生日当天</string>
+    <string name="ringdays_hint">生日当天提醒</string>
     <string name="app_store1">装机必备</string>
     <string name="app_store2">热门推荐</string>
     <string name="app_store3">市场专区</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="cancel">取消</string>
     <string name="about">关于我们</string>
     <string name="take_picture">拍照</string>
     <string name="select_picture">图库</string>
@@ -34,5 +33,11 @@
     <string name="modify">修改</string>
     <string name="add_title">添加生日</string>
     <string name="edit_title">编辑生日</string>
-
+    <string name="year">"年"</string>
+    <string name="month">"月"</string>
+    <string name="day">"日"</string>
+	<string name="confirm">确定</string>
+	<string name="cancel">取消</string>
+	<string name="star_string">已设置为重要生日</string>
+	<string name="no_remind">不提醒</string>
 </resources>

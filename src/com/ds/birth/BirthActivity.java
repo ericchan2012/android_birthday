@@ -1,11 +1,23 @@
 package com.ds.birth;
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +39,7 @@ import android.widget.TextView;
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
 import com.ds.utility.BirthConstants;
+import com.ds.utility.Utility;
 
 public class BirthActivity extends Activity {
 	private static final String TAG = "BirthActivity";
@@ -152,10 +165,10 @@ public class BirthActivity extends Activity {
 		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
 			case ADD_BIRTHDAY:
-				mProgressDialog = ProgressDialog.show(BirthActivity.this,
-						"Loading...", "Please wait...", true, false);
-				Thread thread = new MyThread(UPDATE);
-				thread.start();
+				// mProgressDialog = ProgressDialog.show(BirthActivity.this,
+				// "Loading...", "Please wait...", true, false);
+				// Thread thread = new MyThread(UPDATE);
+				// thread.start();
 				break;
 			}
 		}
@@ -252,7 +265,7 @@ public class BirthActivity extends Activity {
 				if (arg1 == QUERY_STAR) {
 					mEmptyView.setText(R.string.empty_star);
 				} else {
-					radiobtn=settings.getInt(RADIO_BTN, 0);
+					radiobtn = settings.getInt(RADIO_BTN, 0);
 					if (radiobtn == 0) {
 						mEmptyView.setText(R.string.empty_star);
 					} else {
@@ -286,10 +299,16 @@ public class BirthActivity extends Activity {
 
 			if (mCursor != null && mCursor.getCount() > 0) {
 				Log.i(TAG, "--cursor not null---");
-				if (mState == 0) {
-					mHandler.sendEmptyMessage(QUERY_SUCCESS);
-				} else {
+				switch (mState) {
+				case UPDATE:
 					mHandler.sendEmptyMessage(QUERY_UPDATE);
+					break;
+				case QUERY_STAR:
+					mHandler.sendEmptyMessage(QUERY_SUCCESS);
+					break;
+				case QUERY:
+					mHandler.sendEmptyMessage(QUERY_SUCCESS);
+					break;
 				}
 			} else {
 				Message msg = new Message();
@@ -310,6 +329,7 @@ public class BirthActivity extends Activity {
 			viewResId = resource;
 			mInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			this.context = context;
 		}
 
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -319,15 +339,46 @@ public class BirthActivity extends Activity {
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
+			Calendar cal = Calendar.getInstance();
 			if (view != null) {
 				ViewHolder viewHolder = new ViewHolder();
 				View birthView = (RelativeLayout) view;
 				viewHolder.avater = (ImageView) birthView
 						.findViewById(R.id.avatar);
 				viewHolder.name = (TextView) birthView.findViewById(R.id.name);
+				viewHolder.date = (TextView) birthView.findViewById(R.id.date);
+				viewHolder.candle = (ImageView) birthView
+						.findViewById(R.id.candle);
+				viewHolder.yearcnt = (TextView) birthView
+						.findViewById(R.id.yearcnt);
+				viewHolder.daycnt = (TextView) birthView
+						.findViewById(R.id.daycnt);
 
 				viewHolder.name.setText(cursor
 						.getString(DatabaseHelper.NAME_INDEX));
+				viewHolder.date.setText(cursor
+						.getString(DatabaseHelper.BIRTHDAY_INDEX));
+				if (cursor.getInt(DatabaseHelper.ISLUNAR_INDEX) == 0) {
+					viewHolder.candle.setImageResource(R.drawable.birth_solar);
+				} else {
+					viewHolder.candle.setImageResource(R.drawable.birth_lunar);
+				}
+
+				Drawable drawable = context.getResources().getDrawable(
+						R.drawable.avatar_default);
+				BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+				Bitmap bitmap = bitmapDrawable.getBitmap();
+
+				BitmapDrawable bbb = new BitmapDrawable(Utility.toRoundCorner(
+						bitmap, 30));
+				viewHolder.avater.setBackgroundDrawable(bbb);
+				
+				viewHolder.yearcnt.setText(String.valueOf(cal.get(Calendar.YEAR)-cursor.getInt(DatabaseHelper.YEAR_INDEX) + 1));
+				Log.i(TAG,"year:" + cal.get(Calendar.YEAR));
+				Log.i(TAG,"day of month:" + cal.get(Calendar.DAY_OF_MONTH));
+				Log.i(TAG,"day of year:" + cal.get(Calendar.DAY_OF_YEAR));
+//				viewHolder.daycnt.setText(text);
+
 			}
 		}
 	}
@@ -335,5 +386,11 @@ public class BirthActivity extends Activity {
 	private class ViewHolder {
 		ImageView avater;
 		TextView name;
+		TextView date;
+		ImageView candle;
+		TextView yearcnt;
+		TextView daycnt;
+
 	}
+
 }

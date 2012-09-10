@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#00000000"
+    android:background="#ffffffff"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -14,10 +14,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/showyear" />
+            android:background="@drawable/ignoreyear" />
 
         <ImageView
-            android:id="@+id/ig_lunar"
+            android:id="@+id/lunar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -26,12 +26,12 @@
             android:background="@drawable/nong_grey" />
 
         <ImageView
-            android:id="@+id/ig_solar"
+            android:id="@+id/solar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="5.0dip"
-            android:layout_toLeftOf="@+id/ig_lunar"
+            android:layout_toLeftOf="@+id/lunar"
             android:background="@drawable/gong_blue" />
     </RelativeLayout>
 

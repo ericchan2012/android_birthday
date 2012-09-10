@@ -1,6 +1,7 @@
 package com.ds.birth;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import android.app.Activity;
@@ -30,7 +31,9 @@ import android.widget.TextView;
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
 import com.ds.utility.BirthConstants;
+import com.ds.utility.Lunar;
 import com.ds.utility.Person;
+import com.ds.widget.ArrayWheelAdapter;
 import com.ds.widget.NumericWheelAdapter;
 import com.ds.widget.OnWheelChangedListener;
 import com.ds.widget.WheelView;
@@ -47,7 +50,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	ArrayList<String> mRingList = new ArrayList<String>();
 	String[] ringItems = null;
 	Resources mRes;
-	boolean[] flags = new boolean[] { false, false, false, false };
+	boolean[] flags = new boolean[] { true, false, false, false };
 	LayoutInflater mInflater;
 	DbHelper mDbHelper;
 	Button saveBtn;
@@ -60,8 +63,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	CheckBox mStar;
 	ImageView mImportContactName;
 	int defaultSexSelect = 0;
-	int defaultRingType = 0;
+	int defaultRingType = -1;
 	TextView mBirthdayTextView;
+	TextView mBirthAttach;
 	EditText noteEdit;
 	EditText phoneNumEdit;
 
@@ -69,6 +73,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	int gender;
 	int isStar;
 	String birthday;
+	String birthdayYear;
+	String birthdayMonth;
+	String birthdayDay;
 	int ringtype;// 0,1,2
 	String ringdays;
 	String note;
@@ -79,6 +86,28 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	private Cursor mCursor;
 	private TextView titleTextView;
 	private LinearLayout datePickerLayout;
+	ImageView pickerSelectYear;
+	ImageView pickerLunar;
+	ImageView pickerSolar;
+	int isLunar = 0;
+	int mType = 0;//1 is me ,0 is not me
+	boolean isShowYear = true;
+	WheelView year;
+	WheelView month;
+	WheelView day;
+	int currentYear;
+	int currentMonth;
+	int currentDay;
+	int settingYear;
+	int settingMonth;
+	int settingDay;
+	ArrayWheelAdapter<String> yearAdapter;
+	ArrayWheelAdapter<String> monthAdapter;
+	ArrayWheelAdapter<String> dayAdapter;
+	String years[] = null;
+	String months[] = null;
+	String days[] = null;
+	boolean showLunar = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +164,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					do {
 						person.setName(mCursor
 								.getString(DatabaseHelper.NAME_INDEX));
+						isLunar = mCursor.getInt(DatabaseHelper.ISLUNAR_INDEX);
 						updateEdit(person);
 					} while (mCursor.moveToNext());
 				}
@@ -154,6 +184,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		ringTypeText = (TextView) findViewById(R.id.tv_ringtype);
 		headerImage = (ImageView) findViewById(R.id.img_icon);
 		mBirthdayTextView = (TextView) findViewById(R.id.tv_birthday);
+		mBirthAttach = (TextView) findViewById(R.id.birthattach);
 		mStar = (CheckBox) findViewById(R.id.star);
 		noteEdit = (EditText) findViewById(R.id.tv_note);
 		phoneNumEdit = (EditText) findViewById(R.id.tv_number);
@@ -202,26 +233,54 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					R.id.tv_gender, defaultSexSelect);
 			break;
 		case R.id.tv_ringdays:
+			mRingList.clear();
+			for (int i = 0; i < flags.length; i++) {
+				if(flags[i]){
+					mRingList.add(ringItems[i]);
+				}
+			}
 			createCheckedDialog(R.string.ring_title, flags);
 			break;
 		case R.id.tv_ringtype:
-			createOptionDialog(R.id.tv_ringtype, mRingTypeItem,
-					R.id.tv_ringtype, defaultRingType);
+			if (!mBirthdayTextView.getText().equals("")) {
+				createOptionDialog(R.string.ringtype, mRingTypeItem,
+						R.id.tv_ringtype, defaultRingType);
+			}
 			break;
 		case R.id.img_icon:
 			loadMenu();
 			break;
 		case R.id.save:
-			if (BirthEditActivity.this.getCurrentFocus() != null) { 
+			if (BirthEditActivity.this.getCurrentFocus() != null) {
 				hideSoftKeypad();
 			}
 			updateData(mMode);
 			break;
 		case R.id.tv_birthday:
-			datePickerLayout = (LinearLayout) mInflater.inflate(
-					R.layout.date_picker, null);
-			initDatePickerView();
+			initYear();
+			initDatePickerView(mMode);
 			showPickViewDialog();
+			break;
+		case R.id.selectyear:
+			if (isShowYear) {
+				datePickerLayout.findViewById(R.id.year).setVisibility(
+						View.GONE);
+				pickerSelectYear.setImageResource(R.drawable.displayyear);
+				isShowYear = false;
+			} else {
+				isShowYear = true;
+				datePickerLayout.findViewById(R.id.year).setVisibility(
+						View.VISIBLE);
+				pickerSelectYear.setImageResource(R.drawable.ignoreyear);
+			}
+			break;
+		case R.id.lunar:
+			showLunar = true;
+			initLunar(mMode);
+			break;
+		case R.id.solar:
+			showLunar = false;
+			initSolar(mMode);
 			break;
 		}
 	}
@@ -229,52 +288,219 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	private void showPickViewDialog() {
 		final AlertDialog dialog = new AlertDialog.Builder(this).create();
 		// dialog.setTitle("选择分类");
-		dialog.setButton("确定", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				// 实现下ui的刷新
-			}
+		dialog.setButton(mRes.getString(R.string.confirm),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Log.i(TAG, "cur year:" + year.getCurrentItem());
+						Log.i(TAG, "cur month:" + month.getCurrentItem());
+						Log.i(TAG, "cur day:" + day.getCurrentItem());
+						Calendar cal = Calendar.getInstance();
+						int solarYear = 1900 + year.getCurrentItem();
+						cal.set(Calendar.YEAR, solarYear);
+						cal.set(Calendar.MONTH, month.getCurrentItem());
+						cal.set(Calendar.DAY_OF_MONTH,
+								(day.getCurrentItem() + 1));
+						Lunar lunar = new Lunar(cal);
+						String lunarYear = lunar.getLunarYear()
+								+ mRes.getString(R.string.year);
+						String monthstr[] = mRes
+								.getStringArray(R.array.lunarMonths);
+						String daystr[] = mRes
+								.getStringArray(R.array.lunarDaysLong);
+						if (showLunar) {
+							mBirthdayTextView.setText((isShowYear ? lunarYear
+									: "")
+									+ monthstr[month.getCurrentItem()]
+									+ daystr[day.getCurrentItem()]);
+							if (isShowYear) {
+								mBirthAttach.setText("");
+							} else {
+								mBirthAttach.setText("");
+							}
+						} else {
+							String lunarMonth = lunar.get_month();
+							String lunarDay = lunar.get_date();
+							mBirthdayTextView
+									.setText((isShowYear ? (solarYear + "-")
+											: "")
+											+ (month.getCurrentItem() + 1)
+											+ "-" + (day.getCurrentItem() + 1));
+							if (isShowYear) {
+								mBirthAttach.setText(lunarYear + lunarMonth
+										+ mRes.getString(R.string.month)
+										+ lunarDay);
+							} else {
+								mBirthAttach.setText("");
+							}
+						}
+						if(isShowYear){
+							settingYear = solarYear;
+						}else{
+							settingYear = 0;
+						}
+						settingMonth = month.getCurrentItem()+1;
+						settingDay = day.getCurrentItem() + 1;
+					}
 
-		});
-		dialog.setButton2("取消", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
+				});
+		dialog.setButton2(mRes.getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 		dialog.setView(datePickerLayout);
 		dialog.show();
 	}
 
-	private void initDatePickerView() {
-		Calendar calendar = Calendar.getInstance();
-		int currentYear = calendar.get(Calendar.YEAR);
-		int currentMonth = calendar.get(Calendar.MONTH);
-		int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+	private void initYear() {
+		datePickerLayout = (LinearLayout) mInflater.inflate(
+				R.layout.date_picker, null);
+		pickerSelectYear = (ImageView) datePickerLayout
+				.findViewById(R.id.selectyear);
+		pickerLunar = (ImageView) datePickerLayout.findViewById(R.id.lunar);
+		pickerSolar = (ImageView) datePickerLayout.findViewById(R.id.solar);
+		pickerSelectYear.setOnClickListener(this);
+		pickerLunar.setOnClickListener(this);
+		pickerSolar.setOnClickListener(this);
+		isShowYear = true;
+		showLunar = false;
+		pickerSelectYear.setImageResource(R.drawable.ignoreyear);
+		year = (WheelView) datePickerLayout.findViewById(R.id.year);
+		years = new String[2100 - 1900 + 1];
+		for (int i = 0; i < (2100 - 1900 + 1); i++) {
+			years[i] = String.valueOf(1900 + i) + "   "
+					+ mRes.getString(R.string.year);
+		}
+		yearAdapter = new ArrayWheelAdapter<String>(years);
+		year.setAdapter(yearAdapter);
+		month = (WheelView) datePickerLayout.findViewById(R.id.month);
+		day = (WheelView) datePickerLayout.findViewById(R.id.day);
+	}
+
+	private void initDatePickerView(int mode) {
 		Log.i(TAG, "year:" + currentYear + "  month:" + currentMonth + " day:"
 				+ currentDay);
-		WheelView year = (WheelView) datePickerLayout.findViewById(R.id.year);
-		year.setAdapter(new NumericWheelAdapter(2000, 2112));
-		year.setLabel("年");
-		year.setCurrentItem(1902);
-		WheelView month = (WheelView) datePickerLayout.findViewById(R.id.month);
-		month.setAdapter(new NumericWheelAdapter(1, 12));
-		month.setLabel("月");
-		month.setCurrentItem(currentMonth);
-		final WheelView day = (WheelView) datePickerLayout
-				.findViewById(R.id.day);
-		if (currentMonth == 1) {
-			day.setAdapter(new NumericWheelAdapter(1, 28));
-		} else {
-			day.setAdapter(new NumericWheelAdapter(1, 31));
+		switch (mode) {
+		case MODE_ADD:
+			initSolar(mode);
+			break;
+		case MODE_EDIT:
+			if (isLunar == 0) {
+				initSolar(mode);
+			} else {
+				initLunar(mode);
+			}
+			break;
 		}
-		day.setLabel("日");
-		day.setCurrentItem(currentDay - 1);
+	}
+
+	private void initLunar(int mode) {
+		pickerLunar.setImageResource(R.drawable.nong_blue);
+		pickerSolar.setImageResource(R.drawable.gong_grey);
+		Calendar calendar = Calendar.getInstance();
+		Lunar lunar = new Lunar(calendar);
+		final String lunarStr[] = (lunar.toString()).split("-");
+		String temp[] = mRes.getStringArray(R.array.lunarMonths);
+		for (int i = 0; i < temp.length; i++) {
+			if (lunarStr[0].equals(temp[i])) {
+				currentMonth = i;
+			}
+			months[i] = temp[i] + "   ";
+		}
+		monthAdapter = new ArrayWheelAdapter<String>(months);
+		month.setAdapter(monthAdapter);
+
+		year.setCurrentItem(currentYear - 1900);
+		Log.i(TAG, "after lunarStr[0]:" + lunarStr[0]);
+		Log.i(TAG, "currentMonth:" + currentMonth);
+		month.setCurrentItem(currentMonth);
+		final int daycnt = Lunar.monthDays(currentYear, currentMonth);
+		String tmp[] = null;
+		if (daycnt == 29) {
+			tmp = mRes.getStringArray(R.array.lunarDays);
+		} else if (daycnt == 30) {
+			tmp = mRes.getStringArray(R.array.lunarDaysLong);
+		}
+		for (int i = 0; i < tmp.length; i++) {
+			if (lunarStr[1].equals(tmp[i])) {
+				currentDay = i;
+			}
+			days[i] = tmp[i] + "   ";
+		}
+		dayAdapter = new ArrayWheelAdapter<String>(days);
+		day.setAdapter(dayAdapter);
+		day.setCurrentItem(currentDay);
+
 		year.addChangingListener(new OnWheelChangedListener() {
 			@Override
 			public void onChanged(WheelView wheel, int oldValue, int newValue) {
-				// TODO Auto-generated method stub
+				Log.i(TAG, "year oldValue:" + oldValue);
+				Log.i(TAG, "year newValue:" + newValue);
+			}
+		});
+		month.addChangingListener(new OnWheelChangedListener() {
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
+				Log.i(TAG, "oldValue:" + oldValue);
+				Log.i(TAG, "newValue:" + newValue);
+				String tmp2[] = null;
+				if (daycnt == 29) {
+					tmp2 = mRes.getStringArray(R.array.lunarDays);
+				} else if (daycnt == 30) {
+					tmp2 = mRes.getStringArray(R.array.lunarDaysLong);
+				}
+				for (int i = 0; i < tmp2.length; i++) {
+					if (lunarStr[1].equals(tmp2[i])) {
+						currentDay = i;
+					}
+					days[i] = tmp2[i] + "   ";
+				}
+				dayAdapter = new ArrayWheelAdapter<String>(days);
+				day.setAdapter(dayAdapter);
+			}
+		});
+	}
+
+	private void initSolar(int mode) {
+		pickerLunar.setImageResource(R.drawable.nong_grey);
+		pickerSolar.setImageResource(R.drawable.gong_blue);
+		if (mode == MODE_ADD) {
+			Calendar calendar = Calendar.getInstance();
+			currentYear = calendar.get(Calendar.YEAR);
+			currentMonth = calendar.get(Calendar.MONTH);
+			currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+		}
+		months = new String[12];
+		for (int i = 0; i < 12; i++) {
+			months[i] = String.valueOf(i + 1) + "   "
+					+ mRes.getString(R.string.month);
+		}
+		monthAdapter = new ArrayWheelAdapter<String>(months);
+		month.setAdapter(monthAdapter);
+
+		year.setCurrentItem(currentYear - 1900);
+		month.setCurrentItem(currentMonth);
+		if (currentMonth == 1) {
+			days = new String[28];
+
+		} else {
+			days = new String[31];
+
+		}
+		for (int i = 0; i < days.length; i++) {
+			days[i] = String.valueOf(i + 1) + "   "
+					+ mRes.getString(R.string.day);
+		}
+		dayAdapter = new ArrayWheelAdapter<String>(days);
+		day.setAdapter(dayAdapter);
+		day.setCurrentItem(currentDay - 1);
+
+		year.addChangingListener(new OnWheelChangedListener() {
+			@Override
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
 				Log.i(TAG, "year oldValue:" + oldValue);
 				Log.i(TAG, "year newValue:" + newValue);
 			}
@@ -288,22 +514,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 				} else {
 					day.setAdapter(new NumericWheelAdapter(1, 31));
 				}
-			}
-		});
-	}
-
-	/**
-	 * Adds changing listener for wheel that updates the wheel label
-	 * 
-	 * @param wheel
-	 *            the wheel
-	 * @param label
-	 *            the wheel label
-	 */
-	private void addChangingListener(final WheelView wheel, final String label) {
-		wheel.addChangingListener(new OnWheelChangedListener() {
-			public void onChanged(WheelView wheel, int oldValue, int newValue) {
-				wheel.setLabel(newValue != 1 ? label + "s" : label);
 			}
 		});
 	}
@@ -334,9 +544,11 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	private void generateData() {
 		gender = defaultSexSelect;
 		isStar = mStar.isChecked() ? 1 : 0;
-		birthday = "2009-09-09";
+		birthday = mBirthdayTextView.getText().toString();
 		ringtype = defaultRingType;
-		ringdays = "hello";
+		ringdays = ringDaysText.getText().toString();
+		isLunar = showLunar ? 1 : 0;
+		mType = 0;
 		note = noteEdit.getText().toString();
 		phoneNum = phoneNumEdit.getText().toString();
 		contentValues.clear();
@@ -346,6 +558,11 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		contentValues.put(DatabaseHelper.BIRTHDAY, birthday);
 		contentValues.put(DatabaseHelper.RINGTYPE, ringtype);
 		contentValues.put(DatabaseHelper.RINGDAY, ringdays);
+		contentValues.put(DatabaseHelper.ISLUNAR, isLunar);
+		contentValues.put(DatabaseHelper.YEAR, settingYear);
+		contentValues.put(DatabaseHelper.MONTH, settingMonth);
+		contentValues.put(DatabaseHelper.DAY, settingDay);
+		contentValues.put(DatabaseHelper.TYPE, mType);
 		if (null == note || note.equals("")) {
 			note = "";
 		}
@@ -390,7 +607,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					}
 				});
 
-		builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				switch (id) {
 				case R.id.tv_gender:
@@ -403,7 +620,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			}
 		});
 
-		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				dialog.dismiss();
 			}
@@ -427,12 +644,14 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						}
 					}
 				});
-
-		// 添加一个确定按钮
-		builder.setPositiveButton(" 确 定 ",
+		builder.setPositiveButton(R.string.confirm,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						ringDaysText.setText(mRingList.toString());
+						if (mRingList.size() == 0) {
+							ringDaysText.setText(R.string.no_remind);
+						} else {
+							ringDaysText.setText(mRingList.toString());
+						}
 						dialog.dismiss();
 					}
 				});
