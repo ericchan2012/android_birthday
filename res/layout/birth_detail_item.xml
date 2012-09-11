@@ -11,66 +11,67 @@
         android:layout_marginRight="10.0dip" >
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="17.0dip"
             android:layout_marginRight="1.0dip"
             android:layout_marginTop="15.0dip"
-            android:text="距"
+            android:text="@string/age_constants"
             android:textColor="#ff333333"
             android:textSize="18.0dip" />
 
         <LinearLayout
-            android:id="@+id/imageView4"
+            android:id="@+id/bg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/textView4"
+            android:layout_toRightOf="@+id/age"
             android:background="@drawable/birth_info_big_yellow"
             android:gravity="center_horizontal" >
 
             <TextView
-                android:id="@+id/birth_info_zhousui"
+                android:id="@+id/agecnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8.0dip"
+                android:text="@string/ageShowsolar"
                 android:textColor="#ffffffff"
                 android:textSize="28.0dip" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/birth_info_islunar"
+            android:id="@+id/constants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView4"
-            android:layout_alignBottom="@+id/textView4"
+            android:layout_alignBaseline="@+id/age"
+            android:layout_alignBottom="@+id/age"
             android:layout_marginLeft="1.0dip"
-            android:layout_toRightOf="@+id/imageView4"
+            android:layout_toRightOf="@+id/bg"
             android:textColor="#ff333333"
             android:textSize="18.0dip" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView4"
+            android:layout_below="@+id/bg"
             android:layout_marginLeft="160.0dip"
             android:text="还有"
             android:textColor="#ff333333"
             android:textSize="18.0dip" />
 
         <LinearLayout
-            android:id="@+id/imageView5"
+            android:id="@+id/bg2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/textView6"
+            android:layout_toRightOf="@+id/other"
             android:background="@drawable/birth_info_big_green"
             android:gravity="center" >
 
             <TextView
-                android:id="@+id/birth_info_birth_leftday"
+                android:id="@+id/leftday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5.0dip"
@@ -82,9 +83,9 @@
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView6"
-            android:layout_alignBottom="@+id/textView6"
-            android:layout_toRightOf="@+id/imageView5"
+            android:layout_alignBaseline="@+id/other"
+            android:layout_alignBottom="@+id/other"
+            android:layout_toRightOf="@+id/bg2"
             android:text="天"
             android:textColor="#ff333333"
             android:textSize="18.0dip" />
@@ -98,7 +99,7 @@
         android:layout_marginRight="7.0dip"
         android:background="@drawable/birth_line" />
 
-    <LinearLayout
+  <!--    <LinearLayout
         android:id="@+id/layout_birthdaycount"
         android:layout_width="fill_parent"
         android:layout_height="100.0dip"
@@ -220,7 +221,7 @@
                     android:textColor="#ff333333" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="fill_parent"

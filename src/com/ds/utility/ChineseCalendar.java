@@ -8,7 +8,7 @@ public class ChineseCalendar {
 	// 12(or 13) pieces of binary bit in one year,
 	// it is 30 days for 1 form in the corresponding location , otherwise it is
 	// 29 days
-	private static final int[] iLunarMonthDaysTable = {
+	private static final int[] iLunarMonthDaysTable = { 
 			0x4ae0,
 			0xa570,
 			0x5268,

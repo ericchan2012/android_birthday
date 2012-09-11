@@ -19,4 +19,6 @@
         <attr name="point_normal_color" format="color|reference" />
         <attr name="point_radius" format="dimension" />
     </declare-styleable>
+     <declare-styleable name="ImageBtn">  
+    </declare-styleable>  
 </resources>

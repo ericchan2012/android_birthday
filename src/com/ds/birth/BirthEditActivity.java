@@ -257,6 +257,11 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			updateData(mMode);
 			break;
 		case R.id.tv_birthday:
+			if (isLunar == 1) {
+				showLunar = true;
+			} else {
+				showLunar = false;
+			}
 			initYear();
 			initDatePickerView(mMode);
 			showPickViewDialog();
@@ -315,10 +320,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 									+ daystr[day.getCurrentItem()]);
 							if (isShowYear) {
 								mBirthAttach.setText(ChineseCalendar
-												.sCalendarLundarToSolar(
-														solarYear,
-														month.getCurrentItem()+1,
-														day.getCurrentItem()+1));
+										.sCalendarLundarToSolar(solarYear,
+												month.getCurrentItem() + 1,
+												day.getCurrentItem() + 1));
 							} else {
 								mBirthAttach.setText("");
 							}
@@ -369,7 +373,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		pickerLunar.setOnClickListener(this);
 		pickerSolar.setOnClickListener(this);
 		isShowYear = true;
-		showLunar = false;
 		pickerSelectYear.setImageResource(R.drawable.ignoreyear);
 		year = (WheelView) datePickerLayout.findViewById(R.id.year);
 		years = new String[END_YEAR - START_YEAR + 1];
@@ -391,7 +394,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			initSolar(mode);
 			break;
 		case MODE_EDIT:
-			if (isLunar == 0) {
+			if (!showLunar) {
 				initSolar(mode);
 			} else {
 				initLunar(mode);
@@ -510,10 +513,18 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 				Log.i(TAG, "oldValue:" + oldValue);
 				Log.i(TAG, "newValue:" + newValue);
 				if (newValue == 1) {
-					day.setAdapter(new NumericWheelAdapter(1, 28));
+					days = new String[28];
+
 				} else {
-					day.setAdapter(new NumericWheelAdapter(1, 31));
+					days = new String[31];
+
 				}
+				for (int i = 0; i < days.length; i++) {
+					days[i] = String.valueOf(i + 1) + "   "
+							+ mRes.getString(R.string.day);
+				}
+				dayAdapter = new ArrayWheelAdapter<String>(days);
+				day.setAdapter(dayAdapter);
 			}
 		});
 	}

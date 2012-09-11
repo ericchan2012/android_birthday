@@ -36,8 +36,23 @@
     <string name="year">"年"</string>
     <string name="month">"月"</string>
     <string name="day">"日"</string>
-	<string name="confirm">确定</string>
-	<string name="cancel">取消</string>
-	<string name="star_string">已设置为重要生日</string>
-	<string name="no_remind">不提醒</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="star_string">已设置为重要生日</string>
+    <string name="no_remind">不提醒</string>
+    <string name="age">距离%d岁公历生日</string>
+    <string name="lunar_age">距离%d岁农历生日</string>
+    <string name="birthover">今年生日已经过完</string>
+    <string name="today_birthday">%d岁农历生日</string>
+    <string name="age_constants">距</string>
+    <string name="ageShowsolar">岁公历生日</string>
+    <string name="ageShowlunar">岁农历生日</string>
+    <string name="noalarm">未开启提醒</string>
+    <string name="solaralarm">公历提醒:%s</string>
+    <string name="lunaralarm">农历提醒:%s</string>
+    <string name="bless">短信祝福</string>
+    <string name="lucky">每日运势</string>
+    <string name="wiki">生日百科</string>
+    <string name="phone">手机号码:</string>
+
 </resources>

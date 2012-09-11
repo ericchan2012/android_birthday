@@ -41,7 +41,7 @@
                         android:background="@drawable/ava_bg" >
 
                         <ImageView
-                            android:id="@+id/avator"
+                            android:id="@+id/avatar"
                             android:layout_width="68.0dip"
                             android:layout_height="68.0dip"
                             android:scaleType="centerCrop" />
@@ -100,15 +100,14 @@
                     android:id="@+id/birth_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/birth_lunar_date"
+                    android:layout_alignLeft="@+id/birth_secondary_date"
                     android:layout_below="@+id/name"
                     android:layout_marginTop="4.0dip"
-                    android:text="1988-10-06"
                     android:textColor="#ff333333"
                     android:textSize="14.0dip" />
 
                 <TextView
-                    android:id="@+id/birth_lunar_date"
+                    android:id="@+id/birth_secondary_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/gender"
@@ -116,7 +115,6 @@
                     android:layout_marginTop="5.0dip"
                     android:layout_toRightOf="@+id/gender"
                     android:gravity="center"
-                    android:text="adfdsafd"
                     android:textColor="#ff333333"
                     android:textSize="14.0dip" />
             </RelativeLayout>

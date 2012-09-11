@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/day"
         android:layout_alignTop="@+id/name"
-        android:text="距离1岁公历生日"
+        android:text="@string/age"
         android:textColor="#ff808080"
         android:textSize="12.0sp"
         android:textStyle="bold" />
@@ -80,9 +80,7 @@
         android:layout_alignBottom="@+id/day"
         android:layout_marginRight="5.0dip"
         android:layout_toLeftOf="@+id/day"
-        android:background="@drawable/countdays_bg"
         android:gravity="bottom|center"
-        android:text="1"
         android:textColor="#ffffffff"
         android:textSize="26.0dip" />
 

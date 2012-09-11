@@ -137,4 +137,8 @@
         <item name="android:layout_marginLeft">5.0dip</item>
     </style>
 
+    <style name="my_edittext_style" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/selector_edittext_bg</item>
+    </style>
+
 </resources>

@@ -2,73 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_marginBottom="10dip"
+    android:layout_marginRight="10dip"
+    android:layout_marginTop="10dip"
+    android:orientation="horizontal" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="154.79999dip"
-        android:layout_marginLeft="10.0dip"
-        android:layout_marginRight="10.0dip" >
+    <com.ds.widget.ImageBtn
+        android:id="@+id/blessing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dip" />
 
-        <ImageView
-            android:id="@+id/birth_info_sendmsg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15.0dip"
-            android:layout_marginTop="10.0dip"
-            android:background="@drawable/birth_info_msg" />
+    <com.ds.widget.ImageBtn
+        android:id="@+id/lucky"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dip" />
 
-        <ImageView
-            android:id="@+id/birth_info_lucky"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="20.0dip"
-            android:layout_marginTop="10.0dip"
-            android:background="@drawable/lucky_selector" />
-
-        <ImageView
-            android:id="@+id/birth_info_baike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="15.0dip"
-            android:layout_marginTop="10.0dip"
-            android:background="@drawable/log_baike" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/birth_info_baike"
-            android:layout_alignRight="@+id/birth_info_baike"
-            android:layout_below="@+id/birth_info_baike"
-            android:gravity="center"
-            android:text="生日百科"
-            android:textColor="#ff000000" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/birth_info_lucky"
-            android:layout_alignRight="@+id/birth_info_lucky"
-            android:layout_below="@+id/birth_info_lucky"
-            android:gravity="center"
-            android:text="每日运势"
-            android:textColor="#ff000000" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/birth_info_sendmsg"
-            android:layout_alignRight="@+id/birth_info_sendmsg"
-            android:layout_below="@+id/birth_info_sendmsg"
-            android:gravity="center"
-            android:text="短信祝福"
-            android:textColor="#ff000000" />
-    </RelativeLayout>
+    <com.ds.widget.ImageBtn
+        android:id="@+id/wiki"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dip" >
+    </com.ds.widget.ImageBtn>
 
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.ds.birth;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,13 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -39,6 +34,7 @@ import android.widget.TextView;
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
 import com.ds.utility.BirthConstants;
+import com.ds.utility.ChineseCalendar;
 import com.ds.utility.Utility;
 
 public class BirthActivity extends Activity {
@@ -68,7 +64,6 @@ public class BirthActivity extends Activity {
 	int radiobtn;
 	boolean leftClick = false;
 	boolean rightClick = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -338,6 +333,7 @@ public class BirthActivity extends Activity {
 		public void bindView(View view, Context context, Cursor cursor) {
 			Calendar cal = Calendar.getInstance();
 			if (view != null) {
+				int isLunar = cursor.getInt(DatabaseHelper.ISLUNAR_INDEX);
 				ViewHolder viewHolder = new ViewHolder();
 				View birthView = (RelativeLayout) view;
 				viewHolder.avater = (ImageView) birthView
@@ -350,17 +346,18 @@ public class BirthActivity extends Activity {
 						.findViewById(R.id.yearcnt);
 				viewHolder.daycnt = (TextView) birthView
 						.findViewById(R.id.daycnt);
+				viewHolder.day = (TextView)birthView.findViewById(R.id.day);
 
 				viewHolder.name.setText(cursor
 						.getString(DatabaseHelper.NAME_INDEX));
 				viewHolder.date.setText(cursor
 						.getString(DatabaseHelper.BIRTHDAY_INDEX));
-				if (cursor.getInt(DatabaseHelper.ISLUNAR_INDEX) == 0) {
+				if (isLunar == 0) {
 					viewHolder.candle.setImageResource(R.drawable.birth_solar);
 				} else {
 					viewHolder.candle.setImageResource(R.drawable.birth_lunar);
 				}
-
+				// avatar
 				Drawable drawable = context.getResources().getDrawable(
 						R.drawable.avatar_default);
 				BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
@@ -369,13 +366,77 @@ public class BirthActivity extends Activity {
 				BitmapDrawable bbb = new BitmapDrawable(Utility.toRoundCorner(
 						bitmap, 30));
 				viewHolder.avater.setBackgroundDrawable(bbb);
-				
-				viewHolder.yearcnt.setText(String.valueOf(cal.get(Calendar.YEAR)-cursor.getInt(DatabaseHelper.YEAR_INDEX) + 1));
-				Log.i(TAG,"year:" + cal.get(Calendar.YEAR));
-				Log.i(TAG,"day of month:" + cal.get(Calendar.DAY_OF_MONTH));
-				Log.i(TAG,"day of year:" + cal.get(Calendar.DAY_OF_YEAR));
-//				viewHolder.daycnt.setText(text);
+				// count days
+				int year = cursor.getInt(DatabaseHelper.YEAR_INDEX);
+				int month = cursor.getInt(DatabaseHelper.MONTH_INDEX);
+				int day = cursor.getInt(DatabaseHelper.DAY_INDEX);
+				int nowDay = cal.get(Calendar.DAY_OF_MONTH);
+				int nowMonth = cal.get(Calendar.MONTH) + 1;
+				int nowYear = cal.get(Calendar.YEAR);
+				Log.i(TAG, "isLunar:" + isLunar);
+				if (isLunar == 1) {
+					String nowLunar = ChineseCalendar.sCalendarSolarToLundar(
+							nowYear, nowMonth, nowDay);
+					String[] tmp = nowLunar.split("-");
+					nowYear = Integer.parseInt(tmp[0]);
+					nowMonth = Integer.parseInt(tmp[1]);
+					nowDay = Integer.parseInt(tmp[2]);
+				}
 
+				String time = String.valueOf(year + "-" + month + "-" + day);
+				String data = "";
+				int age = -1;
+				try {
+					SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+					Date date = f.parse(time);
+					age = Utility.getAge(date);
+					if (nowMonth > month) {
+						age = age + 1;
+					}else if(nowMonth == month){
+						if(nowDay >= day){
+							age = age+1;
+						}
+					}
+					if (isLunar == 0) {
+						data = getResources().getString(R.string.age);
+					} else {
+						data = getResources().getString(R.string.lunar_age);
+					}
+				} catch (Exception e) {
+
+				}
+
+				String begin = String
+						.valueOf(nowYear + "-" + month + "-" + day);
+
+				String end = String.valueOf(nowYear + "-" + nowMonth + "-"
+						+ nowDay);
+				Log.i(TAG,"nowMonth:" + nowMonth);
+				Log.i(TAG,"month:" + month);
+				if (nowMonth > month) {
+					end = String.valueOf((nowYear + 1) + "-" + month + "-"
+							+ day);
+					begin = String.valueOf(nowYear + "-" + nowMonth + "-"
+							+ nowDay);
+				}else if (nowMonth == month) {
+					if(nowDay > day){
+						end = String.valueOf((nowYear + 1) + "-" + month + "-" + day);
+						begin = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
+					}
+				}
+				long daycnt = Utility.getDays(begin, end);
+				
+				if (daycnt == 0) {
+					data = getResources().getString(R.string.today_birthday);
+					viewHolder.day.setVisibility(View.INVISIBLE);
+					viewHolder.daycnt.setBackgroundResource(R.drawable.today);
+				} else {
+					viewHolder.daycnt.setBackgroundResource(R.drawable.countdays_bg);
+					viewHolder.daycnt.setText(String.valueOf(daycnt));
+					viewHolder.day.setVisibility(View.VISIBLE);
+				}
+				data = String.format(data, age);
+				viewHolder.yearcnt.setText(data);
 			}
 		}
 	}
@@ -387,6 +448,7 @@ public class BirthActivity extends Activity {
 		ImageView candle;
 		TextView yearcnt;
 		TextView daycnt;
+		TextView day;
 
 	}
 
