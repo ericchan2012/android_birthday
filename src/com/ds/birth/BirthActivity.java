@@ -64,6 +64,7 @@ public class BirthActivity extends Activity {
 	int radiobtn;
 	boolean leftClick = false;
 	boolean rightClick = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -346,7 +347,7 @@ public class BirthActivity extends Activity {
 						.findViewById(R.id.yearcnt);
 				viewHolder.daycnt = (TextView) birthView
 						.findViewById(R.id.daycnt);
-				viewHolder.day = (TextView)birthView.findViewById(R.id.day);
+				viewHolder.day = (TextView) birthView.findViewById(R.id.day);
 
 				viewHolder.name.setText(cursor
 						.getString(DatabaseHelper.NAME_INDEX));
@@ -392,9 +393,9 @@ public class BirthActivity extends Activity {
 					age = Utility.getAge(date);
 					if (nowMonth > month) {
 						age = age + 1;
-					}else if(nowMonth == month){
-						if(nowDay >= day){
-							age = age+1;
+					} else if (nowMonth == month) {
+						if (nowDay >= day) {
+							age = age + 1;
 						}
 					}
 					if (isLunar == 0) {
@@ -411,27 +412,36 @@ public class BirthActivity extends Activity {
 
 				String end = String.valueOf(nowYear + "-" + nowMonth + "-"
 						+ nowDay);
-				Log.i(TAG,"nowMonth:" + nowMonth);
-				Log.i(TAG,"month:" + month);
+				Log.i(TAG, "nowMonth:" + nowMonth);
+				Log.i(TAG, "month:" + month);
 				if (nowMonth > month) {
 					end = String.valueOf((nowYear + 1) + "-" + month + "-"
 							+ day);
 					begin = String.valueOf(nowYear + "-" + nowMonth + "-"
 							+ nowDay);
-				}else if (nowMonth == month) {
-					if(nowDay > day){
-						end = String.valueOf((nowYear + 1) + "-" + month + "-" + day);
-						begin = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
+				} else if (nowMonth == month) {
+					if (nowDay > day) {
+						end = String.valueOf((nowYear + 1) + "-" + month + "-"
+								+ day);
+						begin = String.valueOf(nowYear + "-" + nowMonth + "-"
+								+ nowDay);
 					}
 				}
 				long daycnt = Utility.getDays(begin, end);
-				
+
 				if (daycnt == 0) {
-					data = getResources().getString(R.string.today_birthday);
+					if (isLunar == 0) {
+						data = getResources().getString(
+								R.string.today_birthday_solar);
+					} else {
+						data = getResources()
+								.getString(R.string.today_birthday);
+					}
 					viewHolder.day.setVisibility(View.INVISIBLE);
 					viewHolder.daycnt.setBackgroundResource(R.drawable.today);
 				} else {
-					viewHolder.daycnt.setBackgroundResource(R.drawable.countdays_bg);
+					viewHolder.daycnt
+							.setBackgroundResource(R.drawable.countdays_bg);
 					viewHolder.daycnt.setText(String.valueOf(daycnt));
 					viewHolder.day.setVisibility(View.VISIBLE);
 				}

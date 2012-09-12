@@ -8,7 +8,25 @@ public class Person {
 	int isLunar;
 	int ringtype;
 	String ringDays;
+	int isStar;
+	String note;
 	
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public int getIsStar() {
+		return isStar;
+	}
+
+	public void setIsStar(int isStar) {
+		this.isStar = isStar;
+	}
 
 	public int getRingtype() {
 		return ringtype;

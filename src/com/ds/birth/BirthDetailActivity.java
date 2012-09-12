@@ -1,10 +1,12 @@
 package com.ds.birth;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -21,6 +23,7 @@ import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
 import com.ds.utility.BirthConstants;
 import com.ds.utility.ChineseCalendar;
+import com.ds.utility.Lunar;
 import com.ds.utility.Person;
 import com.ds.utility.Utility;
 import com.ds.widget.ImageBtn;
@@ -69,7 +72,7 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 	private static final String LUNAR_YEAR = "lunar_year";
 	private static final String LUNAR_MONTH = "lunar_month";
 	private static final String LUNAR_DAY = "lunar_day";
-	private static final String NOTE = "note";
+//	private static final String NOTE = "note";
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -179,11 +182,9 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 				Person person = new Person();
 				if (mCursor.moveToFirst()) {
 					do {
-						year = mCursor.getInt(DatabaseHelper.YEAR_INDEX);
-						month = mCursor.getInt(DatabaseHelper.MONTH_INDEX);
-						day = mCursor.getInt(DatabaseHelper.DAY_INDEX);
 						person.setName(mCursor
 								.getString(DatabaseHelper.NAME_INDEX));
+						Log.i(TAG, "start query year:" + year);
 						mIsLunar = mCursor.getInt(DatabaseHelper.ISLUNAR_INDEX);
 						person.setIsLunar(mIsLunar);
 						birthday = mCursor
@@ -191,6 +192,11 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 						person.setBirthDay(birthday);
 						gender = mCursor.getInt(DatabaseHelper.SEX_INDEX);
 						person.setGender(gender);
+						year = mCursor.getInt(DatabaseHelper.YEAR_INDEX);
+						month = mCursor.getInt(DatabaseHelper.MONTH_INDEX);
+						day = mCursor.getInt(DatabaseHelper.DAY_INDEX);
+						Log.i(TAG, "year:" + year + " month:" + month + " day:"
+								+ day);
 						if (mIsLunar == 0) {
 							String lunar = ChineseCalendar
 									.sCalendarSolarToLundar(year, month, day);
@@ -226,9 +232,10 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 									.putInt(LUNAR_DAY, day).commit();
 						}
 						note = mCursor.getString(DatabaseHelper.NOTE_INDEX);
-						String tmp = lunarShare.getString(NOTE, "");
-						lunarShare.edit().putString(NOTE, note + tmp).commit();
-
+						// String tmp = lunarShare.getString(NOTE, "");
+						// lunarShare.edit().putString(NOTE, note +
+						// tmp).commit();
+						person.setNote(note);
 						ringtype = mCursor
 								.getInt(DatabaseHelper.RINGTYPE_INDEX);
 						ringdays = mCursor
@@ -246,12 +253,15 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		Log.i(TAG, "birthdate:" + p.getBirthDay());
 		nameTextView.setText(p.getName());
 		mainTextView.setText(p.getBirthDay());
-		noteTextView.setText(lunarShare.getString(NOTE, ""));
+		noteTextView.setText(p.getNote());
 		if (p.getGender() == 1) {
 			genderView.setBackgroundResource(R.drawable.girl);
+		} else {
+			genderView.setBackgroundResource(R.drawable.boy);
 		}
 		if (p.getIsLunar() == 1) {
 			lunarView.setBackgroundResource(R.drawable.nong_blue);
+			solarView.setBackgroundResource(R.drawable.gong_grey);
 			secondaryTextView.setText(String.valueOf(lunarShare
 					.getInt(YEAR, -1))
 					+ "-"
@@ -259,8 +269,16 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 					+ "-" + lunarShare.getInt(DAY, -1));
 		} else {
 			solarView.setBackgroundResource(R.drawable.gong_blue);
-			secondaryTextView.setText(String.valueOf(lunarShare.getInt(
-					LUNAR_YEAR, -1)));
+			lunarView.setBackgroundResource(R.drawable.nong_grey);
+			int tmpYear = lunarShare.getInt(LUNAR_YEAR, -1);
+			int tmpMonth = lunarShare.getInt(LUNAR_MONTH, -1);
+			int tmpDay = lunarShare.getInt(LUNAR_DAY, -1);
+			String[] monthsTmp = getResources().getStringArray(
+					R.array.lunarMonths);
+			String[] daysTmp = getResources().getStringArray(
+					R.array.lunarDaysLong);
+			secondaryTextView.setText(Lunar.getYear(tmpYear)
+					+ monthsTmp[tmpMonth - 1] + daysTmp[tmpDay - 1]);
 		}
 		if (p.getIsLunar() == 1) {
 			getDays(true);
@@ -268,7 +286,7 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 			getDays(false);
 		}
 		String solartmp = getResources().getString(R.string.solaralarm);
-		String lunartmp = getResources().getString(R.string.solaralarm);
+		String lunartmp = getResources().getString(R.string.lunaralarm);
 		String noalarm = getResources().getString(R.string.noalarm);
 		if (p.getRingtype() == 0) {
 			solarAlarmTextView
@@ -293,8 +311,11 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 	protected void onStop() {
 		super.onStop();
 		String tmp = noteTextView.getText().toString();
-		getSharedPreferences(LUNAR_SHARE, 0).edit().putString(NOTE, tmp)
-				.commit();
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.NOTE, tmp);
+		dbHelper.update(values, " _id = " + birthId);
+//		getSharedPreferences(LUNAR_SHARE, 0).edit().putString(NOTE, tmp + note)
+//				.commit();
 	}
 
 	private void getDays(boolean isLunar) {

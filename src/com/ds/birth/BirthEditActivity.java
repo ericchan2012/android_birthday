@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -49,6 +51,8 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	private static final int MODE_ADD = 0;
 	int mMode = 0;
 	ArrayList<String> mRingList = new ArrayList<String>();
+	ArrayList<Integer> mRingCountList = new ArrayList<Integer>();
+	int[] ringcounts = new int[] { 0, 1, 3, 7 };
 	String[] ringItems = null;
 	Resources mRes;
 	boolean[] flags = new boolean[] { true, false, false, false };
@@ -111,6 +115,13 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	boolean showLunar = false;
 	private static final int START_YEAR = 1901;
 	private static final int END_YEAR = 2050;
+	private static final String YEAR = "year";
+	private static final String MONTH = "month";
+	private static final String DAY = "day";
+	private static final String LUNAR_YEAR = "lunar_year";
+	private static final String LUNAR_MONTH = "lunar_month";
+	private static final String LUNAR_DAY = "lunar_day";
+	private static final String SHARE_BIRTH_EDIT = "edit.xml";
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -162,9 +173,63 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 				Person person = new Person();
 				if (mCursor.moveToFirst()) {
 					do {
+						int year = mCursor.getInt(DatabaseHelper.YEAR_INDEX);
+						int month = mCursor.getInt(DatabaseHelper.MONTH_INDEX);
+						int day = mCursor.getInt(DatabaseHelper.DAY_INDEX);
 						person.setName(mCursor
 								.getString(DatabaseHelper.NAME_INDEX));
 						isLunar = mCursor.getInt(DatabaseHelper.ISLUNAR_INDEX);
+						person.setIsLunar(isLunar);
+						isStar = mCursor.getInt(DatabaseHelper.ISSTAR_INDEX);
+						gender = mCursor.getInt(DatabaseHelper.SEX_INDEX);
+						person.setIsStar(isStar);
+						person.setGender(gender);
+						if (isLunar == 0) {
+							String lunar = ChineseCalendar
+									.sCalendarSolarToLundar(year, month, day);
+							String[] lunarStr = lunar.split("-");
+							int lunarYear = Integer.parseInt(lunarStr[0]);
+							int lunarMonth = Integer.parseInt(lunarStr[1]);
+							int lunarDay = Integer.parseInt(lunarStr[2]);
+							Log.i(TAG, "lunarYear: " + lunarYear
+									+ " lunarMonth: " + lunarMonth
+									+ " lunarDay: " + lunarDay);
+							getSharedPreferences(SHARE_BIRTH_EDIT, 0).edit()
+									.putInt(YEAR, year).putInt(MONTH, month)
+									.putInt(DAY, day)
+									.putInt(LUNAR_YEAR, lunarYear)
+									.putInt(LUNAR_MONTH, lunarMonth)
+									.putInt(LUNAR_DAY, lunarDay).commit();
+						} else {
+							String solar = ChineseCalendar
+									.sCalendarLundarToSolar(year, month, day);
+							String[] solarStr = solar.split("-");
+							int solarYear = Integer.parseInt(solarStr[0]);
+							int solarMonth = Integer.parseInt(solarStr[1]);
+							int solarDay = Integer.parseInt(solarStr[2]);
+							Log.i(TAG, "solarYear: " + solarYear
+									+ " solarMonth: " + solarMonth
+									+ " solarDay: " + solarDay);
+							getSharedPreferences(SHARE_BIRTH_EDIT, 0).edit()
+									.putInt(YEAR, solarYear)
+									.putInt(MONTH, solarMonth)
+									.putInt(DAY, solarDay)
+									.putInt(LUNAR_YEAR, year)
+									.putInt(LUNAR_MONTH, month)
+									.putInt(LUNAR_DAY, day).commit();
+						}
+						ringtype = mCursor
+								.getInt(DatabaseHelper.RINGTYPE_INDEX);
+						ringdays = mCursor
+								.getString(DatabaseHelper.RINGDAY_INDEX);
+						note = mCursor.getString(DatabaseHelper.NOTE_INDEX);
+						phoneNum = mCursor
+								.getString(DatabaseHelper.PHONE_NUMBER_INDEX);
+						String birth = mCursor
+								.getString(DatabaseHelper.BIRTHDAY_INDEX);
+						person.setBirthDay(birth);
+						person.setRingDays(ringdays);
+						person.setRingtype(ringtype);
 						updateEdit(person);
 					} while (mCursor.moveToNext());
 				}
@@ -174,6 +239,61 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 
 	private void updateEdit(Person p) {
 		nameEdit.setText(p.getName());
+		if (p.getIsStar() == 1) {
+			mStar.setChecked(true);
+		}
+		if (p.getGender() == 1) {
+			genderText.setText(R.string.female);
+		} else {
+			genderText.setText(R.string.male);
+		}
+		mBirthdayTextView.setText(p.getBirthDay());
+		if (p.getIsLunar() == 1) {
+			int year = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(YEAR,
+					-1);
+			int month = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(MONTH,
+					-1);
+			int day = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(DAY, -1);
+			settingYear = year;
+			settingMonth = month;
+			settingDay = day;
+			mBirthAttach
+					.setText(String.valueOf(year + "-" + month + "-" + day));
+			showLunar = true;
+		} else {
+			int tmpYear = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					LUNAR_YEAR, -1);
+			int tmpMonth = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					LUNAR_MONTH, -1);
+			int tmpDay = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					LUNAR_DAY, -1);
+			String[] monthsTmp = getResources().getStringArray(
+					R.array.lunarMonths);
+			String[] daysTmp = getResources().getStringArray(
+					R.array.lunarDaysLong);
+			mBirthAttach.setText(Lunar.getYear(tmpYear)
+					+ monthsTmp[tmpMonth - 1] + daysTmp[tmpDay - 1]);
+			settingYear = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					YEAR, -1);
+			settingMonth = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					MONTH, -1);
+			settingDay = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(DAY,
+					-1);
+			showLunar = false;
+		}
+		if (p.getRingtype() != -1) {
+			String ringtypeStr[] = getResources().getStringArray(
+					R.array.ringtypes);
+			ringTypeText.setText(ringtypeStr[p.getRingtype()]);
+		} else {
+			ringTypeText.setText(R.string.no_remind);
+		}
+		ringDaysText.setText(p.getRingDays());
+		noteEdit.setText(note);
+		phoneNumEdit.setText(phoneNum);
+		defaultRingType = p.getRingtype();
+		defaultSexSelect = p.getGender();
+
 	}
 
 	private void initViews() {
@@ -234,15 +354,20 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.tv_ringdays:
 			mRingList.clear();
+			mRingCountList.clear();
 			for (int i = 0; i < flags.length; i++) {
 				if (flags[i]) {
 					mRingList.add(ringItems[i]);
+					mRingCountList.add(ringcounts[i]);
 				}
 			}
 			createCheckedDialog(R.string.ring_title, flags);
 			break;
 		case R.id.tv_ringtype:
 			if (!mBirthdayTextView.getText().equals("")) {
+				if (mMode == MODE_EDIT) {
+					defaultRingType = ringtype;
+				}
 				createOptionDialog(R.string.ringtype, mRingTypeItem,
 						R.id.tv_ringtype, defaultRingType);
 			}
@@ -345,7 +470,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						if (isShowYear) {
 							settingYear = solarYear;
 						} else {
-							settingYear = 0;
+							settingYear = cal.get(Calendar.YEAR);
 						}
 						settingMonth = month.getCurrentItem() + 1;
 						settingDay = day.getCurrentItem() + 1;
@@ -403,16 +528,27 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private void initLunar(int mode) {
+	private void initLunar(final int mode) {
 		pickerLunar.setImageResource(R.drawable.nong_blue);
 		pickerSolar.setImageResource(R.drawable.gong_grey);
+		if (mode == MODE_EDIT) {
+			currentYear = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					LUNAR_YEAR, -1);
+			currentMonth = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					LUNAR_MONTH, -1) - 1;
+			currentDay = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					LUNAR_DAY, -1) - 1;
+		}
 		Calendar calendar = Calendar.getInstance();
 		Lunar lunar = new Lunar(calendar);
 		final String lunarStr[] = (lunar.toString()).split("-");
 		String temp[] = mRes.getStringArray(R.array.lunarMonths);
+		months = new String[12];
 		for (int i = 0; i < temp.length; i++) {
-			if (lunarStr[0].equals(temp[i])) {
-				currentMonth = i;
+			if (mode == MODE_ADD) {
+				if (lunarStr[0].equals(temp[i])) {
+					currentMonth = i;
+				}
 			}
 			months[i] = temp[i] + "   ";
 		}
@@ -420,19 +556,16 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		month.setAdapter(monthAdapter);
 
 		year.setCurrentItem(currentYear - START_YEAR);
-		Log.i(TAG, "after lunarStr[0]:" + lunarStr[0]);
 		Log.i(TAG, "currentMonth:" + currentMonth);
 		month.setCurrentItem(currentMonth);
-		final int daycnt = Lunar.monthDays(currentYear, currentMonth);
-		String tmp[] = null;
-		if (daycnt == 29) {
-			tmp = mRes.getStringArray(R.array.lunarDays);
-		} else if (daycnt == 30) {
-			tmp = mRes.getStringArray(R.array.lunarDaysLong);
-		}
-		for (int i = 0; i < tmp.length; i++) {
-			if (lunarStr[1].equals(tmp[i])) {
-				currentDay = i;
+		int daycnt = Lunar.monthDays(currentYear, currentMonth);
+		String tmp[] = mRes.getStringArray(R.array.lunarDaysLong);
+		days = new String[daycnt];
+		for (int i = 0; i < daycnt; i++) {
+			if (mode == MODE_ADD) {
+				if (lunarStr[1].equals(tmp[i])) {
+					currentDay = i;
+				}
 			}
 			days[i] = tmp[i] + "   ";
 		}
@@ -450,15 +583,16 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			public void onChanged(WheelView wheel, int oldValue, int newValue) {
 				Log.i(TAG, "oldValue:" + oldValue);
 				Log.i(TAG, "newValue:" + newValue);
-				String tmp2[] = null;
-				if (daycnt == 29) {
-					tmp2 = mRes.getStringArray(R.array.lunarDays);
-				} else if (daycnt == 30) {
-					tmp2 = mRes.getStringArray(R.array.lunarDaysLong);
-				}
-				for (int i = 0; i < tmp2.length; i++) {
-					if (lunarStr[1].equals(tmp2[i])) {
-						currentDay = i;
+				String tmp2[] = mRes.getStringArray(R.array.lunarDaysLong);
+				int daycnt = Lunar.monthDays(currentYear, newValue);
+				Log.i(TAG, "dayCnt:" + daycnt);
+				days = new String[daycnt];
+				for (int i = 0; i < daycnt; i++) {
+					Log.i(TAG, "tmp2[" + i + "]:" + tmp2[i]);
+					if (mode == MODE_ADD) {
+						if (lunarStr[1].equals(tmp2[i])) {
+							currentDay = i;
+						}
 					}
 					days[i] = tmp2[i] + "   ";
 				}
@@ -476,6 +610,13 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			currentYear = calendar.get(Calendar.YEAR);
 			currentMonth = calendar.get(Calendar.MONTH);
 			currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+		} else {
+			currentYear = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					YEAR, -1);
+			currentMonth = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(
+					MONTH, -1) - 1;
+			currentDay = getSharedPreferences(SHARE_BIRTH_EDIT, 0).getInt(DAY,
+					-1);
 		}
 		months = new String[12];
 		for (int i = 0; i < 12; i++) {
@@ -487,17 +628,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 
 		year.setCurrentItem(currentYear - START_YEAR);
 		month.setCurrentItem(currentMonth);
-		if (currentMonth == 1) {
-			days = new String[28];
-
-		} else {
-			days = new String[31];
-
-		}
-		for (int i = 0; i < days.length; i++) {
-			days[i] = String.valueOf(i + 1) + "   "
-					+ mRes.getString(R.string.day);
-		}
+		confirmDay(currentMonth);
 		dayAdapter = new ArrayWheelAdapter<String>(days);
 		day.setAdapter(dayAdapter);
 		day.setCurrentItem(currentDay - 1);
@@ -512,21 +643,49 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			public void onChanged(WheelView wheel, int oldValue, int newValue) {
 				Log.i(TAG, "oldValue:" + oldValue);
 				Log.i(TAG, "newValue:" + newValue);
-				if (newValue == 1) {
-					days = new String[28];
-
-				} else {
-					days = new String[31];
-
-				}
-				for (int i = 0; i < days.length; i++) {
-					days[i] = String.valueOf(i + 1) + "   "
-							+ mRes.getString(R.string.day);
-				}
+				confirmDay(newValue);
 				dayAdapter = new ArrayWheelAdapter<String>(days);
 				day.setAdapter(dayAdapter);
 			}
 		});
+	}
+
+	private void confirmDay(int m) {
+		switch (m) {
+		case 0:
+		case 2:
+		case 4:
+		case 6:
+		case 7:
+		case 9:
+		case 11:
+			days = new String[31];
+			break;
+		case 3:
+		case 5:
+		case 8:
+		case 10:
+			days = new String[30];
+			break;
+		default:
+			if (isLeapYear(currentYear)) {
+				days = new String[29];
+			} else {
+				days = new String[28];
+			}
+		}
+		for (int i = 0; i < days.length; i++) {
+			days[i] = String.valueOf(i + 1) + "   "
+					+ mRes.getString(R.string.day);
+		}
+	}
+
+	private boolean isLeapYear(int year) {
+		if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private void updateData(int mode) {
@@ -582,6 +741,78 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		}
 		contentValues.put(DatabaseHelper.NOTE, note);
 		contentValues.put(DatabaseHelper.PHONE_NUMBER, phoneNum);
+		// mRingCountList
+		if (isLunar == 1) {
+			Log.i(TAG, ChineseCalendar.sCalendarLundarToSolar(settingYear,
+					settingMonth, settingDay));
+			String lunarCal = ChineseCalendar.sCalendarLundarToSolar(
+					settingYear, settingMonth, settingDay);
+			String[] lunarCalStr = lunarCal.split("-");
+			int solarYear = Integer.parseInt(lunarCalStr[0]);
+			int solarMonth = Integer.parseInt(lunarCalStr[1]);
+			int solarDay = Integer.parseInt(lunarCalStr[2]);
+			switch (ringtype) {
+			case 0:// 仅提醒公历生日
+				setSolarAlarm(solarMonth, solarDay);
+				break;
+			case 1:// 仅提醒农历生日
+				setLunarAlarm(settingMonth, settingDay);
+				break;
+			case 2:// 两个都提醒
+				setSolarAlarm(solarMonth, solarDay);
+				setLunarAlarm(settingMonth, settingDay);
+				break;
+			default:
+				break;
+			}
+		} else {
+			Log.i(TAG, ChineseCalendar.sCalendarLundarToSolar(settingYear,
+					settingMonth, settingDay));
+			String solarCal = ChineseCalendar.sCalendarSolarToLundar(
+					settingYear, settingMonth, settingDay);
+			String[] solarCalStr = solarCal.split("-");
+			int lunarYear = Integer.parseInt(solarCalStr[0]);
+			int lunarMonth = Integer.parseInt(solarCalStr[1]);
+			int lunarDay = Integer.parseInt(solarCalStr[2]);
+			switch (ringtype) {
+			case 0:// 仅提醒公历生日
+				mRingCountList.size();
+				setSolarAlarm(settingMonth, settingDay);
+				break;
+			case 1:// 仅提醒农历生日
+				setLunarAlarm(lunarMonth, lunarDay);
+				break;
+			case 2:// 两个都提醒
+//				setSolarAlarm(settingMonth, settingDay);
+//				setLunarAlarm(lunarMonth, lunarDay);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	private void setLunarAlarm(int month, int day) {
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.YEAR, 2011);
+		c.set(Calendar.MONTH, month - 1);// 也可以填数字，0-11,一月为0
+		c.set(Calendar.DAY_OF_MONTH, day);
+		c.set(Calendar.HOUR_OF_DAY, 06);
+		c.set(Calendar.MINUTE, 00);
+		c.set(Calendar.SECOND, 00);
+		Intent intent = new Intent(this, AlarmReceiver.class);
+		PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 0);
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		am.cancel(pi);
+		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
+	}
+
+	private void setSolarAlarm(int month, int day) {
+
+	}
+
+	private void setLunarAndSolarAlarm(int month, int day) {
+
 	}
 
 	private void loadMenu() {
@@ -651,8 +882,10 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						flags[which] = isChecked;
 						if (flags[which]) {
 							mRingList.add(ringItems[which]);
+							mRingCountList.add(ringcounts[which]);
 						} else {
 							mRingList.remove(ringItems[which]);
+							mRingCountList.remove(ringcounts[which]);
 						}
 					}
 				});

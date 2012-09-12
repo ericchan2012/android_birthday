@@ -39,4 +39,12 @@ public class MyEditText extends LinearLayout {
 		tv.setText(resId);
 	}
 
+	public String getEditText() {
+		return et.getText().toString();
+	}
+	
+	public void setEditText(String text){
+		et.setText(text);
+	}
+
 }

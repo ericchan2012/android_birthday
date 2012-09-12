@@ -27,13 +27,6 @@
             android:hint="未设置"
             android:textColor="#ff999999"
             android:textSize="16.0dip" />
-
-        <ImageView
-            android:id="@+id/send_sms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10.0dip"
-            android:background="@drawable/add_sms" />
     </LinearLayout>
 
     <TextView

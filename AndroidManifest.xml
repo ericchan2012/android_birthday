@@ -23,6 +23,8 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:icon="@drawable/appicon"
@@ -67,7 +69,9 @@
         </activity>
         <activity android:name=".AppStoreActivity" >
         </activity>
-        <activity android:name=".SendBlessActivity" >
+        <activity
+            android:name=".SendBlessActivity"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity android:name=".RankingActivity" >
         </activity>

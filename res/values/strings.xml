@@ -44,6 +44,7 @@
     <string name="lunar_age">距离%d岁农历生日</string>
     <string name="birthover">今年生日已经过完</string>
     <string name="today_birthday">%d岁农历生日</string>
+    <string name="today_birthday_solar">%d岁公历生日</string>
     <string name="age_constants">距</string>
     <string name="ageShowsolar">岁公历生日</string>
     <string name="ageShowlunar">岁农历生日</string>
@@ -54,5 +55,8 @@
     <string name="lucky">每日运势</string>
     <string name="wiki">生日百科</string>
     <string name="phone">手机号码:</string>
-
+    <string name="send">发送</string>
+    <string name="selectcontact">选择</string>
+ <string name="male">男</string>
+  <string name="female">女</string>
 </resources>

@@ -1,12 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/birth_detail_bg" >
 
-    <com.ds.widget.MyEditText
-        android:id="@+id/myedittext"
+    <include
+        android:id="@+id/head"
+        layout="@layout/birth_detail_head" />
+
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/head" >
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <com.ds.widget.MyEditText
+                    android:id="@+id/phone"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:paddingLeft="10dip" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <EditText
+                    android:id="@+id/message"
+                    android:layout_width="fill_parent"
+                    android:layout_height="120.0dip"
+                    android:background="@drawable/edit_bg"
+                    android:gravity="left"
+                    android:padding="10.0dip"
+                    android:text="生日快乐\\^o^/"
+                    android:textSize="16.0sp" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="40.0dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/sendsmstitle"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1.0"
+                        android:gravity="left|center"
+                        android:paddingLeft="10.0dip"
+                        android:text="定时发送短信："
+                        android:textColor="@color/black"
+                        android:textSize="20.0sp" />
+
+                    <ToggleButton
+                        android:id="@+id/plan_sms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30.0dip"
+                        android:layout_gravity="right|center"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/btn_toggle_bg"
+                        android:disabledAlpha="?android:disabledAlpha"
+                        android:textOff="@null"
+                        android:textOn="@null" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/selectcontact"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selectcontact" />
+
+                <TextView
+                    android:id="@+id/selectsms"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40.0dip"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="20.0dip"
+                    android:background="@drawable/selectsms_bg"
+                    android:gravity="center"
+                    android:text="精选祝福短信"
+                    android:textColor="@color/black"
+                    android:textSize="20.0sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -99,6 +99,11 @@ public class Lunar {
 		return (cyclicalm(num));
 	}
 
+	public static String getYear(int year) {
+		int num = year - 1900 + 36;
+		return (cyclicalm(num));
+	}
+
 	/** */
 	/**
 	 * 传出y年m月d日对应的农历. yearCyl3:农历年与1864的相差数 ? monCyl4:从1900年1月31日以来,闰月数
@@ -195,8 +200,8 @@ public class Lunar {
 		else
 			return chineseTen[day / 10] + chineseNumber[n];
 	}
-	
-	public String getLunarYear(){
+
+	public String getLunarYear() {
 		return cyclical();
 	}
 
