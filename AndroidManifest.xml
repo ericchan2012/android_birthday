@@ -24,7 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:icon="@drawable/appicon"
@@ -79,9 +79,22 @@
         </activity>
         <activity android:name=".MoreActivity" >
         </activity>
+        <activity android:name=".AlarmActivity" >
+        </activity>
+        <activity android:name=".RenrenLoginActivity" >
+        </activity>
+        <activity android:name=".RenrenFriendsActivity" >
+        </activity>
         <activity
-            android:name="com.ds.birth.CityListActivity"
-            android:screenOrientation="portrait" />
+            android:name=".AlarmDialog"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity android:name=".TestAlarmActivity" >
+        </activity>
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:process=".abc" />
     </application>
 
 </manifest>

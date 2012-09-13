@@ -1,16 +1,18 @@
 package com.ds.birth;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class RankingActivity extends Activity {
+public class RankingActivity extends Activity implements OnItemClickListener {
 
 	private static String[] datas = null;
 
@@ -29,6 +31,7 @@ public class RankingActivity extends Activity {
 		mineListView.setAdapter(mAdapter);
 		title = (TextView) findViewById(R.id.module_title_text_view);
 		title.setText(R.string.rank_title);
+		mineListView.setOnItemClickListener(this);
 	}
 
 	private BaseAdapter mAdapter = new BaseAdapter() {
@@ -56,5 +59,16 @@ public class RankingActivity extends Activity {
 		}
 
 	};
+
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent();
+		switch(arg2){
+		case 0:
+			intent.setClass(this, RenrenLoginActivity.class);
+			startActivity(intent);
+			break;
+		}
+	}
 
 }

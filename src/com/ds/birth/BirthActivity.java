@@ -121,6 +121,10 @@ public class BirthActivity extends Activity {
 				// add birthday
 				Intent intent = new Intent(BirthConstants.ACTION_ADD_BIRTH);
 				startActivityForResult(intent, ADD_BIRTHDAY);
+				// Intent it = new Intent(BirthActivity.this,
+				// TestAlarmActivity.class);
+				// it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				// startActivity(it);
 			}
 		});
 
@@ -459,7 +463,6 @@ public class BirthActivity extends Activity {
 		TextView yearcnt;
 		TextView daycnt;
 		TextView day;
-
 	}
 
 }

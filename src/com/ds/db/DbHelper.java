@@ -40,6 +40,14 @@ public class DbHelper {
 		return cur;
 	}
 
+	public Cursor queryAlarm(String where) {
+		SQLiteDatabase db = databaseHelper.getWritableDatabase();
+		Cursor cur = db.query(BIRTH_TABLE, DatabaseHelper.QUERY_ALL_PROJECTION,
+				where, null, null, null, null);
+
+		return cur;
+	}
+
 	public Cursor queryStar() {
 		SQLiteDatabase db = databaseHelper.getWritableDatabase();
 		Cursor cur = db.query(BIRTH_TABLE, DatabaseHelper.QUERY_ALL_PROJECTION,

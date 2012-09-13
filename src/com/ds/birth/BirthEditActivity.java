@@ -354,14 +354,12 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.tv_ringdays:
 			mRingList.clear();
-			mRingCountList.clear();
 			for (int i = 0; i < flags.length; i++) {
 				if (flags[i]) {
 					mRingList.add(ringItems[i]);
-					mRingCountList.add(ringcounts[i]);
 				}
 			}
-			createCheckedDialog(R.string.ring_title, flags);
+			// createCheckedDialog(R.string.ring_title);
 			break;
 		case R.id.tv_ringtype:
 			if (!mBirthdayTextView.getText().equals("")) {
@@ -392,17 +390,17 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			showPickViewDialog();
 			break;
 		case R.id.selectyear:
-			if (isShowYear) {
-				datePickerLayout.findViewById(R.id.year).setVisibility(
-						View.GONE);
-				pickerSelectYear.setImageResource(R.drawable.displayyear);
-				isShowYear = false;
-			} else {
-				isShowYear = true;
-				datePickerLayout.findViewById(R.id.year).setVisibility(
-						View.VISIBLE);
-				pickerSelectYear.setImageResource(R.drawable.ignoreyear);
-			}
+			// if (isShowYear) {
+			// datePickerLayout.findViewById(R.id.year).setVisibility(
+			// View.GONE);
+			// pickerSelectYear.setImageResource(R.drawable.displayyear);
+			// isShowYear = false;
+			// } else {
+			// isShowYear = true;
+			// datePickerLayout.findViewById(R.id.year).setVisibility(
+			// View.VISIBLE);
+			// pickerSelectYear.setImageResource(R.drawable.ignoreyear);
+			// }
 			break;
 		case R.id.lunar:
 			showLunar = true;
@@ -699,15 +697,67 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		generateData();
 		if (mode == MODE_ADD) {
 			id = mDbHelper.insert(contentValues);
+			setAlarm((int) id);
 		} else if (mode == MODE_EDIT) {
 			String where = "_id = " + mId;
 			returnUpdateId = mDbHelper.update(contentValues, where);
+			setAlarm(mId);
 		}
 
 		Log.i(TAG, "id:" + id);
 		if (id > 0 || returnUpdateId > 0) {
 			setResult(Activity.RESULT_OK);
 			BirthEditActivity.this.finish();
+		}
+	}
+
+	private void setAlarm(int id) {
+		if (isLunar == 1) {
+			Log.i(TAG, ChineseCalendar.sCalendarLundarToSolar(settingYear,
+					settingMonth, settingDay));
+			String lunarCal = ChineseCalendar.sCalendarLundarToSolar(
+					settingYear, settingMonth, settingDay);
+			String[] lunarCalStr = lunarCal.split("-");
+			int solarYear = Integer.parseInt(lunarCalStr[0]);
+			int solarMonth = Integer.parseInt(lunarCalStr[1]);
+			int solarDay = Integer.parseInt(lunarCalStr[2]);
+			switch (ringtype) {
+			case 0:// 仅提醒公历生日
+				setSolarAlarm(solarMonth, solarDay, id);
+				break;
+			case 1:// 仅提醒农历生日
+				setLunarAlarm(settingMonth, settingDay, id);
+				break;
+			case 2:// 两个都提醒
+				setSolarAlarm(solarMonth, solarDay, id);
+				setLunarAlarm(settingMonth, settingDay, id);
+				break;
+			default:
+				break;
+			}
+		} else {
+			Log.i(TAG, ChineseCalendar.sCalendarLundarToSolar(settingYear,
+					settingMonth, settingDay));
+			String solarCal = ChineseCalendar.sCalendarSolarToLundar(
+					settingYear, settingMonth, settingDay);
+			String[] solarCalStr = solarCal.split("-");
+			int lunarYear = Integer.parseInt(solarCalStr[0]);
+			int lunarMonth = Integer.parseInt(solarCalStr[1]);
+			int lunarDay = Integer.parseInt(solarCalStr[2]);
+			switch (ringtype) {
+			case 0:// 仅提醒公历生日
+				setSolarAlarm(settingMonth, settingDay, id);
+				break;
+			case 1:// 仅提醒农历生日
+				setLunarAlarm(lunarMonth, lunarDay, id);
+				break;
+			case 2:// 两个都提醒
+				setSolarAlarm(settingMonth, settingDay, id);
+				setLunarAlarm(lunarMonth, lunarDay, id);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -741,78 +791,71 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		}
 		contentValues.put(DatabaseHelper.NOTE, note);
 		contentValues.put(DatabaseHelper.PHONE_NUMBER, phoneNum);
-		// mRingCountList
-		if (isLunar == 1) {
-			Log.i(TAG, ChineseCalendar.sCalendarLundarToSolar(settingYear,
-					settingMonth, settingDay));
-			String lunarCal = ChineseCalendar.sCalendarLundarToSolar(
-					settingYear, settingMonth, settingDay);
-			String[] lunarCalStr = lunarCal.split("-");
-			int solarYear = Integer.parseInt(lunarCalStr[0]);
-			int solarMonth = Integer.parseInt(lunarCalStr[1]);
-			int solarDay = Integer.parseInt(lunarCalStr[2]);
-			switch (ringtype) {
-			case 0:// 仅提醒公历生日
-				setSolarAlarm(solarMonth, solarDay);
-				break;
-			case 1:// 仅提醒农历生日
-				setLunarAlarm(settingMonth, settingDay);
-				break;
-			case 2:// 两个都提醒
-				setSolarAlarm(solarMonth, solarDay);
-				setLunarAlarm(settingMonth, settingDay);
-				break;
-			default:
-				break;
-			}
+		for (int i = 0; i < flags.length; i++) {
+			Log.i(TAG, "flags[" + i + "]==" + flags[i]);
+		}
+		if (flags[0]) {
+			contentValues.put(DatabaseHelper.TODAY, ringcounts[0]);
 		} else {
-			Log.i(TAG, ChineseCalendar.sCalendarLundarToSolar(settingYear,
-					settingMonth, settingDay));
-			String solarCal = ChineseCalendar.sCalendarSolarToLundar(
-					settingYear, settingMonth, settingDay);
-			String[] solarCalStr = solarCal.split("-");
-			int lunarYear = Integer.parseInt(solarCalStr[0]);
-			int lunarMonth = Integer.parseInt(solarCalStr[1]);
-			int lunarDay = Integer.parseInt(solarCalStr[2]);
-			switch (ringtype) {
-			case 0:// 仅提醒公历生日
-				mRingCountList.size();
-				setSolarAlarm(settingMonth, settingDay);
-				break;
-			case 1:// 仅提醒农历生日
-				setLunarAlarm(lunarMonth, lunarDay);
-				break;
-			case 2:// 两个都提醒
-//				setSolarAlarm(settingMonth, settingDay);
-//				setLunarAlarm(lunarMonth, lunarDay);
-				break;
-			default:
-				break;
-			}
+			contentValues.put(DatabaseHelper.TODAY, -1);
+		}
+		if (flags[1]) {
+			contentValues.put(DatabaseHelper.AHEAD_ONE_DAY, ringcounts[1]);
+		} else {
+			contentValues.put(DatabaseHelper.AHEAD_ONE_DAY, -1);
+		}
+		if (flags[2]) {
+			contentValues.put(DatabaseHelper.AHEAD_THREE_DAY, ringcounts[2]);
+		} else {
+			contentValues.put(DatabaseHelper.AHEAD_THREE_DAY, -1);
+		}
+		if (flags[3]) {
+			contentValues.put(DatabaseHelper.AHEAD_SEVEN_DAY, ringcounts[3]);
+		} else {
+			contentValues.put(DatabaseHelper.AHEAD_SEVEN_DAY, -1);
 		}
 	}
 
-	private void setLunarAlarm(int month, int day) {
+	private void setLunarAlarm(int month, int day, int id) {
 		Calendar c = Calendar.getInstance();
-		c.set(Calendar.YEAR, 2011);
+		if (month < c.get(Calendar.MONTH)) {
+			c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
+		} else if (month == c.get(Calendar.MONTH)) {
+			if (day < c.get(Calendar.DAY_OF_MONTH)) {
+				c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
+			}
+		}
 		c.set(Calendar.MONTH, month - 1);// 也可以填数字，0-11,一月为0
 		c.set(Calendar.DAY_OF_MONTH, day);
 		c.set(Calendar.HOUR_OF_DAY, 06);
 		c.set(Calendar.MINUTE, 00);
 		c.set(Calendar.SECOND, 00);
 		Intent intent = new Intent(this, AlarmReceiver.class);
-		PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 0);
+		PendingIntent pi = PendingIntent.getBroadcast(this, id, intent, 0);
 		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 		am.cancel(pi);
 		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
 	}
 
-	private void setSolarAlarm(int month, int day) {
-
-	}
-
-	private void setLunarAndSolarAlarm(int month, int day) {
-
+	private void setSolarAlarm(int month, int day, int id) {
+		Calendar c = Calendar.getInstance();
+		if (month < c.get(Calendar.MONTH)) {
+			c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
+		} else if (month == c.get(Calendar.MONTH)) {
+			if (day < c.get(Calendar.DAY_OF_MONTH)) {
+				c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
+			}
+		}
+		c.set(Calendar.MONTH, month - 1);// 也可以填数字，0-11,一月为0
+		c.set(Calendar.DAY_OF_MONTH, day);
+		c.set(Calendar.HOUR_OF_DAY, 06);
+		c.set(Calendar.MINUTE, 00);
+		c.set(Calendar.SECOND, 00);
+		Intent intent = new Intent(this, AlarmReceiver.class);
+		PendingIntent pi2 = PendingIntent.getBroadcast(this, id, intent, 0);
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		am.cancel(pi2);
+		am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi2);
 	}
 
 	private void loadMenu() {
@@ -871,7 +914,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		builder.create().show();
 	}
 
-	private void createCheckedDialog(int title, final boolean[] flags) {
+	private void createCheckedDialog(int title) {
 		Builder builder = new android.app.AlertDialog.Builder(this);
 		builder.setIcon(R.drawable.ic_launcher);
 		builder.setTitle(title);
@@ -882,10 +925,8 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						flags[which] = isChecked;
 						if (flags[which]) {
 							mRingList.add(ringItems[which]);
-							mRingCountList.add(ringcounts[which]);
 						} else {
 							mRingList.remove(ringItems[which]);
-							mRingCountList.remove(ringcounts[which]);
 						}
 					}
 				});

@@ -24,9 +24,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String MONTH = "month";
 	public static final String DAY = "day";
 	public static final String TYPE = "type";// 1 is me,0 is not me
+	public static final String AHEAD_ONE_DAY = "one_day";
+	public static final String TODAY = "today";
+	public static final String AHEAD_THREE_DAY = "three_day";
+	public static final String AHEAD_SEVEN_DAY = "seven_day";
 	public static String[] QUERY_ALL_PROJECTION = { ID, NAME, SEX, BIRTHDAY,
 			RINGTYPE, RINGDAY, PHONE_NUMBER, NOTE, ISSTAR, ISLUNAR, YEAR,
-			MONTH, DAY, TYPE };
+			MONTH, DAY, TYPE, TODAY, AHEAD_ONE_DAY, AHEAD_THREE_DAY,
+			AHEAD_SEVEN_DAY };
 	public static final int ID_INDEX = 0;
 	public static final int NAME_INDEX = 1;
 	public static final int SEX_INDEX = 2;
@@ -41,6 +46,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final int MONTH_INDEX = 11;
 	public static final int DAY_INDEX = 12;
 	public static final int TYPE_INDEX = 13;
+	public static final int TODAY_INDEX = 14;
+	public static final int AHEAD_ONE_DAY_INDEX = 15;
+	public static final int AHEAD_THREE_DAY_INDEX = 16;
+	public static final int AHEAD_SEVEN_DAY_INDEX = 17;
 
 	private static final String BIRTH_TABLE = "birth";
 
@@ -55,15 +64,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
 		String sql = "CREATE TABLE IF NOT EXISTS " + BIRTH_TABLE
 				+ " (_id INTEGER PRIMARY KEY autoincrement, " + NAME
 				+ " TEXT NOT NULL,  " + SEX + " INTEGER DEFAULT 0, " + BIRTHDAY
 				+ " TEXT, " + RINGTYPE + " INTEGER DEFAULT 0," + RINGDAY
 				+ " TEXT, " + PHONE_NUMBER + " TEXT, " + NOTE + " TEXT,"
 				+ ISSTAR + " INTEGER DEFAULT 1," + ISLUNAR
-				+ " INTEGER DEFAULT 0, " + YEAR + " INTEGER," + MONTH + " INTEGER,"
-				+ DAY + " INTEGER," + TYPE + " INTEGER DEFAULT 0" + " )";
+				+ " INTEGER DEFAULT 0, " + YEAR + " INTEGER," + MONTH
+				+ " INTEGER," + DAY + " INTEGER," + TYPE
+				+ " INTEGER DEFAULT 0," + TODAY + " INTEGER DEFAULT -1,"
+				+ AHEAD_ONE_DAY + " INTEGER DEFAULT -1," + AHEAD_THREE_DAY
+				+ " INTEGER DEFAULT -1," + AHEAD_SEVEN_DAY
+				+ " INTEGER DEFAULT -1" + " )";
 		db.execSQL(sql);
 	}
 
@@ -96,6 +108,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			}
 		}
 	}
+
 	public SQLiteDatabase getDatabase(SQLiteDatabase mDatabase,
 			Context mContext, String mName, CursorFactory mFactory) {
 		if (mDatabase != null && mDatabase.isOpen() && !mDatabase.isReadOnly()) {
