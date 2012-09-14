@@ -28,10 +28,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String TODAY = "today";
 	public static final String AHEAD_THREE_DAY = "three_day";
 	public static final String AHEAD_SEVEN_DAY = "seven_day";
+	public static final String AVATAR = "avatar";
 	public static String[] QUERY_ALL_PROJECTION = { ID, NAME, SEX, BIRTHDAY,
 			RINGTYPE, RINGDAY, PHONE_NUMBER, NOTE, ISSTAR, ISLUNAR, YEAR,
 			MONTH, DAY, TYPE, TODAY, AHEAD_ONE_DAY, AHEAD_THREE_DAY,
-			AHEAD_SEVEN_DAY };
+			AHEAD_SEVEN_DAY,AVATAR };
 	public static final int ID_INDEX = 0;
 	public static final int NAME_INDEX = 1;
 	public static final int SEX_INDEX = 2;
@@ -50,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final int AHEAD_ONE_DAY_INDEX = 15;
 	public static final int AHEAD_THREE_DAY_INDEX = 16;
 	public static final int AHEAD_SEVEN_DAY_INDEX = 17;
-
+	public static final int AVATAR_INDEX = 18;
 	private static final String BIRTH_TABLE = "birth";
 
 	public DatabaseHelper(Context context, String name, CursorFactory factory,
@@ -75,7 +76,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				+ " INTEGER DEFAULT 0," + TODAY + " INTEGER DEFAULT -1,"
 				+ AHEAD_ONE_DAY + " INTEGER DEFAULT -1," + AHEAD_THREE_DAY
 				+ " INTEGER DEFAULT -1," + AHEAD_SEVEN_DAY
-				+ " INTEGER DEFAULT -1" + " )";
+				+ " INTEGER DEFAULT -1," + AVATAR + " TEXT" + " )";
 		db.execSQL(sql);
 	}
 

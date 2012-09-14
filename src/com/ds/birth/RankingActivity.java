@@ -63,9 +63,13 @@ public class RankingActivity extends Activity implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent();
-		switch(arg2){
+		switch (arg2) {
 		case 0:
 			intent.setClass(this, RenrenLoginActivity.class);
+			startActivity(intent);
+			break;
+		case 1:
+			intent.setClass(this, KaixinLoginActivity.class);
 			startActivity(intent);
 			break;
 		}

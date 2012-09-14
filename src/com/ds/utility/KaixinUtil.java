@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class RenrenUtil {
+public class KaixinUtil {
 	public static String access_token;
 	public static String expires_in;
 

@@ -53,7 +53,11 @@ public class Utility {
 			long lBeginTime = date.getTime();
 			Date td2 = (new SimpleDateFormat("yyyy-MM-dd")).parse(end);
 			long lEndTime = td2.getTime();
-			iDay = ((lEndTime - lBeginTime) / (24 * 60 * 60 * 1000));
+			if (lBeginTime > lEndTime) {
+				iDay = ((lBeginTime - lEndTime) / (24 * 60 * 60 * 1000));
+			} else {
+				iDay = ((lEndTime - lBeginTime) / (24 * 60 * 60 * 1000));
+			}
 			return iDay;
 		} catch (ParseException e) {
 			e.printStackTrace();

@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 
+import com.ds.kaixin.FriendInfo;
 import com.ds.utility.Renren;
 
 public class AsyncImageLoader {
@@ -25,6 +26,39 @@ public class AsyncImageLoader {
 			final ImageCallback imageCallback) {
 		final String imageId = renren.getId();
 		final String imageURL = renren.getHeadurl();
+
+		// 判断缓存中是否已经存在图片，如果存在则直接返回
+		if (imageCache.containsKey(imageId)) {
+			SoftReference<Drawable> softReference = imageCache.get(imageId);
+			Drawable drawable = softReference.get();
+			if (drawable != null) {
+				return drawable;
+			}
+		}
+
+		final Handler handler = new Handler() {
+			public void handleMessage(Message message) {
+				imageCallback.imageLoaded((Drawable) message.obj, imageURL);
+			}
+		};
+
+		// 开辟一个新线程去下载图片，并用Handler去更新UI
+		new Thread() {
+			@Override
+			public void run() {
+				Drawable drawable = loadImageFromUrl(imageURL);
+				imageCache.put(imageURL, new SoftReference<Drawable>(drawable));
+				Message message = handler.obtainMessage(0, drawable);
+				handler.sendMessage(message);
+			}
+		}.start();
+		return null;
+	}
+
+	public Drawable loadDrawable(final FriendInfo renren,
+			final ImageCallback imageCallback) {
+		final String imageId = renren.getUid();
+		final String imageURL = renren.getLogoUrl();
 
 		// 判断缓存中是否已经存在图片，如果存在则直接返回
 		if (imageCache.containsKey(imageId)) {

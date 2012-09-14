@@ -3,6 +3,7 @@ package com.ds.birth;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -42,6 +44,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ds.birth.AsyncImageLoader.ImageCallback;
+import com.ds.db.DatabaseHelper;
+import com.ds.db.DbHelper;
 import com.ds.utility.Renren;
 import com.ds.utility.RenrenUtil;
 
@@ -65,11 +69,14 @@ public class RenrenFriendsActivity extends Activity {
 	boolean isSelectAll = false;
 	TextView empty;
 	ProgressDialog importDialog;
+	boolean isImporting = true;
 	private static final int STATE_FRIENDS = 0;
 	private static final int STATE_INFO = 1;
 
 	private static final int GET_FRIENDS_SUCCESS = 0;
 	private static final int GET_FRIENDS_FAILURE = 1;
+	private static final int IMPORT_SUCCESS = 2;
+	private static final int IMPORT_FAILURE = 3;
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -89,9 +96,21 @@ public class RenrenFriendsActivity extends Activity {
 						Toast.LENGTH_SHORT).show();
 				friendsListView.setAdapter(null);
 				break;
+			case IMPORT_SUCCESS:
+				importDialog.dismiss();
+				Toast.makeText(RenrenFriendsActivity.this,
+						R.string.import_complete, Toast.LENGTH_SHORT).show();
+				break;
+			case IMPORT_FAILURE:
+				importDialog.dismiss();
+				Toast.makeText(RenrenFriendsActivity.this, R.string.import_failure,
+						Toast.LENGTH_SHORT).show();
+				break;
 			}
 		}
 	};
+
+	private DbHelper dbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +118,18 @@ public class RenrenFriendsActivity extends Activity {
 		setContentView(R.layout.renren_friend);
 		friendsListView = (ListView) findViewById(R.id.friendsList);
 		friendsListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		dbHelper = DbHelper.getInstance(this);
+		dbHelper.open(this);
 		initViews();
 		FriendsTask task = new FriendsTask(STATE_FRIENDS);
 		task.execute();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		dbHelper.close();
 	}
 
 	private void dataChanged() {
@@ -113,18 +141,17 @@ public class RenrenFriendsActivity extends Activity {
 		importDialog = new ProgressDialog(this);
 		importDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		importDialog.setTitle("导入人人网好友");
-		// importDialog.setMessage(getResources().getString(R.string.second));
 		importDialog.setIcon(R.drawable.ic_launcher);
-		importDialog.setProgress(59);
-		importDialog.setButton(getResources().getString(R.string.confirm),
+		importDialog.setButton(getResources().getString(R.string.cancel),
 				new android.content.DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-
+						isImporting = false;
+						dialog.dismiss();
 					}
 				});
 		importDialog.setIndeterminate(false);
-		importDialog.setCancelable(true);
+		importDialog.setCancelable(false);
 		importDialog.show();
 	}
 
@@ -135,6 +162,7 @@ public class RenrenFriendsActivity extends Activity {
 
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				initImportDialog();
 				FriendsTask taskInfo = new FriendsTask(STATE_INFO);
 				taskInfo.execute();
 			}
@@ -213,8 +241,6 @@ public class RenrenFriendsActivity extends Activity {
 					} else {
 						renrenInfoList = RenrenUtil
 								.parseRenrenInfoFromJson(strResult);
-						Log.i(TAG,
-								"renrenInfoList.size" + renrenInfoList.size());
 
 					}
 					returnValue = "1"; // 定义返回标志
@@ -243,7 +269,6 @@ public class RenrenFriendsActivity extends Activity {
 		switch (state) {
 		case STATE_INFO:
 			method = "users.getInfo";
-			Log.i(TAG, "renrenList.size:" + renrenList.size());
 			for (int i = 0; i < renrenList.size(); i++) {
 				if (isIdSelected.get(renrenList.get(i).getId())) {
 					sb.append(renrenList.get(i).getId() + ",");
@@ -265,6 +290,8 @@ public class RenrenFriendsActivity extends Activity {
 		param.add("format=JSON"); // 返回JSON数据
 		if (state == STATE_INFO) {
 			param.add("uids=" + sb.toString());
+			param.add("fields="
+					+ "uid,name,sex,star,zidou,vip,birthday,tinyurl,headurl,mainurl,hometown_location,work_history,university_history");
 		}
 
 		String signature = getSignature(param,
@@ -276,6 +303,13 @@ public class RenrenFriendsActivity extends Activity {
 		paramList.add(new BasicNameValuePair("access_token",
 				RenrenUtil.access_token));
 		paramList.add(new BasicNameValuePair("format", "JSON"));
+		if (state == STATE_INFO) {
+			paramList.add(new BasicNameValuePair("uids", sb.toString()));
+			paramList
+					.add(new BasicNameValuePair(
+							"fields",
+							"uid,name,sex,star,zidou,vip,birthday,tinyurl,headurl,mainurl,hometown_location,work_history,university_history"));
+		}
 	}
 
 	/**
@@ -393,8 +427,66 @@ public class RenrenFriendsActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			Log.i("FriendsTask", "----doInBackground----");
-			getParams(mState);
-			return sendRequest(mState);
+			if (mState == STATE_FRIENDS) {
+				getParams(STATE_FRIENDS);
+				return sendRequest(STATE_FRIENDS);
+			} else {
+				getParams(STATE_INFO);
+				String result = sendRequest(STATE_INFO);
+				importDialog.setMax(renrenInfoList.size());
+				ContentValues contentValues = new ContentValues();
+				if (result == "1") {
+					for (int i = 0; i < renrenInfoList.size(); i++) {
+						// insert into db
+						if (isImporting) {
+							Renren renren = renrenInfoList.get(i);
+							contentValues.clear();
+							contentValues.put(DatabaseHelper.NAME,
+									renren.getName());
+							contentValues.put(DatabaseHelper.SEX,
+									renren.getSex());
+							contentValues.put(DatabaseHelper.AVATAR,
+									renren.getHeadurl());
+							contentValues.put(DatabaseHelper.ISSTAR, 0);
+							contentValues.put(DatabaseHelper.BIRTHDAY,
+									renren.getBirthday());
+							contentValues.put(DatabaseHelper.RINGTYPE, 0);
+							contentValues.put(DatabaseHelper.RINGDAY, "");
+							contentValues.put(DatabaseHelper.ISLUNAR, 0);
+							String[] date = renren.getBirthday().split("-");
+							String year = date[0];
+							String month = date[1];
+							String day = date[2];
+							Calendar cal = Calendar.getInstance();
+							Log.i(TAG, "year:" + year + " month:" + month
+									+ " day:" + day);
+							if (year.equals("0000")) {
+								year = String.valueOf(cal.get(Calendar.YEAR));
+							}
+							if (month.equals("00")) {
+								month = String
+										.valueOf((cal.get(Calendar.MONTH) + 1));
+							}
+							if (day.equals("00")) {
+								day = String.valueOf(cal
+										.get(Calendar.DAY_OF_MONTH));
+							}
+							contentValues.put(DatabaseHelper.YEAR, year);
+							contentValues.put(DatabaseHelper.MONTH, month);
+							contentValues.put(DatabaseHelper.DAY, day);
+							contentValues.put(DatabaseHelper.TYPE, 0);
+							contentValues.put(DatabaseHelper.NOTE, "");
+							contentValues.put(DatabaseHelper.PHONE_NUMBER, "");
+							long id = dbHelper.insert(contentValues);
+							if (id > 0) {
+								publishProgress(i + 1);
+							}
+						}
+					}
+				}
+				return result;
+			}
+
 		}
 
 		@Override
@@ -407,7 +499,6 @@ public class RenrenFriendsActivity extends Activity {
 		protected void onPostExecute(String result) {
 			Log.i("FriendsTask", "----onPostExecute----");
 			Log.i("FriendsTask", "result:" + result);
-			// message.setText(result);
 			if (mState == STATE_FRIENDS) {
 				pDialog.dismiss();
 				if (result.equals("1")) {
@@ -416,10 +507,10 @@ public class RenrenFriendsActivity extends Activity {
 					mHandler.sendEmptyMessage(GET_FRIENDS_FAILURE);
 				}
 			} else {
-				Log.i(TAG, "renrenInfoList.size()==" + renrenInfoList.size());
-				for (int i = 0; i < renrenInfoList.size(); i++) {
-					Log.i(TAG, "renrenInfoList.get(" + i + ")=="
-							+ renrenInfoList.get(i));
+				if (result.equals("1")) {
+					mHandler.sendEmptyMessage(IMPORT_SUCCESS);
+				} else {
+					mHandler.sendEmptyMessage(IMPORT_FAILURE);
 				}
 			}
 		}
@@ -431,16 +522,18 @@ public class RenrenFriendsActivity extends Activity {
 				pDialog = ProgressDialog.show(RenrenFriendsActivity.this,
 						"Importing", "importing...");
 			} else {
-				initImportDialog();
+				importDialog.setProgress(0);
+				// importDialog.setMessage("0/0");
 			}
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
-			// 更新进度
 			Log.i("FriendsTask", "---onProgressUpdate----");
 			if (mState == STATE_INFO) {
-
+				importDialog.setProgress(values[0]);
+				// importDialog.setMessage("" + values[0] + "/"
+				// + renrenInfoList.size());
 			}
 		}
 	}

@@ -33,9 +33,6 @@
     <string name="modify">修改</string>
     <string name="add_title">添加生日</string>
     <string name="edit_title">编辑生日</string>
-    <string name="year">"年"</string>
-    <string name="month">"月"</string>
-    <string name="day">"日"</string>
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="star_string">已设置为重要生日</string>
@@ -60,8 +57,15 @@
     <string name="male">男</string>
     <string name="female">女</string>
     <string name="importRenren">人人网好友</string>
+    <string name="importKaxin">开心网好友</string>
     <string name="select_all">全选</string>
     <string name="deselect_all">取消全选</string>
     <string name="no_renren_friend">人人网上没有好友</string>
+    <string name="import_complete">导入完成</string>
+    <string name="import_failure">导入失败</string>
+    <string name="after">后</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
 
 </resources>

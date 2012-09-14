@@ -12,8 +12,8 @@
         android:resizeable="false"
         android:smallScreens="true" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -90,6 +90,24 @@
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity android:name=".TestAlarmActivity" >
+        </activity>
+        <activity android:name=".QQLoginActivity" >
+        </activity>
+        <activity android:name=".KaixinLoginActivity" >
+        </activity>
+        <activity android:name=".KaixinFriendsActivity" >
+        </activity>
+        <activity
+            android:name="com.tencent.tauth.TAuthView"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="auth" />
+            </intent-filter>
         </activity>
 
         <receiver

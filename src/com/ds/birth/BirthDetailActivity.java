@@ -364,13 +364,15 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		String begin = String.valueOf(nowYear + "-" + month + "-" + day);
 
 		String end = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
-		Log.i(TAG, "nowMonth:" + nowMonth + "month:" + month + " nowDay:"
+		Log.i(TAG, "nowMonth:" + nowMonth + " month:" + month + " nowDay:"
 				+ nowDay + " day:" + day);
 		if (nowMonth > month) {
 			end = String.valueOf((nowYear + 1) + "-" + month + "-" + day);
 			begin = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
 		} else if (nowMonth == month) {
+			Log.i(TAG,"nowMonth==month");
 			if (nowDay > day) {
+				Log.i(TAG,"nowDay>day");
 				end = String.valueOf((nowYear + 1) + "-" + month + "-" + day);
 				begin = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
 			}
