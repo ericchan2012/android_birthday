@@ -19,8 +19,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import com.ds.birth.R;
-
 /**
  * ����Ϊ���Դ�����Ȩ�Ļ��࣬������Լ̳����Լ�ҳ���߼�
  */

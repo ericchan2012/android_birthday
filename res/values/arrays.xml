@@ -7,23 +7,11 @@
         <item>男</item>
         <item>女</item>
     </string-array>
-    <string-array name="rankData">
-        <item>从人人网导入好友生日</item>
-        <item>从QQ空间导入好友生日</item>
-    </string-array>
     <string-array name="selectDays">
         <item>生日当天提醒</item>
         <item>提前一天提醒</item>
         <item>提前三天提醒</item>
         <item>提前一周提醒</item>
-    </string-array>
-    <string-array name="set">
-        <item>设置</item>
-        <item>帮助反馈</item>
-        <item>精品推荐</item>
-        <item>检测更新</item>
-        <item>邀请好友</item>
-        <item>关于我们</item>
     </string-array>
     <string-array name="ringtypes">
          <item>仅提醒公历生日</item>

@@ -3,7 +3,7 @@
     android:id="@+id/layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/birth_detail_bg" >
+    android:background="@drawable/border_bg" >
 
     <include
         android:id="@+id/head"

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/headerNav" >
+
+    <Button
+        android:id="@+id/backBtn"
+        style="@style/head_nav_left_button" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/headerNavText"
+        android:text="@string/about" />
+    <Button
+        android:id="@+id/rightBtn"
+        style="@style/head_nav_right_button" />
+
+</RelativeLayout>

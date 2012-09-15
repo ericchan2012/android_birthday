@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/default_linearlayout_background" >
+
+    <include
+        android:id="@+id/head"
+        layout="@layout/head_nav" />
+
+    <FrameLayout
+        android:id="@+id/mainBodyLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0" >
+
+        <LinearLayout style="@style/default_body_container" >
+
+            <ScrollView
+                android:id="@+id/scrollView1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+
+                <LinearLayout
+                    android:id="@+id/linearLayout1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <LinearLayout style="@style/more_row_wrapper" >
+
+                        <LinearLayout
+                            android:id="@+id/renren"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                style="@style/more_row_title_text"
+                                android:text="@string/renren_import" />
+
+                            <ImageButton style="@style/more_right_arrow" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
+
+                        <LinearLayout
+                            android:id="@+id/kaixin"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                style="@style/more_row_title_text"
+                                android:text="@string/kaixin_import" />
+
+                            <ImageButton style="@style/more_right_arrow" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

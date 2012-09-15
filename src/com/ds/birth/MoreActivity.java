@@ -1,93 +1,70 @@
 package com.ds.birth;
 
-import com.ds.iphone.BirthDialogBuilder;
-
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MoreActivity extends Activity implements OnItemClickListener {
-	private String[] datas = null;
+import com.ds.iphone.BirthDialogBuilder;
 
-	ListView mineListView;
+public class MoreActivity extends Activity implements OnClickListener {
+
 	TextView title;
+	LinearLayout setting;
+	LinearLayout feedback;
+	LinearLayout appstore;
+	LinearLayout update;
+	LinearLayout invite;
+	LinearLayout about;
 
-	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.birth_more);
-		datas = getResources().getStringArray(R.array.set);
 		initViews();
 	}
 
 	private void initViews() {
-		mineListView = (ListView) findViewById(R.id.phoneMyMainListView);
-		mineListView.setAdapter(mAdapter);
-		title = (TextView) findViewById(R.id.module_title_text_view);
+		title = (TextView) findViewById(R.id.title);
 		title.setText(R.string.more);
-		mineListView.setOnItemClickListener(this);
+		setting = (LinearLayout) findViewById(R.id.setting);
+		feedback = (LinearLayout) findViewById(R.id.feedback);
+		appstore = (LinearLayout) findViewById(R.id.appstore);
+		update = (LinearLayout) findViewById(R.id.update);
+		invite = (LinearLayout) findViewById(R.id.invite);
+		about = (LinearLayout) findViewById(R.id.about);
+		setting.setOnClickListener(this);
+		feedback.setOnClickListener(this);
+		appstore.setOnClickListener(this);
+		update.setOnClickListener(this);
+		invite.setOnClickListener(this);
+		about.setOnClickListener(this);
 	}
 
-	private BaseAdapter mAdapter = new BaseAdapter() {
-
-		public int getCount() {
-			return datas.length;
-		}
-
-		public Object getItem(int position) {
-			return null;
-		}
-
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View retval = LayoutInflater.from(parent.getContext()).inflate(
-					R.layout.more_adapter, null);
-			TextView title = (TextView) retval
-					.findViewById(R.id.phoneMyMainText);
-			title.setText(datas[position]);
-			if(position == 0){
-				retval.setBackgroundResource(R.drawable.moreitem_bg_top);
-			}else if(position == (datas.length-1)){
-				retval.setBackgroundResource(R.drawable.moreitem_bg_bottom);
-				
-			}else {
-				retval.setBackgroundResource(R.drawable.moreitem_bg_middle);
-			}
-			return retval;
-		}
-
-	};
-
-	
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-			long arg3) {
-		switch (position) {
-		case 0:
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent();
+		switch (v.getId()) {
+		case R.id.setting:
 			break;
-		case 1:
+		case R.id.feedback:
 			break;
-		case 2:
-			Intent intent = new Intent(this, AppStoreActivity.class);
+		case R.id.appstore:
+			intent.setClass(this, AppStoreActivity.class);
 			startActivity(intent);
 			break;
-		case 3:
+		case R.id.update:
 			break;
-		case 4:
+		case R.id.invite:
 			break;
-		case 5:
-			showAboutDialog();
+		case R.id.about:
+			intent.setClass(this, AboutActivity.class);
+			startActivity(intent);
 			break;
 		}
 	}
@@ -97,11 +74,12 @@ public class MoreActivity extends Activity implements OnItemClickListener {
 		idb.setTitle(R.string.about);
 		idb.setMessage("测试内容");
 		idb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			
+
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
 			}
 		});
 		idb.show();
 	}
+
 }

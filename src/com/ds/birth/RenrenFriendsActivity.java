@@ -161,16 +161,16 @@ public class RenrenFriendsActivity extends Activity {
 		importBtn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				initImportDialog();
 				FriendsTask taskInfo = new FriendsTask(STATE_INFO);
 				taskInfo.execute();
 			}
 
 		});
-		backBtn = (Button) findViewById(R.id.back);
+		backBtn = (Button) findViewById(R.id.backBtn);
+		backBtn.setVisibility(View.VISIBLE);
 		title = (TextView) findViewById(R.id.title);
-		selectAll = (Button) findViewById(R.id.edit);
+		selectAll = (Button) findViewById(R.id.rightBtn);
 		title.setText(R.string.importRenren);
 		backBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -178,6 +178,7 @@ public class RenrenFriendsActivity extends Activity {
 			}
 		});
 		selectAll.setText(R.string.select_all);
+		selectAll.setVisibility(View.VISIBLE);
 		selectAll.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (!isSelectAll) {

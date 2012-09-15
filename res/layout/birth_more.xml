@@ -1,22 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-      android:background="@drawable/birth_detail_bg"
-    android:fillViewport="true" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/default_linearlayout_background" >
 
     <include
-        android:id="@+id/header"
-        layout="@layout/header_layout" />
+        android:id="@+id/head"
+        layout="@layout/head_nav" />
 
-    <ListView
-        android:id="@+id/phoneMyMainListView"
+    <FrameLayout
+        android:id="@+id/mainBodyLayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dip"
-        android:layout_below="@+id/header"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="@drawable/item_line"
-        android:listSelector="@drawable/item_bg" />
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0" >
 
-</RelativeLayout>
+        <LinearLayout style="@style/default_body_container" >
+
+            <ScrollView
+                android:id="@+id/scrollView1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+
+                <LinearLayout
+                    android:id="@+id/linearLayout1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <LinearLayout style="@style/more_row_wrapper" >
+
+                        <LinearLayout
+                            android:id="@+id/setting"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                android:id="@+id/eventTitle"
+                                style="@style/more_row_title_text"
+                                android:text="@string/setting" />
+
+                            <ImageButton
+                                android:id="@+id/eventArrow"
+                                style="@style/more_right_arrow" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
+
+                        <LinearLayout
+                            android:id="@+id/feedback"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                android:id="@+id/shareTitle"
+                                style="@style/more_row_title_text"
+                                android:text="@string/feedback" />
+
+                            <ImageButton
+                                android:id="@+id/shareArrow"
+                                style="@style/more_right_arrow" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/more_row_wrapper"
+                        android:layout_gravity="center" >
+
+                        <LinearLayout
+                            android:id="@+id/appstore"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                android:id="@+id/netSettingTitle"
+                                style="@style/more_row_title_text"
+                                android:text="@string/appstore" />
+
+                            <ImageButton
+                                android:id="@+id/netSettingArrow"
+                                style="@style/more_right_arrow" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
+
+                        <LinearLayout
+                            android:id="@+id/update"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                android:id="@+id/bindEmailTitle"
+                                style="@style/more_row_title_text"
+                                android:text="@string/update" />
+
+                            <ImageButton
+                                android:id="@+id/bindEmailArrow"
+                                style="@style/more_right_arrow" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
+
+                        <LinearLayout
+                            android:id="@+id/invite"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                android:id="@+id/inviteTitle"
+                                style="@style/more_row_title_text"
+                                android:text="@string/invite" />
+
+                            <ImageButton
+                                android:id="@+id/inviteArrow"
+                                style="@style/more_right_arrow" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
+
+                        <LinearLayout
+                            android:id="@+id/about"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                style="@style/more_row_title_text"
+                                android:text="@string/about" />
+
+                            <ImageButton style="@style/more_right_arrow" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>
+

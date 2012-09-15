@@ -7,13 +7,9 @@
     android:orientation="vertical" >
 
     <include
-        android:id="@+id/header"
-        layout="@layout/header_layout" />
+        android:id="@+id/head"
+        layout="@layout/head_nav" />
 
-    <com.ds.widget.HeaderLayout
-        android:id="@+id/myLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="90dp" />
 
     <include layout="@layout/login" />
 

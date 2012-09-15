@@ -1,7 +1,6 @@
 package com.ds.birth;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 import android.app.Activity;
@@ -37,7 +36,6 @@ import com.ds.utility.ChineseCalendar;
 import com.ds.utility.Lunar;
 import com.ds.utility.Person;
 import com.ds.widget.ArrayWheelAdapter;
-import com.ds.widget.NumericWheelAdapter;
 import com.ds.widget.OnWheelChangedListener;
 import com.ds.widget.WheelView;
 

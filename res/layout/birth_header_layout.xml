@@ -17,7 +17,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:onClick="topLeftButtonClicked"
-        android:text="@string/back_text"
+        android:text="@string/back"
         android:visibility="invisible" />
 
     <Button

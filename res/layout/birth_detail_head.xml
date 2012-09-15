@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:text="@string/back_text"
+        android:text="@string/back"
         android:visibility="visible" />
 
     <TextView

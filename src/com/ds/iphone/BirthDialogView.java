@@ -1,12 +1,12 @@
 package com.ds.iphone;
 
-import com.ds.birth.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.ds.birth.R;
 public class BirthDialogView extends RelativeLayout {
 
 	private TextView itemMessage, itemTitle;

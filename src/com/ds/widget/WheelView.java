@@ -22,9 +22,6 @@ package com.ds.widget;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.ds.birth.R;
-
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -46,10 +43,11 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
+import com.ds.birth.R;
+
 /**
  * Numeric wheel view.
  * 
- * @author Yuri Kanivets
  */
 public class WheelView extends View {
 	/** Scrolling duration */

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="back_text">返回</string>
+    <string name="back">返回</string>
     <string name="birth_title">生日</string>
-    <string name="rank_title">导入</string>
+    <string name="import_title">导入</string>
     <string name="mine_title">个人中心</string>
     <string name="more_title">更多</string>
     <string name="app_name">我的生日管家</string>
@@ -21,7 +21,6 @@
     <string name="app_store3">市场专区</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="about">关于我们</string>
     <string name="take_picture">拍照</string>
     <string name="select_picture">图库</string>
     <string name="default_picture">默认</string>
@@ -67,5 +66,29 @@
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">日</string>
+    <string name="account">帐号:</string>
+    <string name="account_hint">手机号码/邮箱帐号</string>
+    <string name="password">密码:</string>
+    <string name="password_hint">请输入密码</string>
+    <string name="other_login">其他方式登录:</string>
+    <string name="new_user_reg">注册</string>
+    <string name="login">登录</string>
+    <string name="name_empty_hint">帐号不能为空</string>
+    <string name="passwd_empty_hint">请输入密码</string>
+    <string name="login_title">检查登录</string>
+    <string name="login_message">正在登录,请稍侯...</string>
+    <string name="error_title">出错了^_^</string>
+    <string name="error_message">未找到该帐号，请检查您的输入！</string>
+    <string name="about_detail_new">Copyright©2012 DStudio 梦想工作室 版权所有</string>
+    <string name="client_name">我的生日管家 Android版</string>
+    <string name="client_version">版本%1$s</string>
+    <string name="setting">设置</string>
+    <string name="feedback">帮助反馈</string>
+    <string name="appstore">精品推荐</string>
+    <string name="update">检测更新</string>
+    <string name="invite">邀请好友</string>
+    <string name="about">关于我们</string>
+    <string name="renren_import">从人人网导入好友生日</string>
+    <string name="kaixin_import">从开心网导入好友生日</string>
 
 </resources>

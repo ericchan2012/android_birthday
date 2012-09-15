@@ -44,7 +44,7 @@
                 android:id="@+id/tab_rank"
                 style="@style/bottom_radio"
                 android:drawableTop="@drawable/bottom_follow_radio_button_bg"
-                android:text="@string/rank_title" />
+                android:text="@string/import_title" />
 
             <RadioButton
                 android:id="@+id/tab_mine"

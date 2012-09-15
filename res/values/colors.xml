@@ -11,5 +11,9 @@
     <color name="qiyi_green">#ff78a22f</color>
     <color name="qiyi_grey">#ff9b9b9b</color>
     <color name="qiyi_main">#ffdcdcdc</color>
+    <color name="gray_new_color">#ffcecfc4</color>
+    <color name="greenBackground">#ff5bbd2c</color>
+    <color name="whiteTextColor">#ffffffff</color>
+    <color name="black_text_color">#ff58595b</color>
 
 </resources>

@@ -5,74 +5,48 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class RankingActivity extends Activity implements OnItemClickListener {
+public class RankingActivity extends Activity implements OnClickListener {
 
-	private static String[] datas = null;
+	private TextView title;
 
-	ListView mineListView;
-	TextView title;
+	private LinearLayout renren;
+	private LinearLayout kaixin;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.birth_rank);
+		setContentView(R.layout.birth_import);
 		initViews();
 	}
 
 	private void initViews() {
-		datas = getResources().getStringArray(R.array.rankData);
-		mineListView = (ListView) findViewById(R.id.phoneMyMainListView);
-		mineListView.setAdapter(mAdapter);
-		title = (TextView) findViewById(R.id.module_title_text_view);
-		title.setText(R.string.rank_title);
-		mineListView.setOnItemClickListener(this);
+		title = (TextView) findViewById(R.id.title);
+		title.setText(R.string.import_title);
+		renren = (LinearLayout) findViewById(R.id.renren);
+		kaixin = (LinearLayout) findViewById(R.id.kaixin);
+		renren.setOnClickListener(this);
+		kaixin.setOnClickListener(this);
 	}
 
-	private BaseAdapter mAdapter = new BaseAdapter() {
-
-		public int getCount() {
-			return datas.length;
-		}
-
-		public Object getItem(int position) {
-			return null;
-		}
-
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View retval = LayoutInflater.from(parent.getContext()).inflate(
-					R.layout.phone_adapter_my_main, null);
-			TextView title = (TextView) retval
-					.findViewById(R.id.phoneMyMainText);
-			title.setText(datas[position]);
-
-			return retval;
-		}
-
-	};
-
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
+	public void onClick(View v) {
 		Intent intent = new Intent();
-		switch (arg2) {
-		case 0:
+		switch (v.getId()) {
+		case R.id.renren:
 			intent.setClass(this, RenrenLoginActivity.class);
-			startActivity(intent);
 			break;
-		case 1:
+		case R.id.kaixin:
 			intent.setClass(this, KaixinLoginActivity.class);
-			startActivity(intent);
 			break;
 		}
+		startActivity(intent);
 	}
 
 }

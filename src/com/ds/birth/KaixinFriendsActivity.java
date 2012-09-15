@@ -1,40 +1,17 @@
 package com.ds.birth;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.security.GeneralSecurityException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -62,13 +39,7 @@ import com.ds.kaixin.BaseActivity;
 import com.ds.kaixin.Constant;
 import com.ds.kaixin.FriendInfo;
 import com.ds.kaixin.GetFriendListTask;
-import com.ds.kaixin.Kaixin;
-import com.ds.kaixin.KaixinAuthError;
-import com.ds.kaixin.KaixinAuthListener;
 import com.ds.kaixin.KaixinError;
-import com.ds.utility.KaixinUtil;
-import com.ds.utility.Renren;
-import com.ds.utility.RenrenUtil;
 
 public class KaixinFriendsActivity extends BaseActivity {
 	private static final String TAG = "KaixinFriendsActivity";
