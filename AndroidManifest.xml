@@ -85,6 +85,8 @@
         </activity>
         <activity android:name=".RenrenFriendsActivity" >
         </activity>
+        <activity android:name=".DeleteBirthActivity" >
+        </activity>
         <activity
             android:name=".AlarmDialog"
             android:theme="@android:style/Theme.Dialog" >

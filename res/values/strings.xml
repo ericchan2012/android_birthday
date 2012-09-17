@@ -90,5 +90,5 @@
     <string name="about">关于我们</string>
     <string name="renren_import">从人人网导入好友生日</string>
     <string name="kaixin_import">从开心网导入好友生日</string>
-
+	<string name="delete_title">删除好友</string>
 </resources>

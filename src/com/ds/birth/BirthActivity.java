@@ -42,6 +42,7 @@ public class BirthActivity extends Activity {
 	RadioButton leftRadioBtn;
 	RadioButton rightRadioBtn;
 	Button topRightBtn;
+	Button topLeftBtn;
 	ListView mListView;
 	TextView mEmptyView;
 
@@ -64,6 +65,8 @@ public class BirthActivity extends Activity {
 	int radiobtn;
 	boolean leftClick = false;
 	boolean rightClick = false;
+
+	private static final int DELETE_REQUEST = 1001;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +130,15 @@ public class BirthActivity extends Activity {
 				// startActivity(it);
 			}
 		});
-
+		topLeftBtn = (Button) findViewById(R.id.top_left_button);
+		topLeftBtn.setVisibility(View.VISIBLE);
+		topLeftBtn.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(BirthActivity.this,
+						DeleteBirthActivity.class);
+				startActivityForResult(intent, DELETE_REQUEST);
+			}
+		});
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> adapter, View view,
 					int position, long arg3) {
