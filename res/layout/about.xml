@@ -18,7 +18,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/logo" />
+                android:src="@drawable/logo" />  
 
             <TextView
                 android:id="@+id/textView1"

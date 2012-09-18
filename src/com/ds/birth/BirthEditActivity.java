@@ -295,7 +295,8 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	}
 
 	private void initViews() {
-		topLeftBtn = (Button) findViewById(R.id.top_left_btton);
+		topLeftBtn = (Button) findViewById(R.id.backBtn);
+		topLeftBtn.setVisibility(View.VISIBLE);
 		nameEdit = (EditText) findViewById(R.id.name);
 		genderText = (TextView) findViewById(R.id.tv_gender);
 		ringDaysText = (TextView) findViewById(R.id.tv_ringdays);
@@ -306,7 +307,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		mStar = (CheckBox) findViewById(R.id.star);
 		noteEdit = (EditText) findViewById(R.id.tv_note);
 		phoneNumEdit = (EditText) findViewById(R.id.tv_number);
-		saveBtn = (Button) findViewById(R.id.save);
+		saveBtn = (Button) findViewById(R.id.rightBtn);
+		saveBtn.setVisibility(View.VISIBLE);
+		saveBtn.setText(R.string.save);
 		topLeftBtn.setOnClickListener(this);
 		genderText.setOnClickListener(this);
 		ringDaysText.setOnClickListener(this);
@@ -334,7 +337,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.top_left_btton:
+		case R.id.backBtn:
 			if (BirthEditActivity.this.getCurrentFocus() != null) {
 				hideSoftKeypad();
 			}
@@ -371,7 +374,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		case R.id.img_icon:
 			loadMenu();
 			break;
-		case R.id.save:
+		case R.id.rightBtn:
 			if (BirthEditActivity.this.getCurrentFocus() != null) {
 				hideSoftKeypad();
 			}

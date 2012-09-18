@@ -105,8 +105,8 @@ public class KaixinFriendsActivity extends BaseActivity {
 				break;
 			case IMPORT_FAILURE:
 				importDialog.dismiss();
-				Toast.makeText(KaixinFriendsActivity.this, R.string.import_failure,
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(KaixinFriendsActivity.this,
+						R.string.import_failure, Toast.LENGTH_SHORT).show();
 				break;
 			default:
 				break;
@@ -171,9 +171,11 @@ public class KaixinFriendsActivity extends BaseActivity {
 			}
 
 		});
-		backBtn = (Button) findViewById(R.id.back);
+		backBtn = (Button) findViewById(R.id.backBtn);
 		title = (TextView) findViewById(R.id.title);
-		selectAll = (Button) findViewById(R.id.edit);
+		selectAll = (Button) findViewById(R.id.rightBtn);
+		backBtn.setVisibility(View.VISIBLE);
+		selectAll.setVisibility(View.VISIBLE);
 		title.setText(R.string.importKaxin);
 		backBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -222,6 +224,13 @@ public class KaixinFriendsActivity extends BaseActivity {
 					checkNum++;
 				} else {
 					checkNum--;
+				}
+				if(checkNum == renrenList.size()){
+					isSelectAll = true;
+					selectAll.setText(R.string.deselect_all);
+				}else{
+					isSelectAll = false;
+					selectAll.setText(R.string.select_all);
 				}
 				importBtn.setText("导入(" + checkNum + ")项");
 			}

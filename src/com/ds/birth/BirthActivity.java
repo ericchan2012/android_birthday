@@ -31,6 +31,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ds.birth.AsyncImageLoader.ImageCallback;
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
 import com.ds.utility.BirthConstants;
@@ -49,12 +50,12 @@ public class BirthActivity extends Activity {
 	CursorAdapter mBirthAdapter;
 
 	private static final int ADD_BIRTHDAY = 0;
-	private static final int QUERY_SUCCESS = 0;
-	private static final int QUERY_EMPTY = 1;
-	private static final int QUERY_UPDATE = 2;
-	private static final int QUERY = 0;
-	private static final int UPDATE = 1;
-	private static final int QUERY_STAR = 2;
+	private static final int QUERY_SUCCESS = 1000;
+	private static final int QUERY_EMPTY = 1001;
+	private static final int QUERY_UPDATE = 1002;
+	private static final int QUERY = 2000;
+	private static final int UPDATE = 2001;
+	private static final int QUERY_STAR = 2002;
 	DbHelper mDbHelper;
 	Cursor mCursor;
 	private ProgressDialog mProgressDialog;
@@ -71,7 +72,7 @@ public class BirthActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.birth_list_layout);
+		setContentView(R.layout.birth_layout);
 		mDbHelper = DbHelper.getInstance(this);
 		mDbHelper.open(this);
 		initViews();
@@ -119,6 +120,7 @@ public class BirthActivity extends Activity {
 		mEmptyView.setVisibility(View.GONE);
 		topRightBtn = (Button) findViewById(R.id.top_right_button);
 		topRightBtn.setVisibility(View.VISIBLE);
+		topRightBtn.setText(R.string.add);
 		topRightBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// add birthday
@@ -331,6 +333,14 @@ public class BirthActivity extends Activity {
 		Context context = null;
 		int viewResId;
 		LayoutInflater mInflater;
+		private AsyncImageLoader asyncImageLoader = new AsyncImageLoader(); // 异步获取图片
+		ImageView avater;
+		TextView name;
+		TextView date;
+		ImageView candle;
+		TextView yearcntView;
+		TextView daycntView;
+		TextView dayView;
 
 		public BirthCursorAdapter(Context context, int resource, Cursor cursor) {
 			super(context, cursor);
@@ -346,134 +356,156 @@ public class BirthActivity extends Activity {
 		}
 
 		@Override
-		public void bindView(View view, Context context, Cursor cursor) {
+		public void bindView(View birthView, Context context, Cursor cursor) {
 			Calendar cal = Calendar.getInstance();
-			if (view != null) {
-				int isLunar = cursor.getInt(DatabaseHelper.ISLUNAR_INDEX);
-				ViewHolder viewHolder = new ViewHolder();
-				View birthView = (RelativeLayout) view;
-				viewHolder.avater = (ImageView) birthView
-						.findViewById(R.id.avatar);
-				viewHolder.name = (TextView) birthView.findViewById(R.id.name);
-				viewHolder.date = (TextView) birthView.findViewById(R.id.date);
-				viewHolder.candle = (ImageView) birthView
-						.findViewById(R.id.candle);
-				viewHolder.yearcnt = (TextView) birthView
-						.findViewById(R.id.yearcnt);
-				viewHolder.daycnt = (TextView) birthView
-						.findViewById(R.id.daycnt);
-				viewHolder.day = (TextView) birthView.findViewById(R.id.day);
+			if (birthView != null) {
+				birthView.setTag(cursor.getInt(DatabaseHelper.ID_INDEX));
+				avater = (ImageView) birthView.findViewById(R.id.avatar);
+				avater.setTag(cursor.getString(DatabaseHelper.AVATAR_INDEX));
+				name = (TextView) birthView.findViewById(R.id.name);
+				date = (TextView) birthView.findViewById(R.id.date);
+				candle = (ImageView) birthView.findViewById(R.id.candle);
+				yearcntView = (TextView) birthView.findViewById(R.id.yearcnt);
+				daycntView = (TextView) birthView.findViewById(R.id.daycnt);
+				dayView = (TextView) birthView.findViewById(R.id.day);
 
-				viewHolder.name.setText(cursor
-						.getString(DatabaseHelper.NAME_INDEX));
-				viewHolder.date.setText(cursor
-						.getString(DatabaseHelper.BIRTHDAY_INDEX));
-				if (isLunar == 0) {
-					viewHolder.candle.setImageResource(R.drawable.birth_solar);
-				} else {
-					viewHolder.candle.setImageResource(R.drawable.birth_lunar);
-				}
-				// avatar
-				Drawable drawable = context.getResources().getDrawable(
-						R.drawable.avatar_default);
-				BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-				Bitmap bitmap = bitmapDrawable.getBitmap();
+			}
+			name.setText(cursor.getString(DatabaseHelper.NAME_INDEX));
+			date.setText(cursor.getString(DatabaseHelper.BIRTHDAY_INDEX));
+			int isLunar = cursor.getInt(DatabaseHelper.ISLUNAR_INDEX);
+			if (isLunar == 0) {
+				candle.setImageResource(R.drawable.birth_solar);
+			} else {
+				candle.setImageResource(R.drawable.birth_lunar);
+			}
+			// avatar
+			// 异步加载图片并显示
+			// if (cursor.getString(DatabaseHelper.AVATAR_INDEX) == null
+			// || cursor.getString(DatabaseHelper.AVATAR_INDEX)
+			// .length() == 0) {
+			Drawable drawable = context.getResources().getDrawable(
+					R.drawable.avatar_default);
+			avater.setBackgroundDrawable(drawable);
+			// } else {
+			// Drawable cachedImage = asyncImageLoader.loadDrawable(
+			// String.valueOf(cursor.getInt(DatabaseHelper.ID_INDEX)),
+			// cursor.getString(DatabaseHelper.AVATAR_INDEX),
+			// new ImageCallback() {
+			// public void imageLoaded(Drawable imageDrawable,
+			// String imageUrl) {
+			// ImageView imageView = (ImageView) mListView
+			// .findViewWithTag(imageUrl);
+			// if (imageView != null) {
+			// // BitmapDrawable bitmapDrawable =
+			// // (BitmapDrawable) imageDrawable;
+			// // Bitmap bitmap =
+			// // bitmapDrawable.getBitmap();
+			// //
+			// // BitmapDrawable bbb = new
+			// // BitmapDrawable(Utility.toRoundCorner(
+			// // bitmap, 30));
+			// imageView.setImageDrawable(imageDrawable);
+			// }
+			// avater.setImageDrawable(imageDrawable);
+			// }
+			// });
+			// avater.setBackgroundDrawable(cachedImage);
+			// // Drawable drawable = asyncImageLoader
+			// // .loadImageFromUrl(cursor
+			// // .getString(DatabaseHelper.AVATAR_INDEX));
+			// // avater.setImageDrawable(drawable);
+			// }
 
-				BitmapDrawable bbb = new BitmapDrawable(Utility.toRoundCorner(
-						bitmap, 30));
-				viewHolder.avater.setBackgroundDrawable(bbb);
-				// count days
-				int year = cursor.getInt(DatabaseHelper.YEAR_INDEX);
-				int month = cursor.getInt(DatabaseHelper.MONTH_INDEX);
-				int day = cursor.getInt(DatabaseHelper.DAY_INDEX);
-				int nowDay = cal.get(Calendar.DAY_OF_MONTH);
-				int nowMonth = cal.get(Calendar.MONTH) + 1;
-				int nowYear = cal.get(Calendar.YEAR);
-				Log.i(TAG, "isLunar:" + isLunar);
-				if (isLunar == 1) {
-					String nowLunar = ChineseCalendar.sCalendarSolarToLundar(
-							nowYear, nowMonth, nowDay);
-					String[] tmp = nowLunar.split("-");
-					nowYear = Integer.parseInt(tmp[0]);
-					nowMonth = Integer.parseInt(tmp[1]);
-					nowDay = Integer.parseInt(tmp[2]);
-				}
+			// Drawable drawable = null;
+			// if (cachedImage != null) {
+			// drawable = cachedImage;
+			// } else {
+			// drawable = context.getResources().getDrawable(
+			// R.drawable.avatar_default);
+			// }
+			// BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+			// Bitmap bitmap = bitmapDrawable.getBitmap();
+			//
+			// BitmapDrawable bbb = new
+			// BitmapDrawable(Utility.toRoundCorner(
+			// bitmap, 30));
+			// avater.setBackgroundDrawable(cachedImage);
+			// count days
+			int year = cursor.getInt(DatabaseHelper.YEAR_INDEX);
+			int month = cursor.getInt(DatabaseHelper.MONTH_INDEX);
+			int day = cursor.getInt(DatabaseHelper.DAY_INDEX);
+			int nowDay = cal.get(Calendar.DAY_OF_MONTH);
+			int nowMonth = cal.get(Calendar.MONTH) + 1;
+			int nowYear = cal.get(Calendar.YEAR);
+			Log.i(TAG, "isLunar:" + isLunar);
+			if (isLunar == 1) {
+				String nowLunar = ChineseCalendar.sCalendarSolarToLundar(
+						nowYear, nowMonth, nowDay);
+				String[] tmp = nowLunar.split("-");
+				nowYear = Integer.parseInt(tmp[0]);
+				nowMonth = Integer.parseInt(tmp[1]);
+				nowDay = Integer.parseInt(tmp[2]);
+			}
 
-				String time = String.valueOf(year + "-" + month + "-" + day);
-				String data = "";
-				int age = -1;
-				try {
-					SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-					Date date = f.parse(time);
-					age = Utility.getAge(date);
-					if (nowMonth > month) {
-						age = age + 1;
-					} else if (nowMonth == month) {
-						if (nowDay >= day) {
-							age = age + 1;
-						}
-					}
-					if (isLunar == 0) {
-						data = getResources().getString(R.string.age);
-					} else {
-						data = getResources().getString(R.string.lunar_age);
-					}
-				} catch (Exception e) {
-
-				}
-
-				String begin = String
-						.valueOf(nowYear + "-" + month + "-" + day);
-
-				String end = String.valueOf(nowYear + "-" + nowMonth + "-"
-						+ nowDay);
-				Log.i(TAG, "nowMonth:" + nowMonth);
-				Log.i(TAG, "month:" + month);
+			String time = String.valueOf(year + "-" + month + "-" + day);
+			String data = "";
+			int age = -1;
+			try {
+				SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = f.parse(time);
+				age = Utility.getAge(date);
 				if (nowMonth > month) {
+					age = age + 1;
+				} else if (nowMonth == month) {
+					if (nowDay >= day) {
+						age = age + 1;
+					}
+				}
+				if (isLunar == 0) {
+					data = getResources().getString(R.string.age);
+				} else {
+					data = getResources().getString(R.string.lunar_age);
+				}
+			} catch (Exception e) {
+
+			}
+
+			String begin = String.valueOf(nowYear + "-" + month + "-" + day);
+
+			String end = String
+					.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
+			Log.i(TAG, "nowMonth:" + nowMonth);
+			Log.i(TAG, "month:" + month);
+			if (nowMonth > month) {
+				end = String.valueOf((nowYear + 1) + "-" + month + "-" + day);
+				begin = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
+			} else if (nowMonth == month) {
+				if (nowDay > day) {
 					end = String.valueOf((nowYear + 1) + "-" + month + "-"
 							+ day);
 					begin = String.valueOf(nowYear + "-" + nowMonth + "-"
 							+ nowDay);
-				} else if (nowMonth == month) {
-					if (nowDay > day) {
-						end = String.valueOf((nowYear + 1) + "-" + month + "-"
-								+ day);
-						begin = String.valueOf(nowYear + "-" + nowMonth + "-"
-								+ nowDay);
-					}
 				}
-				long daycnt = Utility.getDays(begin, end);
-
-				if (daycnt == 0) {
-					if (isLunar == 0) {
-						data = getResources().getString(
-								R.string.today_birthday_solar);
-					} else {
-						data = getResources()
-								.getString(R.string.today_birthday);
-					}
-					viewHolder.day.setVisibility(View.INVISIBLE);
-					viewHolder.daycnt.setBackgroundResource(R.drawable.today);
-				} else {
-					viewHolder.daycnt
-							.setBackgroundResource(R.drawable.countdays_bg);
-					viewHolder.daycnt.setText(String.valueOf(daycnt));
-					viewHolder.day.setVisibility(View.VISIBLE);
-				}
-				data = String.format(data, age);
-				viewHolder.yearcnt.setText(data);
 			}
+			long daycnt = Utility.getDays(begin, end);
+			Log.i(TAG, "name:" + name.getText().toString());
+			Log.i(TAG, "daycnt:" + daycnt);
+			if (daycnt == 0) {
+				if (isLunar == 0) {
+					data = getResources().getString(
+							R.string.today_birthday_solar);
+				} else {
+					data = getResources().getString(R.string.today_birthday);
+				}
+				dayView.setVisibility(View.INVISIBLE);
+				daycntView.setBackgroundResource(R.drawable.today);
+			} else {
+				daycntView.setBackgroundResource(R.drawable.countdays_bg);
+				daycntView.setText(String.valueOf(daycnt));
+				dayView.setVisibility(View.VISIBLE);
+			}
+			data = String.format(data, age);
+			yearcntView.setText(data);
 		}
 	}
-
-	private class ViewHolder {
-		ImageView avater;
-		TextView name;
-		TextView date;
-		ImageView candle;
-		TextView yearcnt;
-		TextView daycnt;
-		TextView day;
-	}
-
 }

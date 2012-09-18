@@ -103,8 +103,8 @@ public class RenrenFriendsActivity extends Activity {
 				break;
 			case IMPORT_FAILURE:
 				importDialog.dismiss();
-				Toast.makeText(RenrenFriendsActivity.this, R.string.import_failure,
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(RenrenFriendsActivity.this,
+						R.string.import_failure, Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -217,6 +217,13 @@ public class RenrenFriendsActivity extends Activity {
 					checkNum++;
 				} else {
 					checkNum--;
+				}
+				if (checkNum == renrenList.size()) {
+					isSelectAll = true;
+					selectAll.setText(R.string.deselect_all);
+				} else {
+					isSelectAll = false;
+					selectAll.setText(R.string.select_all);
 				}
 				importBtn.setText("导入(" + checkNum + ")项");
 			}

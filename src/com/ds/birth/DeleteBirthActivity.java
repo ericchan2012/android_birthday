@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +24,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ds.birth.AsyncImageLoader.ImageCallback;
 import com.ds.db.DatabaseHelper;
@@ -31,8 +33,10 @@ import com.ds.db.DbHelper;
 public class DeleteBirthActivity extends Activity {
 	Cursor mCursor;
 	ProgressDialog mProgressDialog;
+	ProgressDialog mDelDialog;
 	private static final int SUCCESS = 1001;
 	private static final int EMPTY = 1002;
+	private static final int DELETE_SUCCESS = 1003;
 	private TextView mEmptyView;
 	private ListView mListView;
 	private DbHelper mDbHelper;
@@ -71,6 +75,16 @@ public class DeleteBirthActivity extends Activity {
 		selectAll.setVisibility(View.VISIBLE);
 		selectAll.setText(R.string.select_all);
 		delConfirm = (Button) findViewById(R.id.delconfirm);
+		delConfirm.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				mDelDialog = ProgressDialog.show(DeleteBirthActivity.this,
+						getResources().getString(R.string.delete_title),
+						getResources().getString(R.string.delete_message));
+				DelThread del = new DelThread();
+				del.start();
+			}
+		});
 		backBtn = (Button) findViewById(R.id.backBtn);
 		backBtn.setVisibility(View.VISIBLE);
 		backBtn.setOnClickListener(new OnClickListener() {
@@ -83,25 +97,27 @@ public class DeleteBirthActivity extends Activity {
 		selectAll.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (!isSelectAll) {
-//					for (int i = 0; i < mCursor.getCount(); i++) {
-//						isSelected.put(mCursor.getInt(DatabaserHelper.), true);
-//					}
-//					if(mCursor!=null && mCursor.getCount() > 0){
-//						mCursor.moveToFirst();
-//						do{
-//							isSelected.put(mCursor.getInt(DatabaseHelper.ID_INDEX), true);
-//						}while(cursor.moveToNext());
-//					}
-//					checkNum = mCount;
-//					dataChanged();
-//					isSelectAll = true;
-//					selectAll.setText(R.string.deselect_all);
+					if (mCursor != null && mCursor.getCount() > 0) {
+						mCursor.moveToFirst();
+						do {
+							isSelected.put(
+									mCursor.getInt(DatabaseHelper.ID_INDEX),
+									true);
+						} while (mCursor.moveToNext());
+					}
+					checkNum = mCount;
+					dataChanged();
+					isSelectAll = true;
+					selectAll.setText(R.string.deselect_all);
 				} else {
-					for (int i = 0; i < mCount; i++) {
-						if (isSelected.get(i)) {
-							isSelected.put(i, false);
-							checkNum--;// 数量减1
-						}
+					if (mCursor != null && mCursor.getCount() > 0) {
+						mCursor.moveToFirst();
+						do {
+							isSelected.put(
+									mCursor.getInt(DatabaseHelper.ID_INDEX),
+									false);
+							checkNum--;
+						} while (mCursor.moveToNext());
 					}
 					dataChanged();
 					isSelectAll = false;
@@ -112,16 +128,26 @@ public class DeleteBirthActivity extends Activity {
 		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 
-			public void onItemClick(AdapterView<?> arg0, View view,
+			public void onItemClick(AdapterView<?> adapter, View view,
 					int position, long arg3) {
-				// TODO Auto-generated method stub
 				CheckBox cb = (CheckBox) view.findViewById(R.id.check);
+				Cursor cursor = (Cursor) adapter.getItemAtPosition(position);
 				cb.toggle();
-				isSelected.put(position, cb.isChecked());
+				isSelected.put(cursor.getInt(DatabaseHelper.ID_INDEX),
+						cb.isChecked());
 				if (cb.isChecked() == true) {
 					checkNum++;
 				} else {
 					checkNum--;
+				}
+				if (mCursor != null && mCursor.getCount() > 0) {
+					if (checkNum == mCursor.getCount()) {
+						isSelectAll = true;
+						selectAll.setText(R.string.deselect_all);
+					}else{
+						isSelectAll = false;
+						selectAll.setText(R.string.select_all);
+					}
 				}
 				delConfirm.setText("删除(" + checkNum + ")项");
 			}
@@ -151,6 +177,7 @@ public class DeleteBirthActivity extends Activity {
 			switch (msg.what) {
 			case SUCCESS:
 				mProgressDialog.dismiss();
+				selectAll.setClickable(true);
 				adapter = new DeleteCursorAdapter(DeleteBirthActivity.this,
 						mCursor);
 				mListView.setAdapter(adapter);
@@ -158,10 +185,26 @@ public class DeleteBirthActivity extends Activity {
 
 			case EMPTY:
 				mProgressDialog.dismiss();
+				selectAll.setClickable(false);
 				adapter = null;
 				mListView.setAdapter(adapter);
 				mListView.setEmptyView(mEmptyView);
 				mListView.invalidate();
+				break;
+			case DELETE_SUCCESS:
+				mDelDialog.dismiss();
+				mCursor = mDbHelper.queryAll();
+				if (mCursor != null && mCursor.getCount() > 0) {
+					adapter.changeCursor(mCursor);
+				} else {
+					adapter = null;
+					mListView.setEmptyView(mEmptyView);
+				}
+				adapter.notifyDataSetChanged();
+				mListView.setAdapter(adapter);
+				mListView.invalidate();
+				Toast.makeText(DeleteBirthActivity.this,
+						R.string.delete_success, Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -180,6 +223,26 @@ public class DeleteBirthActivity extends Activity {
 			} else {
 				mHandler.sendEmptyMessage(EMPTY);
 			}
+		}
+	}
+
+	class DelThread extends Thread {
+
+		public DelThread() {
+		}
+
+		public void run() {
+			if (mCursor != null && mCursor.getCount() > 0) {
+				mCursor.moveToFirst();
+				do {
+					if (isSelected.get(mCursor.getInt(DatabaseHelper.ID_INDEX))) {
+						mDbHelper.delete(mCursor
+								.getInt(DatabaseHelper.ID_INDEX));
+					}
+				} while (mCursor.moveToNext());
+			}
+
+			mHandler.sendEmptyMessage(DELETE_SUCCESS);
 		}
 	}
 
@@ -203,11 +266,12 @@ public class DeleteBirthActivity extends Activity {
 		}
 
 		private void init() {
-			if(cursor!=null && cursor.getCount() > 0){
+			if (cursor != null && cursor.getCount() > 0) {
 				cursor.moveToFirst();
-				do{
-					isSelected.put(cursor.getInt(DatabaseHelper.ID_INDEX), false);
-				}while(cursor.moveToNext());
+				do {
+					isSelected.put(cursor.getInt(DatabaseHelper.ID_INDEX),
+							false);
+				} while (cursor.moveToNext());
 			}
 		}
 
@@ -240,13 +304,14 @@ public class DeleteBirthActivity extends Activity {
 								}
 							}
 						});
-
+				Log.i("DeleteBirthActivity","---delete birth----");
 				if (cachedImage != null) {
 					userImage.setImageDrawable(cachedImage);
 				} else {// 如果没有图片，就以一个载入的图片代替显示
 					userImage.setImageResource(R.drawable.avatar_default);
 				}
-				userCheck.setChecked(isSelected.get(cursor.getInt(DatabaseHelper.ID_INDEX)));
+				userCheck.setChecked(isSelected.get(cursor
+						.getInt(DatabaseHelper.ID_INDEX)));
 			}
 		}
 	}

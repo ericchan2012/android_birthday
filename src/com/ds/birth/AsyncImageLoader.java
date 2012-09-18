@@ -17,7 +17,8 @@ import com.ds.utility.Renren;
 public class AsyncImageLoader {
 
 	private HashMap<String, SoftReference<Drawable>> imageCache; // 缓存图片
-
+	private static final int POST=100;
+	private static final int POST2=101;
 	public AsyncImageLoader() {
 		imageCache = new HashMap<String, SoftReference<Drawable>>();
 	}
@@ -80,6 +81,37 @@ public class AsyncImageLoader {
 				Drawable drawable = loadImageFromUrl(imageUrl);
 				imageCache.put(imageUrl, new SoftReference<Drawable>(drawable));
 				Message message = handler.obtainMessage(0, drawable);
+				handler.sendMessage(message);
+			}
+		}.start();
+		return null;
+	}
+	
+	public Drawable loadDrawable(String id,final String imageUrl,
+			final ImageCallback imageCallback) {
+
+		// 判断缓存中是否已经存在图片，如果存在则直接返回
+		if (imageCache.containsKey(id)) {
+			SoftReference<Drawable> softReference = imageCache.get(id);
+			Drawable drawable = softReference.get();
+			if (drawable != null) {
+				return drawable;
+			}
+		}
+
+		final Handler handler = new Handler() {
+			public void handleMessage(Message message) {
+				imageCallback.imageLoaded((Drawable) message.obj, imageUrl);
+			}
+		};
+
+		// 开辟一个新线程去下载图片，并用Handler去更新UI
+		new Thread() {
+			@Override
+			public void run() {
+				Drawable drawable = loadImageFromUrl(imageUrl);
+				imageCache.put(imageUrl, new SoftReference<Drawable>(drawable));
+				Message message = handler.obtainMessage(POST2, drawable);
 				handler.sendMessage(message);
 			}
 		}.start();

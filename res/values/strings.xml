@@ -82,7 +82,7 @@
     <string name="about_detail_new">Copyright©2012 DStudio 梦想工作室 版权所有</string>
     <string name="client_name">我的生日管家 Android版</string>
     <string name="client_version">版本%1$s</string>
-    <string name="setting">设置</string>
+    <string name="setting">提醒开启</string>
     <string name="feedback">帮助反馈</string>
     <string name="appstore">精品推荐</string>
     <string name="update">检测更新</string>
@@ -90,5 +90,27 @@
     <string name="about">关于我们</string>
     <string name="renren_import">从人人网导入好友生日</string>
     <string name="kaixin_import">从开心网导入好友生日</string>
-	<string name="delete_title">删除好友</string>
+    <string name="delete_title">删除好友</string>
+    <string name="delete_success">删除成功</string>
+    <string name="delete_message">删除中，请稍侯...</string>
+    <string name="add">添加</string>
+    <string name="edit">编辑</string>
+    <string name="share_message_content">嗨，#我正使用腾讯手机管家#，不仅帮我拦截骚扰电话、垃圾短信，还帮我监控流量、查杀病毒，现在使用手机更安全放心了。永久免费的哦，推荐你试试http://msm.qq.com</string>
+    <string name="micro_blog_account">帐　号</string>
+    <string name="micro_blog_password">密　码</string>
+    <string name="micro_blog_account_hint">支持微博帐号/QQ号</string>
+    <string name="follow_QQPhoneSecure">关注生日管家</string>
+	<string name="share_weibo">分享到微博</string>
+	<string name="share_sms">发送短信</string>
+	<string name="feedback_contact_hint">联系方式:邮箱/QQ/手机号</string>
+    <string name="feedback_content_hint">请输入您的反馈意见</string>
+    <string name="submit">提交</string>
+    <string name="mock_record_first">常见的音乐随机播放算法主要有两种：一是Shuffle算法；二是Random算法</string>
+    <string name="mock_record_second">开源项目几乎都使用版本控制系统来对代码进行维护，著名的版本控制软件有诸如CVS、Rational ClearCase、Microsoft Visual SourceSafe、Git、Subversion、Mercurial等等</string>
+    <string name="feedback_record">反馈记录</string>
+    <string name="request_content">请输入反馈的意见</string>
+    <string name="waiting">正在处理，请稍等片刻…</string>
+    <string name="feedback_success">发送成功</string>
+    <string name="feedback_failed">发送失败</string>
+    <string name="update_hint">正在检查更新...</string>
 </resources>

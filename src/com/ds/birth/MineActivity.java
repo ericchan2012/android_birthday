@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ds.db.DbHelper;
@@ -46,6 +47,7 @@ public class MineActivity extends Activity implements OnClickListener {
 	private Button loginBtn;
 	private Button regBtn;
 	private ProgressDialog pDialog;
+	private TextView titleView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,8 @@ public class MineActivity extends Activity implements OnClickListener {
 		regBtn = (Button) findViewById(R.id.regBtn);
 		loginBtn.setOnClickListener(this);
 		regBtn.setOnClickListener(this);
+		titleView = (TextView)findViewById(R.id.title);
+		titleView.setText(R.string.mine_title);
 	}
 
 	public void onClick(View v) {

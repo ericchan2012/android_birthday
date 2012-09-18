@@ -14,6 +14,14 @@
         <item name="android:layout_marginRight">10.0dip</item>
         <item name="android:layout_marginBottom">8.0dip</item>
     </style>
+    <style name="text_big_default">
+        <item name="android:textSize">17.0sp</item>
+        <item name="android:textColor">@color/list_item_title_text_color</item>
+    </style>
+    <style name="text_small_default_black">
+        <item name="android:textSize">13.0sp</item>
+        <item name="android:textColor">@color/list_item_title_text_color</item>
+    </style>
 
     <style name="default_body_container">
         <item name="android:orientation">vertical</item>
@@ -21,7 +29,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_weight">1.0</item>
-    </style> 
+    </style>
 
     <style name="more_row_layout">
         <item name="android:gravity">center_vertical</item>
@@ -53,6 +61,16 @@
         <item name="android:src">@drawable/right_arr</item>
         <item name="android:layout_weight">0.2</item>
     </style>
+    <style name="more_right_toggle">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/btn_toggle_bg</item>
+        <item name="android:layout_width">0.0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.2</item>
+        <item name="android:textOff">@null</item>
+        <item name="android:textOn">@null</item>
+        <item name="android:disabledAlpha">?android:disabledAlpha</item>
+    </style>
 
     <style name="default_linearlayout_background">
         <item name="android:orientation">vertical</item>
@@ -62,7 +80,7 @@
     </style>
 
     <style name="headerNav">
-        <item name="android:background">@drawable/nav_bar_bg</item>
+        <item name="android:background">@drawable/header_bg</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">43.0dip</item>
         <item name="android:baselineAligned">true</item>
@@ -90,6 +108,7 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:visibility">gone</item>
     </style>
+
     <style name="head_nav_right_button">
         <item name="android:textSize">12.0sp</item>
         <item name="android:textColor">@android:color/white</item>
@@ -233,17 +252,52 @@
 
     <style name="top_left_button" parent="@android:style/Widget.Button">
         <item name="android:textColor">#ffffffff</item>
-        <item name="android:background">@drawable/back_button_bg</item>
+        <item name="android:background">@drawable/delete</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:visibility">invisible</item>
+        <item name="android:layout_marginLeft">8.0dip</item>
+    </style>
+
+    <style name="radiogroup">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">6dip</item>
+        <item name="android:orientation">horizontal</item>
     </style>
 
     <style name="top_right_button" parent="@android:style/Widget.Button">
         <item name="android:textColor">#ffffffff</item>
-        <item name="android:background">@drawable/top_right_button_bg</item>
+        <item name="android:background">@drawable/nav_button_right</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:visibility">invisible</item>
     </style>
 
-    <style name="header_right_button" parent="@android:style/Widget.Button">
-        <item name="android:textColor">#ffffffff</item>
-        <item name="android:background">@drawable/people</item>
+    <style name="top_left_radio" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/tab_left_bg</item>
+        <item name="android:button">@null</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_width">0.0dip</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:checked">true</item>
+    </style>
+
+    <style name="top_right_radio" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/tab_right_bg</item>
+        <item name="android:button">@null</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_width">0.0dip</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:layout_height">fill_parent</item>
     </style>
 
     <style name="bottom_radio" parent="@android:style/Widget.CompoundButton.RadioButton">
@@ -259,20 +313,6 @@
         <item name="android:drawableLeft">@null</item>
         <item name="android:drawableRight">@null</item>
         <item name="android:layout_weight">1.0</item>
-    </style>
-
-    <style name="top_left_radio" parent="@android:style/Widget.CompoundButton.RadioButton">
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/top_left_radio_button_bg</item>
-        <item name="android:button">@null</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <style name="top_right_radio" parent="@android:style/Widget.CompoundButton.RadioButton">
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/top_right_radio_button_bg</item>
-        <item name="android:button">@null</item>
-        <item name="android:singleLine">true</item>
     </style>
 
     <style name="list_view" parent="@android:style/Widget.ListView">

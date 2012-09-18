@@ -15,5 +15,12 @@
     <color name="greenBackground">#ff5bbd2c</color>
     <color name="whiteTextColor">#ffffffff</color>
     <color name="black_text_color">#ff58595b</color>
+    <color name="list_item_bg_color">#ffeeeeee</color>
+    <color name="list_item_title_bg_color">#ffd6d9de</color>
+    <color name="list_item_bg_color_focus">#ffffe9a1</color>
+    <color name="main_bg_color">#ffd6d9de</color>
+    <color name="log_white">#ffffffff</color>
+    <color name="list_item_title_text_color">#ff333333</color>
+    <color name="background_color">#ffdbdada</color>
 
 </resources>

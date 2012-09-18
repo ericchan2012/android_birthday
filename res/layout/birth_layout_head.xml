@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/headerNav" >
+
+    <Button
+        android:id="@+id/top_left_button"
+        style="@style/top_left_button" />
+
+    <Button
+        android:id="@+id/top_right_button"
+        style="@style/head_nav_right_button" />
+
+    <RadioGroup
+        style="@style/radiogroup"
+        android:layout_alignBottom="@+id/top_right_button" >
+
+        <RadioButton
+            android:id="@+id/top_left_radio"
+            style="@style/top_left_radio" />
+
+        <RadioButton
+            android:id="@+id/top_right_radio"
+            style="@style/top_right_radio" />
+    </RadioGroup>
+
+</RelativeLayout>

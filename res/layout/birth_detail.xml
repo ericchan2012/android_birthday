@@ -5,7 +5,7 @@
     android:background="@drawable/border_bg"
     android:orientation="vertical" >
 
-    <include layout="@layout/birth_detail_head" />
+    <include layout="@layout/head_nav" />
 
     <ScrollView
         android:layout_width="fill_parent"

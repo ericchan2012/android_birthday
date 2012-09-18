@@ -36,9 +36,10 @@
                                 style="@style/more_row_title_text"
                                 android:text="@string/setting" />
 
-                            <ImageButton
-                                android:id="@+id/eventArrow"
-                                style="@style/more_right_arrow" />
+                            <ToggleButton
+                                android:id="@+id/toggleBtn"
+                                style="@style/more_right_toggle" />
+                           
                         </LinearLayout>
 
                         <ImageView style="@style/divider_line" />

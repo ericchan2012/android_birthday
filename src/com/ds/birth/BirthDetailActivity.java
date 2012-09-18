@@ -59,6 +59,7 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 	private ImageBtn blessImgBtn;
 	private ImageBtn luckyImgBtn;
 	private ImageBtn wikiImgBtn;
+	private TextView titleView;
 
 	int year;
 	int month;
@@ -71,7 +72,8 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 	private static final String LUNAR_YEAR = "lunar_year";
 	private static final String LUNAR_MONTH = "lunar_month";
 	private static final String LUNAR_DAY = "lunar_day";
-//	private static final String NOTE = "note";
+
+	// private static final String NOTE = "note";
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,11 +86,15 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 
 	private void initViews() {
 		lunarShare = getSharedPreferences(LUNAR_SHARE, 0);
-		backBtn = (Button) findViewById(R.id.back);
-		editBtn = (Button) findViewById(R.id.edit);
+		backBtn = (Button) findViewById(R.id.backBtn);
+		editBtn = (Button) findViewById(R.id.rightBtn);
+		backBtn.setVisibility(View.VISIBLE);
+		editBtn.setVisibility(View.VISIBLE);
+		editBtn.setText(R.string.edit);
 		backBtn.setOnClickListener(this);
 		editBtn.setOnClickListener(this);
-
+		titleView = (TextView) findViewById(R.id.title);
+		titleView.setText(R.string.detail_title);
 		nameTextView = (TextView) findViewById(R.id.name);
 		avatarView = (ImageView) findViewById(R.id.avatar);
 		genderView = (ImageView) findViewById(R.id.gender);
@@ -250,6 +256,8 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 
 	private void updateDetailData(Person p) {
 		Log.i(TAG, "birthdate:" + p.getBirthDay());
+		titleView.setText(p.getName()
+				+ getResources().getString(R.string.detail_title));
 		nameTextView.setText(p.getName());
 		mainTextView.setText(p.getBirthDay());
 		noteTextView.setText(p.getNote());
@@ -313,8 +321,9 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.NOTE, tmp);
 		dbHelper.update(values, " _id = " + birthId);
-//		getSharedPreferences(LUNAR_SHARE, 0).edit().putString(NOTE, tmp + note)
-//				.commit();
+		// getSharedPreferences(LUNAR_SHARE, 0).edit().putString(NOTE, tmp +
+		// note)
+		// .commit();
 	}
 
 	private void getDays(boolean isLunar) {
@@ -369,9 +378,9 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 			end = String.valueOf((nowYear + 1) + "-" + month + "-" + day);
 			begin = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
 		} else if (nowMonth == month) {
-			Log.i(TAG,"nowMonth==month");
+			Log.i(TAG, "nowMonth==month");
 			if (nowDay > day) {
-				Log.i(TAG,"nowDay>day");
+				Log.i(TAG, "nowDay>day");
 				end = String.valueOf((nowYear + 1) + "-" + month + "-" + day);
 				begin = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
 			}
@@ -386,10 +395,10 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.back:
+		case R.id.backBtn:
 			finish();
 			break;
-		case R.id.edit:
+		case R.id.rightBtn:
 			// edit birthday
 			Intent intent = new Intent(BirthConstants.ACTION_EDIT_BIRTH);
 			Bundle extras = new Bundle();

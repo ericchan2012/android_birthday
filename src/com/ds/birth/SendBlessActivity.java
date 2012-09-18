@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ds.widget.MyEditText;
@@ -56,11 +57,15 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 	private void initViews() {
 		myEditText = (MyEditText) findViewById(R.id.phone);
 		myEditText.setText(R.string.phone);
-		sendBtn = (Button) findViewById(R.id.edit);
+		sendBtn = (Button) findViewById(R.id.rightBtn);
+		sendBtn.setVisibility(View.VISIBLE);
 		sendBtn.setText(R.string.send);
 		sendBtn.setOnClickListener(this);
-		backBtn = (Button) findViewById(R.id.back);
+		backBtn = (Button) findViewById(R.id.backBtn);
 		backBtn.setOnClickListener(this);
+		backBtn.setVisibility(View.VISIBLE);
+		TextView title = (TextView)findViewById(R.id.title);
+		title.setText(R.string.bless);
 		msgEditText = (EditText) findViewById(R.id.message);
 		selectContactBtn = (Button) findViewById(R.id.selectcontact);
 		selectContactBtn.setOnClickListener(this);
@@ -68,10 +73,10 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.back:
+		case R.id.backBtn:
 			finish();
 			break;
-		case R.id.edit:
+		case R.id.rightBtn:
 			// send sms
 			String phoneNumber = myEditText.getEditText();
 			String message = msgEditText.getText().toString();

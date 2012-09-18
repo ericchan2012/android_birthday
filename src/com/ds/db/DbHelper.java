@@ -62,6 +62,11 @@ public class DbHelper {
 
 		return cur;
 	}
+	
+	public int delete(int id){
+		SQLiteDatabase db = databaseHelper.getWritableDatabase();
+		return db.delete(BIRTH_TABLE, "_id = " + id, null);
+	}
 
 	public void open(Context context) {
 		databaseHelper = new DatabaseHelper(context);
