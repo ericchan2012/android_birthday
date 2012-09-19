@@ -61,25 +61,35 @@ public class MineActivity extends Activity implements OnClickListener {
 	private Button regBtn;
 	private ProgressDialog pDialog;
 	private TextView titleView;
+	private int isPersonal = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.birth_mine);
+		// setContentView(R.layout.birth_mine);
+		setContentView(R.layout.personal);
 		dbHelper = DbHelper.getInstance(this);
 		dbHelper.open(this);
-		initViews();
+		initPersonalViews();
+		// initViews();
+	}
+
+	private void initPersonalViews() {
+		titleView = (TextView) findViewById(R.id.title);
+		titleView.setText(R.string.personal);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		loginPre = getSharedPreferences(LOGIN, 0);
-		mState = loginPre.getInt(STATE, 0);
-		repass = loginPre.getBoolean(ISREPASS, false);
-		mName = loginPre.getString(NAME, "");
-		mPasswd = loginPre.getString(PASSWORD, "");
-		updateViews();
+		if (isPersonal == 0) {
+			loginPre = getSharedPreferences(LOGIN, 0);
+			mState = loginPre.getInt(STATE, 0);
+			repass = loginPre.getBoolean(ISREPASS, false);
+			mName = loginPre.getString(NAME, "");
+			mPasswd = loginPre.getString(PASSWORD, "");
+			updateViews();
+		}
 	}
 
 	private void updateViews() {
@@ -94,14 +104,17 @@ public class MineActivity extends Activity implements OnClickListener {
 	protected void onStop() {
 		super.onStop();
 		dbHelper.close();
-		loginPre = getSharedPreferences(LOGIN, 0);
-		Editor editor = loginPre.edit();
-		editor.putInt(STATE, mState).putBoolean(ISREPASS, mRePass.isChecked())
-				.putString(NAME, mNameEdit.getText().toString());
-		if (mRePass.isChecked()) {
-			editor.putString(PASSWORD, mPassEdit.getText().toString());
+		if (isPersonal == 0) {
+			loginPre = getSharedPreferences(LOGIN, 0);
+			Editor editor = loginPre.edit();
+			editor.putInt(STATE, mState)
+					.putBoolean(ISREPASS, mRePass.isChecked())
+					.putString(NAME, mNameEdit.getText().toString());
+			if (mRePass.isChecked()) {
+				editor.putString(PASSWORD, mPassEdit.getText().toString());
+			}
+			editor.commit();
 		}
-		editor.commit();
 	}
 
 	private void initViews() {
@@ -250,10 +263,10 @@ public class MineActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
-	
-	private void updateContentView(){
-//		MineActivity.this.setContentView(layoutResID);
-		
+
+	private void updateContentView() {
+		// MineActivity.this.setContentView(layoutResID);
+
 	}
 
 	private void showErrorDialog() {

@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/name"
                     android:layout_toRightOf="@+id/avatar"
-                    android:background="@drawable/boy" />
+                    android:background="@drawable/sex_male" />
 
                 <TextView
                     android:id="@+id/birth_date"

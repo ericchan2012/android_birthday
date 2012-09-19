@@ -28,5 +28,8 @@
     <color name="tel_color">#ff656565</color>
     <color name="orangeTextColor">#fff1b000</color>
      <color name="light_dark">#ff808285</color>
+     <color name="light_dark_text_new_color">#ff6d6e71</color>
+     <color name="green_new_color">#ff9dc815</color>
+     <color name="gray_text_new_color">#ffa7a9ac</color>
 
 </resources>

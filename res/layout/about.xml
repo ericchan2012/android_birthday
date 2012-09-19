@@ -5,7 +5,7 @@
 
     <LinearLayout style="@style/default_linearlayout_background" >
 
-        <include layout="@layout/head_nav" />
+        <include layout="@layout/head_nav" /> 
 
         <RelativeLayout
             android:layout_width="fill_parent"

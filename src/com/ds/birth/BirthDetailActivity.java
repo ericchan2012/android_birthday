@@ -290,9 +290,9 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		mainTextView.setText(p.getBirthDay());
 		noteTextView.setText(p.getNote());
 		if (p.getGender() == 1) {
-			genderView.setBackgroundResource(R.drawable.girl);
+			genderView.setBackgroundResource(R.drawable.sex_female);
 		} else {
-			genderView.setBackgroundResource(R.drawable.boy);
+			genderView.setBackgroundResource(R.drawable.sex_male);
 		}
 		if (p.getIsLunar() == 1) {
 			lunarView.setBackgroundResource(R.drawable.nong_blue);

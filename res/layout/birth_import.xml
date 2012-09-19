@@ -50,6 +50,9 @@
 
                             <ImageButton style="@style/more_right_arrow" />
                         </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
+
                         <LinearLayout
                             android:id="@+id/contact"
                             style="@style/more_row_layout" >

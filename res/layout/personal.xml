@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout style="@style/default_linearlayout_background" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="43.0dip" >
+
+            <include layout="@layout/head_nav" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/mainBodyLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0" >
+
+            <ScrollView
+                android:id="@+id/scrollView1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:scrollbars="none" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/focus_view"
+                        android:layout_width="0.0px"
+                        android:layout_height="0.0px"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true" />
+
+                    <LinearLayout
+                        style="@style/profile_row_container"
+                        android:layout_marginBottom="5.0dip"
+                        android:orientation="horizontal" >
+
+                        <RelativeLayout
+                            android:layout_width="100.0dip"
+                            android:layout_height="100.0dip"
+                            android:layout_marginTop="2.0dip"
+                            android:background="@null" >
+
+                            <ImageView
+                                android:id="@+id/avatar"
+                                android:layout_width="96.0dip"
+                                android:layout_height="96.0dip"
+                                android:layout_centerInParent="true"
+                                android:background="@color/transparent"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/common_head_withbg" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout1"
+                            android:layout_width="0.0dip"
+                            android:layout_height="110.0dip"
+                            android:layout_marginBottom="0.0dip"
+                            android:layout_marginLeft="10.0dip"
+                            android:layout_weight="1.0"
+                            android:orientation="vertical"
+                            android:paddingTop="3.0dip" >
+
+                            <TextView
+                                android:id="@+id/whoseBaby"
+                                android:layout_width="wrap_content"
+                                android:layout_height="24.0dip"
+                                android:layout_marginBottom="2.0dip"
+                                android:layout_marginLeft="5.0dip"
+                                android:singleLine="true"
+                                android:textColor="@color/light_dark_text_new_color"
+                                android:textSize="17.0sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/description"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38.0dip"
+                                android:layout_marginBottom="2.0dip"
+                                android:layout_marginLeft="5.0dip"
+                                android:singleLine="false"
+                                android:textColor="@color/light_dark"
+                                android:textSize="15.0dip" />
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="40.0dip"
+                                android:layout_gravity="bottom"
+                                android:layout_marginBottom="0.0dip"
+                                android:gravity="center"
+                                android:orientation="horizontal" >
+
+                                <Button
+                                    android:id="@+id/privacySetBtn"
+                                    style="@style/normal_edit_button_new"
+                                    android:text="@string/privacy_set" />
+
+                                <Button
+                                    android:id="@+id/editProfile"
+                                    style="@style/normal_edit_button_new"
+                                    android:layout_marginLeft="15.0dip"
+                                    android:text="@string/edit_profile" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout2"
+                        android:visibility="invisible"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            style="@style/common_row_wrapper"
+                            android:layout_gravity="center" >
+
+                            <LinearLayout
+                                android:id="@+id/follow"
+                                style="@style/personal_row_item_layout" >
+
+                                <TextView
+                                    style="@style/personal_row_item_ahead_text"
+                                    android:text="@string/following" />
+
+                                <TextView
+                                    android:id="@+id/following_total"
+                                    style="@style/personal_row_item_count_text" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="1.0px"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:background="@color/gray_new_color" />
+
+                            <LinearLayout
+                                android:id="@+id/follower"
+                                style="@style/personal_row_item_layout" >
+
+                                <TextView
+                                    style="@style/personal_row_item_ahead_text"
+                                    android:text="@string/follower" />
+
+                                <TextView
+                                    android:id="@+id/follower_total"
+                                    style="@style/personal_row_item_count_text" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="1.0px"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:background="@color/gray_new_color" />
+
+                            <LinearLayout
+                                android:id="@+id/my_article"
+                                style="@style/personal_row_item_layout" >
+
+                                <TextView
+                                    style="@style/personal_row_item_ahead_text"
+                                    android:text="@string/my_article" />
+
+                                <TextView
+                                    android:id="@+id/my_article_count"
+                                    style="@style/personal_row_item_count_text" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="1.0px"
+                                android:layout_height="fill_parent"
+                                android:layout_gravity="center"
+                                android:background="@color/gray_new_color" />
+
+                            <LinearLayout
+                                android:id="@+id/my_subject"
+                                style="@style/personal_row_item_layout" >
+
+                                <TextView
+                                    style="@style/personal_row_item_ahead_text"
+                                    android:text="@string/my_subject" />
+
+                                <TextView
+                                    android:id="@+id/my_subject_count"
+                                    style="@style/personal_row_item_count_text" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            style="@style/more_row_wrapper"
+                            android:layout_gravity="center" >
+
+                            <LinearLayout
+                                android:id="@+id/backup"
+                                android:background="@drawable/tools_backup_bg"
+                                style="@style/more_row_layout_ex" >
+
+                                <TextView
+                                    style="@style/more_row_ahead_text"
+                                    android:text="@string/backup" />
+
+                                <TextView
+                                    android:id="@+id/pointsCount"
+                                    style="@style/point_count_text"
+                                    android:visibility="invisible" />
+
+                                <ImageButton style="@style/more_right_arrow_ex"
+                                    android:src="@drawable/tools_backup_logo" />
+                            </LinearLayout>
+
+                            <ImageView style="@style/divider_line" />
+
+                            <LinearLayout
+                                android:id="@+id/recovery"
+                                style="@style/more_row_layout_ex"
+                                android:background="@drawable/tools_recover_bg" >
+
+                                <TextView
+                                    style="@style/more_row_ahead_text"
+                                    android:text="@string/recovery" />
+
+                                <TextView
+                                    android:id="@+id/newNotificationsCount"
+                                    style="@style/news_count_style"
+                                    android:visibility="invisible" />
+
+                                <ImageButton style="@style/more_right_arrow_ex" 
+                                    android:src="@drawable/tools_recover_logo"/>
+                            </LinearLayout>
+
+                            <ImageView style="@style/divider_line" />
+
+                            <LinearLayout
+                                android:id="@+id/sync"
+                                android:background="@drawable/tools_sync_bg"
+                                style="@style/more_row_layout_ex" >
+
+                                <TextView
+                                    style="@style/more_row_ahead_text"
+                                    android:text="@string/sync" />
+
+                                <TextView
+                                    android:id="@+id/newPriMsgsCount"
+                                    style="@style/news_count_style"
+                                    android:visibility="invisible" />
+
+                                <ImageButton style="@style/more_right_arrow_ex"
+                                    android:src="@drawable/tools_sync_logo" />
+                            </LinearLayout>
+
+                            <ImageView style="@style/divider_line" />
+
+                            <LinearLayout
+                                android:id="@+id/searchBtn"
+                                android:visibility="gone"
+                                style="@style/more_row_layout" >
+
+                                <TextView
+                                    style="@style/more_row_ahead_text"
+                                    android:text="@string/search_search" />
+
+                                <TextView
+                                    android:id="@+id/same_age_total"
+                                    style="@style/more_row_count_text" />
+
+                                <ImageButton style="@style/more_right_arrow_ex" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </FrameLayout>
+    </LinearLayout>
+
+</RelativeLayout>

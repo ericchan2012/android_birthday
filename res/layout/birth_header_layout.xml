@@ -16,13 +16,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:onClick="topLeftButtonClicked"
         android:text="@string/back"
         android:visibility="invisible" />
 
     <Button
         android:id="@+id/top_right_button"
-        style="@style/header_right_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
