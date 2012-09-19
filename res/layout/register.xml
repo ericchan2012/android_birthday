@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/default_linearlayout_background" >
+
+    <include layout="@layout/head_nav" />
+
+    <LinearLayout style="@style/default_body_container" >
+
+        <LinearLayout
+            style="@style/login_reg_row_container"
+            android:layout_marginTop="20.0dip" >
+
+            <LinearLayout style="@style/login_reg_row_wrapper" >
+
+                <LinearLayout style="@style/login_reg_row_layout" >
+
+                    <TextView
+                        style="@style/login_reg_row_title_text"
+                        android:text="@string/phone_number" />
+
+                    <TextView
+                        android:id="@+id/phone_number"
+                        style="@style/login_reg_row_edit_text"
+                        android:background="@null"
+                        android:clickable="false"
+                        android:inputType="number" />
+                </LinearLayout>
+
+                <ImageView style="@style/divider_line" />
+
+                <LinearLayout style="@style/login_reg_row_layout" >
+
+                    <TextView
+                        style="@style/login_reg_row_title_text"
+                        android:text="@string/password" />
+
+                    <EditText
+                        android:id="@+id/password"
+                        style="@style/login_reg_row_edit_text"
+                        android:hint="@string/password_hint"
+                        android:inputType="textPassword" >
+
+                        <requestFocus />
+                    </EditText>
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/divider_line"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    style="@style/login_reg_row_layout"
+                    android:visibility="gone" >
+
+                    <TextView
+                        style="@style/login_reg_row_title_text"
+                        android:text="@string/user_name" />
+
+                    <EditText
+                        android:id="@+id/user_name"
+                        style="@style/login_reg_row_edit_text"
+                        android:hint="@string/user_name_hint"
+                        android:inputType="text" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

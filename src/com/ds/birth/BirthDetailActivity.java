@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ds.db.DatabaseHelper;
@@ -25,7 +27,6 @@ import com.ds.utility.ChineseCalendar;
 import com.ds.utility.Lunar;
 import com.ds.utility.Person;
 import com.ds.utility.Utility;
-import com.ds.widget.ImageBtn;
 
 public class BirthDetailActivity extends Activity implements OnClickListener {
 	private static final String TAG = "BirthDetailActivity";
@@ -48,18 +49,22 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 	private TextView ageView;
 	private TextView dayView;
 	private String mName;
-	private TextView constants;
+	// private TextView constants;
 	private EditText noteTextView;
 	private int mIsLunar;
+	private int mIsStar;
 	private int ringtype;
 	private String ringdays;
 	private String birthday;
 	private int gender;
 	private String note;
-	private ImageBtn blessImgBtn;
-	private ImageBtn luckyImgBtn;
-	private ImageBtn wikiImgBtn;
+	private String phoneNumber;
+	private LinearLayout blessImgBtn;
+	private LinearLayout luckyImgBtn;
+	private LinearLayout wikiImgBtn;
 	private TextView titleView;
+	private LinearLayout callLayout;
+	private TextView phoneNumView;
 
 	int year;
 	int month;
@@ -72,6 +77,11 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 	private static final String LUNAR_YEAR = "lunar_year";
 	private static final String LUNAR_MONTH = "lunar_month";
 	private static final String LUNAR_DAY = "lunar_day";
+
+	private TextView solarAge;
+	private TextView lunarAge;
+	private ImageView starView;
+	private boolean isStar = false;
 
 	// private static final String NOTE = "note";
 
@@ -93,6 +103,15 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		editBtn.setText(R.string.edit);
 		backBtn.setOnClickListener(this);
 		editBtn.setOnClickListener(this);
+		starView = (ImageView) findViewById(R.id.favor);
+		starView.setOnClickListener(this);
+
+		callLayout = (LinearLayout) findViewById(R.id.call);
+		phoneNumView = (TextView) findViewById(R.id.phoneNum);
+
+		solarAge = (TextView) findViewById(R.id.solarage);
+		lunarAge = (TextView) findViewById(R.id.lunarage);
+
 		titleView = (TextView) findViewById(R.id.title);
 		titleView.setText(R.string.detail_title);
 		nameTextView = (TextView) findViewById(R.id.name);
@@ -102,44 +121,39 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		lunarView = (ImageView) findViewById(R.id.lunar);
 		mainTextView = (TextView) findViewById(R.id.birth_date);
 		secondaryTextView = (TextView) findViewById(R.id.birth_secondary_date);
-		lunarView.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				year = lunarShare.getInt(LUNAR_YEAR, -1);
-				month = lunarShare.getInt(LUNAR_MONTH, -1);
-				day = lunarShare.getInt(LUNAR_DAY, -1);
-				getDays(true);
-				solarView.setBackgroundResource(R.drawable.gong_grey);
-				lunarView.setBackgroundResource(R.drawable.nong_blue);
-			}
-
-		});
-		solarView.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				year = lunarShare.getInt(YEAR, -1);
-				month = lunarShare.getInt(MONTH, -1);
-				day = lunarShare.getInt(DAY, -1);
-				getDays(false);
-				solarView.setBackgroundResource(R.drawable.gong_blue);
-				lunarView.setBackgroundResource(R.drawable.nong_grey);
-			}
-
-		});
+//		lunarView.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				year = lunarShare.getInt(LUNAR_YEAR, -1);
+//				month = lunarShare.getInt(LUNAR_MONTH, -1);
+//				day = lunarShare.getInt(LUNAR_DAY, -1);
+//				// getDays(true);
+//				solarView.setBackgroundResource(R.drawable.gong_grey);
+//				lunarView.setBackgroundResource(R.drawable.nong_blue);
+//			}
+//
+//		});
+//		solarView.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				year = lunarShare.getInt(YEAR, -1);
+//				month = lunarShare.getInt(MONTH, -1);
+//				day = lunarShare.getInt(DAY, -1);
+//				// getDays(false);
+//				solarView.setBackgroundResource(R.drawable.gong_blue);
+//				lunarView.setBackgroundResource(R.drawable.nong_grey);
+//			}
+//
+//		});
+		// getDays(R.id.solarage);
+		// getDays(R.id.lunarage);
 
 		ageView = (TextView) findViewById(R.id.agecnt);
 		dayView = (TextView) findViewById(R.id.leftday);
-		noteTextView = (EditText) findViewById(R.id.birth_info_beizhu);
+		noteTextView = (EditText) findViewById(R.id.note_et);
 		solarAlarmTextView = (TextView) findViewById(R.id.alarmsolar);
 		lunarAlarmTextView = (TextView) findViewById(R.id.alarmlunar);
-		constants = (TextView) findViewById(R.id.constants);
-		blessImgBtn = (ImageBtn) findViewById(R.id.blessing);
-		luckyImgBtn = (ImageBtn) findViewById(R.id.lucky);
-		wikiImgBtn = (ImageBtn) findViewById(R.id.wiki);
-		blessImgBtn.setText(R.string.bless);
-		luckyImgBtn.setText(R.string.lucky);
-		wikiImgBtn.setText(R.string.wiki);
-		blessImgBtn.setImageResource(R.drawable.birth_info_msg);
-		luckyImgBtn.setImageResource(R.drawable.lucky_selector);
-		wikiImgBtn.setImageResource(R.drawable.log_baike);
+		blessImgBtn = (LinearLayout) findViewById(R.id.blessing);
+		luckyImgBtn = (LinearLayout) findViewById(R.id.lucky);
+		wikiImgBtn = (LinearLayout) findViewById(R.id.wiki);
 		blessImgBtn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -191,7 +205,9 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 								.getString(DatabaseHelper.NAME_INDEX));
 						Log.i(TAG, "start query year:" + year);
 						mIsLunar = mCursor.getInt(DatabaseHelper.ISLUNAR_INDEX);
+						mIsStar = mCursor.getInt(DatabaseHelper.ISSTAR_INDEX);
 						person.setIsLunar(mIsLunar);
+						person.setIsStar(mIsStar);
 						birthday = mCursor
 								.getString(DatabaseHelper.BIRTHDAY_INDEX);
 						person.setBirthDay(birthday);
@@ -237,9 +253,12 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 									.putInt(LUNAR_DAY, day).commit();
 						}
 						note = mCursor.getString(DatabaseHelper.NOTE_INDEX);
+						phoneNumber = mCursor
+								.getString(DatabaseHelper.PHONE_NUMBER_INDEX);
 						// String tmp = lunarShare.getString(NOTE, "");
 						// lunarShare.edit().putString(NOTE, note +
 						// tmp).commit();
+						person.setPhoneNumber(phoneNumber);
 						person.setNote(note);
 						ringtype = mCursor
 								.getInt(DatabaseHelper.RINGTYPE_INDEX);
@@ -256,6 +275,15 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 
 	private void updateDetailData(Person p) {
 		Log.i(TAG, "birthdate:" + p.getBirthDay());
+		if (p.getIsStar() == 1) {
+			starView.setBackgroundResource(R.drawable.contact_detial_rb_fever_c);
+			isStar = true;
+		}
+		if (p.getPhoneNumber().length() != 0) {
+			phoneNumView.setText(p.getPhoneNumber());
+		} else {
+			phoneNumView.setText(R.string.no_phone_number);
+		}
 		titleView.setText(p.getName()
 				+ getResources().getString(R.string.detail_title));
 		nameTextView.setText(p.getName());
@@ -287,11 +315,11 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 			secondaryTextView.setText(Lunar.getYear(tmpYear)
 					+ monthsTmp[tmpMonth - 1] + daysTmp[tmpDay - 1]);
 		}
-		if (p.getIsLunar() == 1) {
-			getDays(true);
-		} else {
-			getDays(false);
-		}
+		// if (p.getIsLunar() == 1) {
+		getDays(R.id.lunarage);
+		// } else {
+		getDays(R.id.solarage);
+		// }
 		String solartmp = getResources().getString(R.string.solaralarm);
 		String lunartmp = getResources().getString(R.string.lunaralarm);
 		String noalarm = getResources().getString(R.string.noalarm);
@@ -320,13 +348,24 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		String tmp = noteTextView.getText().toString();
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.NOTE, tmp);
+		if (isStar) {
+			values.put(DatabaseHelper.ISSTAR, 0);
+		} else {
+			values.put(DatabaseHelper.ISSTAR, 1);
+		}
+
 		dbHelper.update(values, " _id = " + birthId);
 		// getSharedPreferences(LUNAR_SHARE, 0).edit().putString(NOTE, tmp +
 		// note)
 		// .commit();
+		dbHelper.close();
 	}
 
-	private void getDays(boolean isLunar) {
+	private void getDays(int viewId) {
+		boolean isLunar = false;
+		if (viewId == R.id.lunarage) {
+			isLunar = true;
+		}
 		Calendar cal = Calendar.getInstance();
 		int nowDay = cal.get(Calendar.DAY_OF_MONTH);
 		int nowMonth = cal.get(Calendar.MONTH) + 1;
@@ -358,13 +397,13 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 					age = age + 1;
 				}
 			}
-			if (isLunar) {
-				// data = getResources().getString(R.string.ageShowlunar);
-				constants.setText(R.string.ageShowlunar);
-			} else {
-				// data = getResources().getString(R.string.ageShowsolar);
-				constants.setText(R.string.ageShowsolar);
-			}
+			// if (isLunar) {
+			// // data = getResources().getString(R.string.ageShowlunar);
+			// constants.setText(R.string.ageShowlunar);
+			// } else {
+			// // data = getResources().getString(R.string.ageShowsolar);
+			// constants.setText(R.string.ageShowsolar);
+			// }
 		} catch (Exception e) {
 
 		}
@@ -385,16 +424,29 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 				begin = String.valueOf(nowYear + "-" + nowMonth + "-" + nowDay);
 			}
 		}
+		data = getResources().getString(R.string.age_show);
 		long daycnt = Utility.getDays(begin, end);
-
-		dayView.setText(String.valueOf(daycnt));
-		// data = String.format(data, age);
-		data = String.valueOf(age);
-		ageView.setText(data);
+		data = String.format(data, age, daycnt);
+		if (isLunar) {
+			// lunarLeftDay.setText(String.valueOf(daycnt));
+			// data = String.valueOf(age);
+			lunarAge.setText(data);
+		} else {
+			// solarLeftDay.setText(String.valueOf(daycnt));
+			// data = String.valueOf(age);
+			solarAge.setText(data);
+		}
 	}
 
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.call:
+			if (phoneNumber != null && phoneNumber.length() != 0) {
+				Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+						+ phoneNumber));
+				startActivity(intent);
+			}
+			break;
 		case R.id.backBtn:
 			finish();
 			break;
@@ -406,8 +458,26 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 			intent.putExtras(extras);
 			startActivityForResult(intent, EDIT_BIRTHDAY);
 			break;
+		case R.id.favor:
+			// String where = "_id = " + birthId;
+			// ContentValues values = new ContentValues();
+			if (isStar) {
+				starView.setBackgroundResource(R.drawable.contact_detial_rb_fever_no);
+//				values.put(DatabaseHelper.ISSTAR, 0);
+				isStar = false;
+			} else {
+				starView.setBackgroundResource(R.drawable.contact_detial_rb_fever_c);
+//				values.put(DatabaseHelper.ISSTAR, 1);
+				isStar = true;
+			}
+			// updateStar(values, where);
+			break;
 		}
 	}
+
+	// private void updateStar(ContentValues values, String where) {
+	// dbHelper.update(values, where);
+	// }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

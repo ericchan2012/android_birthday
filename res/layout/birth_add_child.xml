@@ -1,45 +1,301 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_marginTop="10.0dip"
+    android:layout_weight="1.0" >
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="210.0dip"
-        android:layout_marginLeft="10.0dip"
-        android:layout_marginRight="10.0dip"
+        android:layout_height="fill_parent"
         android:orientation="vertical" >
 
-        <include layout="@layout/card_head_name" />
+        <LinearLayout
+            android:id="@+id/head_and_input"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="5dip"
+            android:paddingLeft="13.0dip"
+            android:paddingRight="13.0dip" >
 
-        <include layout="@layout/card_head_gender" />
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
 
-        <include layout="@layout/card_head_birthday" />
+                <ImageView
+                    android:id="@+id/head"
+                    android:layout_width="59.0dip"
+                    android:layout_height="59.0dip"
+                    android:background="@drawable/common_head_withbg" />
+
+                <ImageView
+                    android:id="@+id/photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right|center"
+                    android:background="@drawable/setting_photo" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="3.0dip"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="left"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="190dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="3.0dip"
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/input"
+                    android:hint="@string/pls_input_name"
+                    android:paddingLeft="5.0dip"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColorHint="#ffdcdcdc" />
+
+                <CheckBox
+                    android:id="@+id/star"
+                    android:background="@drawable/checkbox_bg"
+                    android:layout_width="25.0dip"
+                    android:layout_height="25.0dip"
+                    android:button="@null" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/save_birthday"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7.0dip"
+            android:background="@drawable/setting_press" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50.0dip"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="80.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="6.0dip"
+                    android:layout_weight="1.0"
+                    android:text="@string/save_birthday"
+                    android:textColor="#ff000000" />
+
+                <TextView
+                    android:id="@+id/tv_birthday"
+                    android:layout_width="100.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="21.0dip"
+                    android:layout_weight="1.0"
+                    android:background="@null"
+                    android:hint="@string/save_birthday_hint" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/birthattach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ff999999"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ring_setting"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:layout_marginTop="7.0dip"
+            android:background="@drawable/setting_press"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="80.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6.0dip"
+                android:layout_weight="1.0"
+                android:drawableRight="@drawable/ringtone"
+                android:text="@string/ringtype"
+                android:textColor="#ff000000" />
+
+            <TextView
+                android:id="@+id/tv_ringtype"
+                android:layout_width="122.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="21.0dip"
+                android:layout_weight="1.0"
+                android:background="@null"
+                android:hint="@string/ringtype_hint"
+                android:scrollHorizontally="true" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:minHeight="36.0dip"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="9.0dip"
+                    android:text="@string/ringdays"
+                    android:textColor="#ff333333"
+                    android:textSize="16.0dip" />
+
+                <TextView
+                    android:id="@+id/tv_ringdays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="25.0dip"
+                    android:gravity="left"
+                    android:lineSpacingExtra="3.0dip"
+                    android:text="@string/ringdays_hint"
+                    android:textColor="#ff104984"
+                    android:textSize="16.0dip" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/save_gender"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:layout_marginTop="7.0dip"
+            android:background="@drawable/setting_press"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="80.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6.0dip"
+                android:layout_weight="1.0"
+                android:text="@string/gender"
+                android:textColor="#ff000000" />
+
+            <TextView
+                android:id="@+id/tv_gender"
+                android:layout_width="150.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15.0dip"
+                android:layout_weight="1.0"
+                android:background="@null"
+                android:scrollHorizontally="true"
+                android:text="@string/default_gender"
+                android:textColor="#ff000000"
+                android:textColorHint="#ff000000"
+                android:textSize="14.0sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="5.0dip"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/phone"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:layout_marginTop="7.0dip"
+            android:background="@drawable/setting_press"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="80.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6.0dip"
+                android:layout_weight="1.0"
+                android:text="@string/phone"
+                android:textColor="#ff000000" />
+
+            <EditText
+                android:id="@+id/tv_number"
+                android:layout_width="150.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15.0dip"
+                android:layout_weight="1.0"
+                android:background="@null"
+                android:hint="@string/phone_input_hint"
+                android:scrollHorizontally="true"
+                android:textSize="14.0sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="5.0dip"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/phone"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:layout_marginTop="7.0dip"
+            android:background="@drawable/setting_press"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="80.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6.0dip"
+                android:layout_weight="1.0"
+                android:text="@string/note_str"
+                android:textColor="#ff000000" />
+
+            <EditText
+                android:id="@+id/tv_note"
+                android:layout_width="150.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15.0dip"
+                android:layout_weight="1.0"
+                android:background="@null"
+                android:hint="@string/note_hint"
+                android:scrollHorizontally="true"
+                android:textSize="14.0sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="5.0dip"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:gravity="center" />
+        </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="30.0dip"
-        android:layout_marginLeft="10.0dip"
-        android:layout_marginTop="5.0dip"
-        android:gravity="center_vertical"
-        android:text="提醒设置"
-        android:textColor="#ff333333"
-        android:textSize="15.0dip" />
-
-    <include layout="@layout/card_reminder_set" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="30.0dip"
-        android:layout_marginLeft="10.0dip"
-        android:layout_marginTop="5.0dip"
-        android:gravity="center_vertical"
-        android:text="其它"
-        android:textColor="#ff333333"
-        android:textSize="15.0dip" />
-
-    <include layout="@layout/card_other" />
-
-</LinearLayout>
+</ScrollView>

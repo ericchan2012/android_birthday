@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
@@ -301,7 +302,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		genderText = (TextView) findViewById(R.id.tv_gender);
 		ringDaysText = (TextView) findViewById(R.id.tv_ringdays);
 		ringTypeText = (TextView) findViewById(R.id.tv_ringtype);
-		headerImage = (ImageView) findViewById(R.id.img_icon);
+		headerImage = (ImageView) findViewById(R.id.head);
 		mBirthdayTextView = (TextView) findViewById(R.id.tv_birthday);
 		mBirthAttach = (TextView) findViewById(R.id.birthattach);
 		mStar = (CheckBox) findViewById(R.id.star);
@@ -371,7 +372,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						R.id.tv_ringtype, defaultRingType);
 			}
 			break;
-		case R.id.img_icon:
+		case R.id.head:
 			loadMenu();
 			break;
 		case R.id.rightBtn:
@@ -431,8 +432,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						cal.set(Calendar.DAY_OF_MONTH,
 								(day.getCurrentItem() + 1));
 						Lunar lunar = new Lunar(cal);
-						String lunarYear = lunar.getLunarYear()
-								+ mRes.getString(R.string.year);
+						String lunarYear = lunar.getLunarYear();
 						String monthstr[] = mRes
 								.getStringArray(R.array.lunarMonths);
 						String daystr[] = mRes
@@ -693,6 +693,8 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		name = nameEdit.getText().toString();
 		if (name == null || name.equals("")) {
 			// show dialog
+			Toast.makeText(this, R.string.pls_input_name, Toast.LENGTH_SHORT)
+					.show();
 			return;
 		}
 		generateData();

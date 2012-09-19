@@ -1,16 +1,28 @@
 package com.ds.birth;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,6 +40,7 @@ import com.ds.db.DbHelper;
  * 
  */
 public class MineActivity extends Activity implements OnClickListener {
+	private static final String Tag = "MineActivity";
 	DbHelper dbHelper;
 	private static final String LOGIN = "login";
 	private static final String PASSWORD = "passwd";
@@ -101,7 +114,7 @@ public class MineActivity extends Activity implements OnClickListener {
 		regBtn = (Button) findViewById(R.id.regBtn);
 		loginBtn.setOnClickListener(this);
 		regBtn.setOnClickListener(this);
-		titleView = (TextView)findViewById(R.id.title);
+		titleView = (TextView) findViewById(R.id.title);
 		titleView.setText(R.string.mine_title);
 	}
 
@@ -135,10 +148,88 @@ public class MineActivity extends Activity implements OnClickListener {
 						.getString(R.string.login_message));
 		pDialog.show();
 		// connect the server to check the account,
+		String url = "http://10.1.1.121:80/birthday/login.php?name=" + name
+				+ "&passwd=" + passwd;
+		isSuccess = serverCheckLogin(url);
 		if (isSuccess) {
 			mHandler.sendEmptyMessage(SUCCESS);
 		} else {
 			mHandler.sendEmptyMessage(FAILURE);
+		}
+	}
+
+	public boolean serverCheckLogin(String url) {
+		int res = 0;
+		boolean result = false;
+		HttpClient client = new DefaultHttpClient();
+		StringBuilder str = new StringBuilder();
+		HttpGet httpGet = new HttpGet(url);
+		try {
+			HttpResponse httpRes = client.execute(httpGet);
+			httpRes = client.execute(httpGet);
+			res = httpRes.getStatusLine().getStatusCode();
+			if (res == 200) {
+				BufferedReader buffer = new BufferedReader(
+						new InputStreamReader(httpRes.getEntity().getContent()));
+				for (String s = buffer.readLine(); s != null; s = buffer
+						.readLine()) {
+					str.append(s);
+				}
+				Log.i(Tag, str.toString());
+				if (str.equals(0)) {
+					result = false;
+				} else {
+					result = true;
+				}
+			} else {
+				Log.i(Tag, "HttpGet Error");
+			}
+		} catch (Exception e) {
+			Log.i(Tag, "Exception");
+		}
+		return result;
+	}
+
+	public void getServerJsonDataWithNoType(String url) {
+		int res = 0;
+		HttpClient client = new DefaultHttpClient();
+		StringBuilder str = new StringBuilder();
+		HttpGet httpGet = new HttpGet(url);
+		try {
+			HttpResponse httpRes = client.execute(httpGet);
+			httpRes = client.execute(httpGet);
+			res = httpRes.getStatusLine().getStatusCode();
+			if (res == 200) {
+				BufferedReader buffer = new BufferedReader(
+						new InputStreamReader(httpRes.getEntity().getContent()));
+				for (String s = buffer.readLine(); s != null; s = buffer
+						.readLine()) {
+					str.append(s);
+				}
+				// String out =
+				// EntityUtils.toString(httpRes.getEntity().getContent(),
+				// "UTF-8");
+				// StringBuilder sb = new StringBuilder()
+				Log.i(Tag, str.toString());
+				try {
+					// JSONObject json = new
+					// JSONObject(str.toString()).getJSONObject("content");
+					JSONObject json = new JSONObject(str.toString());
+					String title = json.getString("title");
+					Log.i(Tag, title);
+					int id = json.getInt("id");
+					String value = json.getString("value");
+					Log.i(Tag, value);
+				} catch (JSONException e) {
+					Log.i(Tag, e.getLocalizedMessage());
+					// buffer.close();
+					e.printStackTrace();
+				}
+			} else {
+				Log.i(Tag, "HttpGet Error");
+			}
+		} catch (Exception e) {
+			Log.i(Tag, "Exception");
 		}
 	}
 
@@ -150,6 +241,7 @@ public class MineActivity extends Activity implements OnClickListener {
 			case SUCCESS:
 				// startActivity
 				pDialog.dismiss();
+				updateContentView();
 				break;
 			case FAILURE:
 				pDialog.dismiss();
@@ -158,6 +250,11 @@ public class MineActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+	
+	private void updateContentView(){
+//		MineActivity.this.setContentView(layoutResID);
+		
+	}
 
 	private void showErrorDialog() {
 		Dialog dialog = new AlertDialog.Builder(MineActivity.this)

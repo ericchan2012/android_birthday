@@ -43,6 +43,21 @@
                         </LinearLayout>
 
                         <ImageView style="@style/divider_line" />
+                        <LinearLayout
+                            android:id="@+id/auto_login"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                style="@style/more_row_title_text"
+                                android:text="@string/autologin" />
+
+                            <ToggleButton
+                                android:id="@+id/auto_login_toggle"
+                                style="@style/more_right_toggle" />
+                           
+                        </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
 
                         <LinearLayout
                             android:id="@+id/feedback"

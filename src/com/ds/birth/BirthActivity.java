@@ -384,7 +384,7 @@ public class BirthActivity extends Activity {
 			// || cursor.getString(DatabaseHelper.AVATAR_INDEX)
 			// .length() == 0) {
 			Drawable drawable = context.getResources().getDrawable(
-					R.drawable.avatar_default);
+					R.drawable.common_head_withbg);
 			avater.setBackgroundDrawable(drawable);
 			// } else {
 			// Drawable cachedImage = asyncImageLoader.loadDrawable(

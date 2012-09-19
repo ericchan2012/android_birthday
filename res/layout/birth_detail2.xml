@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/border_bg"
+    android:orientation="vertical" >
+
+    <include layout="@layout/head_nav" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.8" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="0dp" >
+            </EditText>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="130.0dip" >
+
+                <LinearLayout
+                    android:id="@+id/avatar_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginTop="17.0dip"
+                    android:orientation="vertical" >
+
+                    <FrameLayout
+                        android:id="@+id/leftimgframe"
+                        android:layout_width="60.0dip"
+                        android:layout_height="60.0dip"
+                        android:background="@drawable/ava_bg" >
+
+                        <ImageView
+                            android:id="@+id/avatar"
+                            android:layout_width="60.0dip"
+                            android:layout_height="60.0dip"
+                            android:scaleType="centerCrop" />
+
+                        <ImageView
+                            android:id="@+id/mask"
+                            android:layout_width="60.0dip"
+                            android:layout_height="60.0dip" />
+                    </FrameLayout>
+
+                    <ImageView
+                        android:layout_width="68.0dip"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/solar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="7.0dip"
+                    android:background="@drawable/solar_bg" />
+
+                <ImageView
+                    android:id="@+id/lunar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/solar"
+                    android:background="@drawable/lunar_bg" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/avatar_ll"
+                    android:layout_marginLeft="2.0dip"
+                    android:layout_toRightOf="@+id/gender"
+                    android:text="name"
+                    android:textColor="#ff333333"
+                    android:textSize="18.0dip" />
+
+                <ImageView
+                    android:id="@+id/gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/name"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15.0dip"
+                    android:layout_marginTop="6.0dip"
+                    android:layout_toRightOf="@+id/avatar_ll"
+                    android:background="@drawable/boy" />
+
+                <TextView
+                    android:id="@+id/birth_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/birth_secondary_date"
+                    android:layout_below="@+id/name"
+                    android:layout_marginTop="4.0dip"
+                    android:textColor="#ff333333"
+                    android:textSize="14.0dip" />
+
+                <TextView
+                    android:id="@+id/birth_secondary_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/gender"
+                    android:layout_below="@+id/birth_date"
+                    android:layout_marginTop="5.0dip"
+                    android:layout_toRightOf="@+id/gender"
+                    android:gravity="center"
+                    android:textColor="#ff333333"
+                    android:textSize="14.0dip" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="fill_parent"
+                android:layout_height="1.0dip"
+                android:layout_marginLeft="7.0dip"
+                android:layout_marginRight="7.0dip"
+                android:background="@drawable/birth_line" />
+
+            <include layout="@layout/birth_detail_item" />
+
+            <include layout="@layout/birth_detail_cloud" />
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/birth_detail_footer" />
+
+</LinearLayout>

@@ -10,7 +10,16 @@ public class Person {
 	String ringDays;
 	int isStar;
 	String note;
+	String phoneNumber;
 	
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
 	public String getNote() {
 		return note;

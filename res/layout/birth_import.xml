@@ -50,6 +50,16 @@
 
                             <ImageButton style="@style/more_right_arrow" />
                         </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/contact"
+                            style="@style/more_row_layout" >
+
+                            <TextView
+                                style="@style/more_row_title_text"
+                                android:text="@string/contact_import" />
+
+                            <ImageButton style="@style/more_right_arrow" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

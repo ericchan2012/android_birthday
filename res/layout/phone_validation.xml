@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/default_linearlayout_background" >
+
+   <include layout="@layout/head_nav"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.0"
+        android:orientation="vertical" >
+
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <LinearLayout style="@style/default_body_container" >
+
+                <LinearLayout
+                    style="@style/login_reg_row_container"
+                    android:layout_marginBottom="0.0dip"
+                    android:layout_marginTop="20.0dip" >
+
+                    <LinearLayout style="@style/login_reg_row_wrapper" >
+
+                        <LinearLayout style="@style/login_reg_row_layout" >
+
+                            <TextView
+                                style="@style/login_reg_row_title_text"
+                                android:layout_weight="0.3"
+                                android:text="@string/phone_number" />
+
+                            <EditText
+                                android:id="@+id/phone_number"
+                                style="@style/login_reg_row_edit_text"
+                                android:layout_weight="0.6"
+                                android:background="@null"
+                                android:hint="@string/phone_number_hint"
+                                android:inputType="phone" >
+
+                                <requestFocus />
+                            </EditText>
+
+                            <TextView
+                                style="@style/login_reg_row_step"
+                                android:text="1" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
+
+                        <LinearLayout
+                            style="@style/login_reg_row_layout"
+                            android:layout_marginBottom="0.0dip" >
+
+                            <LinearLayout
+                                android:id="@+id/linearLayout1"
+                                android:layout_width="0.0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.7"
+                                android:gravity="center_horizontal" >
+
+                                <RelativeLayout
+                                    android:id="@+id/get_validation_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:background="@drawable/bt_light_orange"
+                                    android:gravity="center_horizontal" >
+
+                                    <ImageView
+                                        android:id="@+id/refresh_img"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignBottom="@+id/get_validation_btn"
+                                        android:layout_alignTop="@+id/get_validation_btn"
+                                        android:layout_toLeftOf="@+id/get_validation_btn"
+                                        android:src="@drawable/icon_1" />
+
+                                    <TextView
+                                        android:id="@+id/get_validation_code_text"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_toRightOf="@+id/refresh_img"
+                                        android:text="@string/get_validation_code"
+                                        android:textColor="@color/orangeTextColor" />
+                                </RelativeLayout>
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/cant_get_regid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right|center"
+                                android:layout_weight="0.2"
+                                android:gravity="center"
+                                android:text="@string/cant_get_regid"
+                                android:textColor="#ff184ffb" />
+
+                            <TextView
+                                style="@style/login_reg_row_step"
+                                android:layout_gravity="center"
+                                android:text="2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:visibility="gone"
+                            style="@style/login_reg_row_layout"
+                            android:layout_marginTop="0.0dip" >
+
+                            <TextView
+                                android:id="@+id/textView1"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/get_validation_code_hint"
+                                android:textColor="@color/light_dark"
+                                android:textSize="12.0sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                             style="@style/divider_line" />
+
+                        <LinearLayout style="@style/login_reg_row_layout" >
+
+                            <TextView
+                                style="@style/login_reg_row_title_text"
+                                android:layout_weight="0.3"
+                                android:text="@string/validation_code" />
+
+                            <EditText
+                                android:id="@+id/validation_code"
+                                style="@style/login_reg_row_edit_text"
+                                android:layout_weight="0.6"
+                                android:background="@null"
+                                android:hint="@string/input_validation_code_hint"
+                                android:inputType="number" />
+
+                            <TextView
+                                style="@style/login_reg_row_step"
+                                android:text="2" />
+                        </LinearLayout>
+
+                        <ImageView style="@style/divider_line" />
+
+                        <LinearLayout style="@style/login_reg_row_layout" >
+
+                            <TextView
+                                style="@style/login_reg_row_title_text"
+                                android:layout_weight="0.3"
+                                android:text="@string/password" />
+
+                            <EditText
+                                android:id="@+id/password"
+                                style="@style/login_reg_row_edit_text"
+                                android:layout_weight="0.6"
+                                android:hint="@string/password_hint"
+                                android:inputType="textPassword" />
+
+                            <TextView
+                                style="@style/login_reg_row_step"
+                                android:text="3" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:orientation="horizontal" >
+
+                    <CheckBox
+                        android:id="@+id/eula_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/read"
+                        android:textColor="@color/black_text_color"
+                        android:textSize="15.0sp" />
+
+                    <TextView
+                        android:id="@+id/eula_content_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/baby_eula"
+                        android:textColor="@color/orangeTextColor"
+                        android:textSize="15.0sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</LinearLayout>

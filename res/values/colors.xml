@@ -22,5 +22,11 @@
     <color name="log_white">#ffffffff</color>
     <color name="list_item_title_text_color">#ff333333</color>
     <color name="background_color">#ffdbdada</color>
+    <color name="transparent">#00000000</color>
+    <color name="contact_text">#ff4b4b4b</color>
+    <color name="text_gray">#ff656565</color>
+    <color name="tel_color">#ff656565</color>
+    <color name="orangeTextColor">#fff1b000</color>
+     <color name="light_dark">#ff808285</color>
 
 </resources>

@@ -1,29 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contact_detial_layout_bottom"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginBottom="10dip"
-    android:layout_marginRight="10dip"
-    android:layout_marginTop="10dip"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/botm_layout_botm_margin"
+    android:layout_marginTop="@dimen/botm_layout_margin"
+    android:background="@color/transparent"
     android:orientation="horizontal" >
 
-    <com.ds.widget.ImageBtn
-        android:id="@+id/blessing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dip" />
-
-    <com.ds.widget.ImageBtn
+    <LinearLayout
         android:id="@+id/lucky"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="5dip" />
+        android:layout_marginLeft="@dimen/botm_layout_margin"
+        android:layout_weight="1.0"
+        android:background="@drawable/contact_detial_send_card"
+        android:gravity="center" >
 
-    <com.ds.widget.ImageBtn
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/send_card" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/lucky"
+            android:textColor="@drawable/common_btn_color"
+            android:textSize="16.0sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/wiki"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="5dip" >
-    </com.ds.widget.ImageBtn>
+        android:layout_marginRight="@dimen/botm_layout_margin"
+        android:layout_weight="1.0"
+        android:background="@drawable/contact_detial_see_space"
+        android:gravity="center" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/invite_use" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/wiki"
+            android:textColor="@drawable/common_btn_color"
+            android:textSize="16.0sp" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -300,11 +300,11 @@ public class MoreActivity extends Activity implements OnClickListener {
 
 	void update() {
 
-		// Intent intent = new Intent(Intent.ACTION_VIEW);
-		// intent.setDataAndType(Uri.fromFile(new File(Environment
-		// .getExternalStorageDirectory(), Config.UPDATE_SAVENAME)),
-		// "application/vnd.android.package-archive");
-		// startActivity(intent);
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setDataAndType(Uri.fromFile(new File(Environment
+				.getExternalStorageDirectory(), Config.UPDATE_SAVENAME)),
+				"application/vnd.android.package-archive");
+		startActivity(intent);
 	}
 
 }
