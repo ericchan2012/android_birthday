@@ -25,10 +25,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.ds.feedback.FeedbackActivity;
 import com.ds.iphone.BirthDialogBuilder;
@@ -52,6 +56,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 	private static final int CANCEL_UPDATE = 1002;
 	private Handler handler = new Handler();
 
+//	ToggleButton autoLogin;
+	private static final String TAG = "MoreActivity";
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -81,13 +87,27 @@ public class MoreActivity extends Activity implements OnClickListener {
 		title = (TextView) findViewById(R.id.title);
 		title.setText(R.string.more);
 		setting = (LinearLayout) findViewById(R.id.setting);
-//		setting.setClickable(false);
+		// setting.setClickable(false);
 		feedback = (LinearLayout) findViewById(R.id.feedback);
 		appstore = (LinearLayout) findViewById(R.id.appstore);
 		update = (LinearLayout) findViewById(R.id.update);
 		invite = (LinearLayout) findViewById(R.id.invite);
 		about = (LinearLayout) findViewById(R.id.about);
-//		setting.setOnClickListener(this);
+		// setting.setOnClickListener(this);
+//		autoLogin = (ToggleButton) findViewById(R.id.auto_login_toggle);
+//		boolean isAuto = getSharedPreferences(MineActivity.LOGIN, 0)
+//				.getBoolean(MineActivity.ISAUTOLOGIN, false);
+//		autoLogin.setChecked(isAuto);
+//		autoLogin.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//
+//			public void onCheckedChanged(CompoundButton buttonView,
+//					boolean isChecked) {
+//				Log.i(TAG, "isChecked:" + isChecked);
+//				getSharedPreferences(MineActivity.LOGIN, 0).edit()
+//						.putBoolean(MineActivity.ISAUTOLOGIN, isChecked)
+//						.commit();
+//			}
+//		});
 		feedback.setOnClickListener(this);
 		appstore.setOnClickListener(this);
 		update.setOnClickListener(this);
@@ -99,8 +119,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent();
 		switch (v.getId()) {
-//		case R.id.setting:
-//			break;
+		// case R.id.setting:
+		// break;
 		case R.id.feedback:
 			intent.setClass(this, FeedbackActivity.class);
 			break;

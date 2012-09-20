@@ -12,6 +12,7 @@
         android:id="@+id/friendsList"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_gravity="center"
         android:layout_weight="7.0"
         android:cacheColorHint="#00000000" />
 
@@ -19,10 +20,12 @@
         android:id="@+id/emptyview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:text="@string/no_renren_friend"
-        android:visibility="gone" />
+        />
 
-    <LinearLayout
+     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="60.0dip"
         android:layout_weight="1.0"
@@ -34,6 +37,6 @@
             android:layout_height="wrap_content"
             android:text="导入"
             android:textColor="#ff333333" />
-    </LinearLayout>
+    </LinearLayout>-->
 
 </LinearLayout>

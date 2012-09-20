@@ -161,6 +161,24 @@
                                 style="@style/login_reg_row_step"
                                 android:text="3" />
                         </LinearLayout>
+                        <LinearLayout style="@style/login_reg_row_layout" >
+
+                            <TextView
+                                style="@style/login_reg_row_title_text"
+                                android:layout_weight="0.3"
+                                android:text="@string/nickname" />
+
+                            <EditText
+                                android:id="@+id/nickname"
+                                style="@style/login_reg_row_edit_text"
+                                android:layout_weight="0.6"
+                                android:hint="@string/nickname_hint"
+                                 />
+
+                            <TextView
+                                style="@style/login_reg_row_step"
+                                android:text="4" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 

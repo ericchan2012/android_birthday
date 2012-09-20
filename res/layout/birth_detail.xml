@@ -209,7 +209,7 @@
                     <LinearLayout
                         android:id="@+id/call"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="fill_parent"
                         android:layout_weight="1.0"
                         android:background="@drawable/contact_detial_new_call" >
 
@@ -226,7 +226,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginTop="10dip"
                             android:layout_weight="1.0"
                             android:orientation="horizontal"
                              >
@@ -256,7 +255,6 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:layout_marginTop="20dip"
                             android:scaleType="fitXY"
                             android:src="@drawable/line_v" />
                     </LinearLayout>

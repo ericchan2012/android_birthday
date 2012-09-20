@@ -107,6 +107,7 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		starView.setOnClickListener(this);
 
 		callLayout = (LinearLayout) findViewById(R.id.call);
+		callLayout.setOnClickListener(this);
 		phoneNumView = (TextView) findViewById(R.id.phoneNum);
 
 		solarAge = (TextView) findViewById(R.id.solarage);
@@ -348,11 +349,6 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		String tmp = noteTextView.getText().toString();
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.NOTE, tmp);
-		if (isStar) {
-			values.put(DatabaseHelper.ISSTAR, 0);
-		} else {
-			values.put(DatabaseHelper.ISSTAR, 1);
-		}
 
 		dbHelper.update(values, " _id = " + birthId);
 		// getSharedPreferences(LUNAR_SHARE, 0).edit().putString(NOTE, tmp +
@@ -459,25 +455,26 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 			startActivityForResult(intent, EDIT_BIRTHDAY);
 			break;
 		case R.id.favor:
-			// String where = "_id = " + birthId;
-			// ContentValues values = new ContentValues();
+			 String where = "_id = " + birthId;
+			 ContentValues values = new ContentValues();
 			if (isStar) {
 				starView.setBackgroundResource(R.drawable.contact_detial_rb_fever_no);
-//				values.put(DatabaseHelper.ISSTAR, 0);
+				values.put(DatabaseHelper.ISSTAR, 0);
 				isStar = false;
 			} else {
 				starView.setBackgroundResource(R.drawable.contact_detial_rb_fever_c);
-//				values.put(DatabaseHelper.ISSTAR, 1);
+				values.put(DatabaseHelper.ISSTAR, 1);
 				isStar = true;
 			}
-			// updateStar(values, where);
+			 updateStar(values, where);
 			break;
 		}
 	}
 
-	// private void updateStar(ContentValues values, String where) {
-	// dbHelper.update(values, where);
-	// }
+	private void updateStar(ContentValues values, String where) {
+		dbHelper.update(values, where);
+		dbHelper.close();
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -223,6 +223,10 @@ public class Lunar {
 	public String get_month() {// 返回阴历的月份
 		return chineseNumber[month - 1];
 	}
+	
+	public static String getChineseMonth(int month){
+		return chineseNumber[month - 1];
+	}
 
 	public String get_date() {// 返回阴历的天
 		return getChinaDayString(day);

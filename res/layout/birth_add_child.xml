@@ -15,8 +15,8 @@
             android:id="@+id/head_and_input"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginTop="5dip"
+            android:gravity="center"
             android:paddingLeft="13.0dip"
             android:paddingRight="13.0dip" >
 
@@ -65,9 +65,9 @@
 
                 <CheckBox
                     android:id="@+id/star"
-                    android:background="@drawable/checkbox_bg"
                     android:layout_width="25.0dip"
                     android:layout_height="25.0dip"
+                    android:background="@drawable/checkbox_bg"
                     android:button="@null" />
             </LinearLayout>
         </LinearLayout>
@@ -199,7 +199,7 @@
                 android:layout_marginLeft="6.0dip"
                 android:layout_weight="1.0"
                 android:text="@string/gender"
-                android:textColor="#ff000000" />
+                android:textColor="#ff333333" />
 
             <TextView
                 android:id="@+id/tv_gender"
@@ -211,8 +211,8 @@
                 android:background="@null"
                 android:scrollHorizontally="true"
                 android:text="@string/default_gender"
-                android:textColor="#ff000000"
-                android:textColorHint="#ff000000"
+                android:textColor="#ff104984"
+                android:textColorHint="#ff104984"
                 android:textSize="14.0sp" />
 
             <LinearLayout

@@ -59,8 +59,8 @@
         android:text="@string/age"
         android:textColor="#ff808080"
         android:textSize="12.0sp"
-        android:visibility="gone"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/day"
@@ -70,10 +70,10 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="15.0dip"
         android:paddingRight="2.0dip"
-        android:visibility="gone"
         android:textColor="#ff808080"
         android:textSize="14.0sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/daycnt"
@@ -84,8 +84,17 @@
         android:layout_toLeftOf="@+id/day"
         android:gravity="bottom|center"
         android:textColor="#ffffffff"
-        android:visibility="gone"
-        android:textSize="26.0dip" />
+        android:textSize="26.0dip"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/favor"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dip"
+        android:layout_marginTop="20dip"
+        android:gravity="right|center" />
 
     <ImageView
         android:layout_width="fill_parent"

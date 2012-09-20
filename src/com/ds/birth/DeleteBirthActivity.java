@@ -196,15 +196,16 @@ public class DeleteBirthActivity extends Activity {
 				mCursor = mDbHelper.queryAll();
 				if (mCursor != null && mCursor.getCount() > 0) {
 					adapter.changeCursor(mCursor);
+					adapter.notifyDataSetChanged();
 				} else {
 					adapter = null;
 					mListView.setEmptyView(mEmptyView);
 				}
-				adapter.notifyDataSetChanged();
 				mListView.setAdapter(adapter);
 				mListView.invalidate();
 				Toast.makeText(DeleteBirthActivity.this,
 						R.string.delete_success, Toast.LENGTH_SHORT).show();
+				finish();
 				break;
 			}
 		}
@@ -308,7 +309,7 @@ public class DeleteBirthActivity extends Activity {
 				if (cachedImage != null) {
 					userImage.setImageDrawable(cachedImage);
 				} else {// 如果没有图片，就以一个载入的图片代替显示
-					userImage.setImageResource(R.drawable.avatar_default);
+					userImage.setImageResource(R.drawable.common_head_withbg);
 				}
 				userCheck.setChecked(isSelected.get(cursor
 						.getInt(DatabaseHelper.ID_INDEX)));

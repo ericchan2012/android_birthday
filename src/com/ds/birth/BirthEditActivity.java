@@ -122,6 +122,10 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	private static final String LUNAR_DAY = "lunar_day";
 	private static final String SHARE_BIRTH_EDIT = "edit.xml";
 
+	public static final String TYPE = "type";
+	public static final String NAME = "name";
+	private String meName = "";
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.birth_add);
@@ -143,7 +147,11 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	private void initMode() {
 		Intent intent = getIntent();
 		if (intent.getAction().equals(BirthConstants.ACTION_ADD_BIRTH)) {
+			mType = intent.getIntExtra(TYPE, 0);
 			mMode = MODE_ADD;
+			if (mType == 1) {
+				meName = intent.getStringExtra(NAME);
+			}
 		} else {
 			mMode = MODE_EDIT;
 			mId = intent.getExtras().getInt(BirthConstants.ID);
@@ -229,6 +237,8 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						person.setBirthDay(birth);
 						person.setRingDays(ringdays);
 						person.setRingtype(ringtype);
+						mType = mCursor.getInt(DatabaseHelper.TYPE_INDEX);
+						person.setType(mType);
 						updateEdit(person);
 					} while (mCursor.moveToNext());
 				}
@@ -238,6 +248,10 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 
 	private void updateEdit(Person p) {
 		nameEdit.setText(p.getName());
+		if (p.getType() == 1) {
+			nameEdit.setClickable(false);
+			nameEdit.setFocusable(false);
+		}
 		if (p.getIsStar() == 1) {
 			mStar.setChecked(true);
 		}
@@ -299,6 +313,11 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		topLeftBtn = (Button) findViewById(R.id.backBtn);
 		topLeftBtn.setVisibility(View.VISIBLE);
 		nameEdit = (EditText) findViewById(R.id.name);
+		if (mType == 1) {
+			nameEdit.setText(meName);
+			nameEdit.setFocusable(false);
+			nameEdit.setClickable(false);
+		}
 		genderText = (TextView) findViewById(R.id.tv_gender);
 		ringDaysText = (TextView) findViewById(R.id.tv_ringdays);
 		ringTypeText = (TextView) findViewById(R.id.tv_ringtype);
@@ -382,6 +401,25 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			updateData(mMode);
 			break;
 		case R.id.tv_birthday:
+			if(mMode == MODE_ADD){
+				defaultRingType = 0;
+				ringTypeText.setText(mRingTypeItem[0]);
+			}else{
+				switch(ringtype){
+				case 0:
+					defaultRingType = 0;
+					ringTypeText.setText(mRingTypeItem[0]);
+					break;
+				case 1:
+					defaultRingType = 1;
+					ringTypeText.setText(mRingTypeItem[1]);
+					break;
+				case 2:
+					defaultRingType = 2;
+					ringTypeText.setText(mRingTypeItem[2]);
+					break;
+				}
+			}
 			if (isLunar == 1) {
 				showLunar = true;
 			} else {
@@ -405,10 +443,14 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			// }
 			break;
 		case R.id.lunar:
+			defaultRingType = 1;
+			ringTypeText.setText(mRingTypeItem[1]);
 			showLunar = true;
 			initLunar(mMode);
 			break;
 		case R.id.solar:
+			defaultRingType = 0;
+			ringTypeText.setText(mRingTypeItem[0]);
 			showLunar = false;
 			initSolar(mMode);
 			break;
@@ -476,12 +518,12 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					}
 
 				});
-		dialog.setButton2(mRes.getString(R.string.cancel),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
+//		dialog.setButton2(mRes.getString(R.string.cancel),
+//				new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.dismiss();
+//					}
+//				});
 		dialog.setView(datePickerLayout);
 		dialog.show();
 	}
@@ -771,7 +813,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		ringtype = defaultRingType;
 		ringdays = ringDaysText.getText().toString();
 		isLunar = showLunar ? 1 : 0;
-		mType = 0;
 		note = noteEdit.getText().toString();
 		phoneNum = phoneNumEdit.getText().toString();
 		contentValues.clear();
@@ -877,7 +918,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			final int id, int defaultSelect) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				BirthEditActivity.this);
-		builder.setIcon(R.drawable.ic_launcher);
 		builder.setTitle(title);
 		builder.setSingleChoiceItems(items, defaultSelect,
 				new DialogInterface.OnClickListener() {

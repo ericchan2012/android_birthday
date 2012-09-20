@@ -69,7 +69,7 @@
                             android:paddingTop="3.0dip" >
 
                             <TextView
-                                android:id="@+id/whoseBaby"
+                                android:id="@+id/name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="24.0dip"
                                 android:layout_marginBottom="2.0dip"
@@ -87,7 +87,8 @@
                                 android:layout_marginLeft="5.0dip"
                                 android:singleLine="false"
                                 android:textColor="@color/light_dark"
-                                android:textSize="15.0dip" />
+                                android:textSize="15.0dip"
+                                android:visibility="invisible" />
 
                             <LinearLayout
                                 android:layout_width="fill_parent"
@@ -98,25 +99,27 @@
                                 android:orientation="horizontal" >
 
                                 <Button
-                                    android:id="@+id/privacySetBtn"
-                                    style="@style/normal_edit_button_new"
-                                    android:text="@string/privacy_set" />
-
-                                <Button
                                     android:id="@+id/editProfile"
                                     style="@style/normal_edit_button_new"
+                                    android:text="@string/edit_profile"
+                                     />
+
+                                <Button
+                                    android:id="@+id/privacySetBtn"
+                                    style="@style/normal_edit_button_new"
                                     android:layout_marginLeft="15.0dip"
-                                    android:text="@string/edit_profile" />
+                                    android:visibility="invisible"
+                                    android:text="@string/privacy_set" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/linearLayout2"
-                        android:visibility="invisible"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:orientation="vertical" >
+                        android:orientation="vertical"
+                        android:visibility="invisible" >
 
                         <LinearLayout
                             style="@style/common_row_wrapper"
@@ -207,7 +210,6 @@
 
                             <LinearLayout
                                 android:id="@+id/backup"
-                                android:background="@drawable/tools_backup_bg"
                                 style="@style/more_row_layout_ex" >
 
                                 <TextView
@@ -219,7 +221,8 @@
                                     style="@style/point_count_text"
                                     android:visibility="invisible" />
 
-                                <ImageButton style="@style/more_right_arrow_ex"
+                                <ImageButton
+                                    style="@style/more_right_arrow_ex"
                                     android:src="@drawable/tools_backup_logo" />
                             </LinearLayout>
 
@@ -227,8 +230,7 @@
 
                             <LinearLayout
                                 android:id="@+id/recovery"
-                                style="@style/more_row_layout_ex"
-                                android:background="@drawable/tools_recover_bg" >
+                                style="@style/more_row_layout_ex" >
 
                                 <TextView
                                     style="@style/more_row_ahead_text"
@@ -239,15 +241,15 @@
                                     style="@style/news_count_style"
                                     android:visibility="invisible" />
 
-                                <ImageButton style="@style/more_right_arrow_ex" 
-                                    android:src="@drawable/tools_recover_logo"/>
+                                <ImageButton
+                                    style="@style/more_right_arrow_ex"
+                                    android:src="@drawable/tools_recover_logo" />
                             </LinearLayout>
 
                             <ImageView style="@style/divider_line" />
 
                             <LinearLayout
                                 android:id="@+id/sync"
-                                android:background="@drawable/tools_sync_bg"
                                 style="@style/more_row_layout_ex" >
 
                                 <TextView
@@ -259,7 +261,8 @@
                                     style="@style/news_count_style"
                                     android:visibility="invisible" />
 
-                                <ImageButton style="@style/more_right_arrow_ex"
+                                <ImageButton
+                                    style="@style/more_right_arrow_ex"
                                     android:src="@drawable/tools_sync_logo" />
                             </LinearLayout>
 
@@ -267,8 +270,8 @@
 
                             <LinearLayout
                                 android:id="@+id/searchBtn"
-                                android:visibility="gone"
-                                style="@style/more_row_layout" >
+                                style="@style/more_row_layout"
+                                android:visibility="gone" >
 
                                 <TextView
                                     style="@style/more_row_ahead_text"

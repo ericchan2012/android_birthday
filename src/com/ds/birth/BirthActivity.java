@@ -239,9 +239,7 @@ public class BirthActivity extends Activity {
 		case QUERY:
 			return mDbHelper.queryAll();
 		case UPDATE:
-			Log.i(TAG, "---update---");
 			radiobtn = settings.getInt(RADIO_BTN, 0);
-			Log.i(TAG, "---radiobtn===" + radiobtn);
 			if (radiobtn == 0) {
 				leftRadioBtn.setChecked(true);
 				return mDbHelper.queryStar();
@@ -259,6 +257,7 @@ public class BirthActivity extends Activity {
 			switch (msg.what) {
 			case QUERY_SUCCESS:
 				Log.i(TAG, "---handler success----");
+				topLeftBtn.setClickable(true);
 				mProgressDialog.dismiss();
 				mEmptyView.setVisibility(View.GONE);
 				mBirthAdapter = new BirthCursorAdapter(BirthActivity.this,
@@ -268,6 +267,7 @@ public class BirthActivity extends Activity {
 
 			case QUERY_EMPTY:
 				Log.i(TAG, "--query empty---");
+				topLeftBtn.setClickable(false);
 				mProgressDialog.dismiss();
 				int arg1 = msg.arg1;
 				Log.i(TAG, "--arg1---" + arg1);
@@ -289,6 +289,7 @@ public class BirthActivity extends Activity {
 				break;
 			case QUERY_UPDATE:
 				Log.i(TAG, "---handler update----");
+				topLeftBtn.setClickable(true);
 				mProgressDialog.dismiss();
 				mEmptyView.setVisibility(View.GONE);
 				updateListView();
@@ -341,6 +342,8 @@ public class BirthActivity extends Activity {
 		TextView yearcntView;
 		TextView daycntView;
 		TextView dayView;
+		
+		ImageView favorView;
 
 		public BirthCursorAdapter(Context context, int resource, Cursor cursor) {
 			super(context, cursor);
@@ -368,6 +371,8 @@ public class BirthActivity extends Activity {
 				yearcntView = (TextView) birthView.findViewById(R.id.yearcnt);
 				daycntView = (TextView) birthView.findViewById(R.id.daycnt);
 				dayView = (TextView) birthView.findViewById(R.id.day);
+				
+				favorView = (ImageView)birthView.findViewById(R.id.favor);
 
 			}
 			name.setText(cursor.getString(DatabaseHelper.NAME_INDEX));
@@ -377,6 +382,12 @@ public class BirthActivity extends Activity {
 				candle.setImageResource(R.drawable.birth_solar);
 			} else {
 				candle.setImageResource(R.drawable.birth_lunar);
+			}
+			int isStar = cursor.getInt(DatabaseHelper.ISSTAR_INDEX);
+			if(isStar == 0){
+				favorView.setImageResource(R.drawable.favorite_icon);
+			}else{
+				favorView.setImageResource(R.drawable.favorite_icon_selected);
 			}
 			// avatar
 			// 异步加载图片并显示

@@ -42,9 +42,11 @@
                            
                         </LinearLayout>
 
-                        <ImageView style="@style/divider_line" />
+                        <ImageView android:visibility="gone"
+                            style="@style/divider_line" />
                         <LinearLayout
                             android:id="@+id/auto_login"
+                            android:visibility="gone"
                             style="@style/more_row_layout" >
 
                             <TextView

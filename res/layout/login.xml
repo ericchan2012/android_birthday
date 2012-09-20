@@ -23,7 +23,7 @@
                     android:background="@null"
                     android:hint="@string/account_hint"
                     android:imeOptions="normal|actionUnspecified"
-                    android:inputType="text"
+                    android:inputType="phone"
                     android:numeric="integer" />
             </LinearLayout>
 
@@ -54,7 +54,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dip"
-            android:checked="true"
             android:text="@string/rememberpass"
             android:textColor="#000000" />
         <CheckBox
@@ -63,8 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dip"
             android:layout_alignParentRight="true"
+            android:visibility="gone"
             android:layout_alignRight="@+id/rememberPassword"
-            android:checked="true"
             android:text="@string/autologin"
             android:textColor="#000000" />
     </RelativeLayout>
@@ -101,6 +100,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5.0dip"
         android:paddingBottom="5.0dip"
+        android:visibility="invisible"
         android:paddingLeft="12.0dip"
         android:paddingTop="5.0dip" >
 

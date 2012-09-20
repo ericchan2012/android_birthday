@@ -388,7 +388,7 @@ public class KaixinFriendsActivity extends BaseActivity {
 					contentValues.put(DatabaseHelper.TYPE, 0);
 					contentValues.put(DatabaseHelper.NOTE, "");
 					contentValues.put(DatabaseHelper.PHONE_NUMBER, "");
-					contentValues.put(DatabaseHelper.ISSTAR, "1");
+//					contentValues.put(DatabaseHelper.ISSTAR, "1");
 					long id = dbHelper.insert(contentValues);
 					if (id > 0) {
 						publishProgress(i + 1);

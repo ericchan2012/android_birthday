@@ -18,6 +18,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,11 +29,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
+import com.ds.utility.BirthConstants;
 
 /**
  * 如果登录了，则显示个人资料信息，如果没有，则不显示，只显示登录框信息。
@@ -42,41 +48,64 @@ import com.ds.db.DbHelper;
 public class MineActivity extends Activity implements OnClickListener {
 	private static final String Tag = "MineActivity";
 	DbHelper dbHelper;
-	private static final String LOGIN = "login";
+	public static final String LOGIN = "login.xml";
 	private static final String PASSWORD = "passwd";
 	private static final String NAME = "name";
-	// private static final String ISAUTOLOGIN="isautologin";
+	// public static final String ISAUTOLOGIN = "isautologin";
 	private static final String ISREPASS = "isrepass";
 	private static final String STATE = "state";
 	private SharedPreferences loginPre;
 	private int mState = 0;// 是否为登录状态。
 	private boolean repass = false;
+	// private boolean autoLogin = false;
 	private String mName;
 	private String mPasswd;
 
 	private EditText mNameEdit;
 	private EditText mPassEdit;
 	private CheckBox mRePass;
+	// private CheckBox mAutoLogin;
 	private Button loginBtn;
 	private Button regBtn;
 	private ProgressDialog pDialog;
 	private TextView titleView;
-	private int isPersonal = 1;
+	private int isPersonal = 0;
+	private static final int REQUEST_REGISTER = 1000;
+
+	private TextView pNameView;
+	private Button pEditButton;
+	private Button rightBtn;
+	private static final String TAG = "MineActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.birth_mine);
-		setContentView(R.layout.personal);
+		setContentView(R.layout.birth_mine);
 		dbHelper = DbHelper.getInstance(this);
 		dbHelper.open(this);
-		initPersonalViews();
-		// initViews();
+		initViews();
 	}
 
 	private void initPersonalViews() {
 		titleView = (TextView) findViewById(R.id.title);
 		titleView.setText(R.string.personal);
+		pNameView = (TextView) findViewById(R.id.name);
+		pEditButton = (Button) findViewById(R.id.editProfile);
+		pEditButton.setOnClickListener(this);
+		rightBtn = (Button) findViewById(R.id.rightBtn);
+		rightBtn.setVisibility(View.VISIBLE);
+		rightBtn.setText(R.string.quit_login);
+		rightBtn.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				// getSharedPreferences(LOGIN, 0).edit()
+				// .putBoolean(ISAUTOLOGIN, false).commit();
+				setContentView(R.layout.birth_mine);
+				isPersonal = 0;
+				initViews();
+				onResume();
+			}
+		});
 	}
 
 	@Override
@@ -88,15 +117,20 @@ public class MineActivity extends Activity implements OnClickListener {
 			repass = loginPre.getBoolean(ISREPASS, false);
 			mName = loginPre.getString(NAME, "");
 			mPasswd = loginPre.getString(PASSWORD, "");
+			// autoLogin = loginPre.getBoolean(ISAUTOLOGIN, false);
 			updateViews();
 		}
 	}
 
 	private void updateViews() {
+		// Log.i(TAG, "autoLogin:" + autoLogin);
 		mNameEdit.setText(mName);
 		mRePass.setChecked(repass);
+		// mAutoLogin.setChecked(autoLogin);
 		if (repass) {
-			mPassEdit.setText(mPasswd);
+			mNameEdit.setText(mName);
+		} else {
+			mNameEdit.setText("");
 		}
 	}
 
@@ -105,14 +139,18 @@ public class MineActivity extends Activity implements OnClickListener {
 		super.onStop();
 		dbHelper.close();
 		if (isPersonal == 0) {
+			Log.i(TAG, "----onstop----");
 			loginPre = getSharedPreferences(LOGIN, 0);
 			Editor editor = loginPre.edit();
-			editor.putInt(STATE, mState)
-					.putBoolean(ISREPASS, mRePass.isChecked())
-					.putString(NAME, mNameEdit.getText().toString());
+			editor.putInt(STATE, mState).putBoolean(ISREPASS,
+					mRePass.isChecked());
+			// .putBoolean(ISAUTOLOGIN, mAutoLogin.isChecked());
 			if (mRePass.isChecked()) {
-				editor.putString(PASSWORD, mPassEdit.getText().toString());
+				editor.putString(NAME, mNameEdit.getText().toString());
 			}
+			// if (mAutoLogin.isChecked()) {
+			// editor.putString(PASSWORD, mPassEdit.getText().toString());
+			// }
 			editor.commit();
 		}
 	}
@@ -122,6 +160,22 @@ public class MineActivity extends Activity implements OnClickListener {
 		mNameEdit = (EditText) findViewById(R.id.account);
 		mPassEdit = (EditText) findViewById(R.id.password);
 		mRePass = (CheckBox) findViewById(R.id.rememberPassword);
+		mRePass.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				getSharedPreferences(LOGIN, 0).edit()
+						.putBoolean(ISREPASS, isChecked).commit();
+				if (!isChecked) {
+					mNameEdit.setText("");
+					mPassEdit.setText("");
+					getSharedPreferences(LOGIN, 0).edit().putString(NAME, "")
+							.commit();
+				}
+			}
+		});
+		// mAutoLogin = (CheckBox) findViewById(R.id.autologin);
 
 		loginBtn = (Button) findViewById(R.id.loginBtn);
 		regBtn = (Button) findViewById(R.id.regBtn);
@@ -145,8 +199,45 @@ public class MineActivity extends Activity implements OnClickListener {
 			}
 			break;
 		case R.id.regBtn:
-
+			Intent intent = new Intent(MineActivity.this,
+					RegisterActivity.class);
+			startActivityForResult(intent, REQUEST_REGISTER);
 			break;
+		case R.id.editProfile:
+			Cursor c = dbHelper.queryMe();
+			if (c != null && c.getCount() > 0) {
+				c.moveToFirst();
+				int id = c.getInt(DatabaseHelper.ID_INDEX);
+				Intent dintent = new Intent(BirthConstants.ACTION_VIEW_BIRTH);
+				Bundle extras = new Bundle();
+				extras.putInt(BirthConstants.ID, id);
+				dintent.putExtras(extras);
+				startActivity(dintent);
+			} else {
+				Intent addintent = new Intent(BirthConstants.ACTION_ADD_BIRTH);
+				addintent.putExtra(BirthEditActivity.TYPE, 1);
+				addintent.putExtra(BirthEditActivity.NAME, pNameView.getText()
+						.toString());
+				startActivity(addintent);
+			}
+			dbHelper.close();
+			break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_REGISTER) {
+			if (resultCode == RESULT_OK) {
+				Bundle extras = data.getExtras();
+				int serverId = extras.getInt(RegisterActivity.SERVER_ID);
+				String name = extras.getString(RegisterActivity.NAME);
+				setContentView(R.layout.personal);
+				isPersonal = 1;
+				initPersonalViews();
+				pNameView.setText(name);
+			}
 		}
 	}
 
@@ -155,20 +246,15 @@ public class MineActivity extends Activity implements OnClickListener {
 	}
 
 	private void checkLogin(String name, String passwd) {
-		boolean isSuccess = false;
 		pDialog = ProgressDialog.show(this,
 				getResources().getString(R.string.login_title), getResources()
 						.getString(R.string.login_message));
 		pDialog.show();
 		// connect the server to check the account,
-		String url = "http://10.1.1.121:80/birthday/login.php?name=" + name
+		String url = "http://10.1.1.121:80/birthday/login.php?number=" + name
 				+ "&passwd=" + passwd;
-		isSuccess = serverCheckLogin(url);
-		if (isSuccess) {
-			mHandler.sendEmptyMessage(SUCCESS);
-		} else {
-			mHandler.sendEmptyMessage(FAILURE);
-		}
+		CheckLoginTask task = new CheckLoginTask();
+		task.execute(url);
 	}
 
 	public boolean serverCheckLogin(String url) {
@@ -179,7 +265,6 @@ public class MineActivity extends Activity implements OnClickListener {
 		HttpGet httpGet = new HttpGet(url);
 		try {
 			HttpResponse httpRes = client.execute(httpGet);
-			httpRes = client.execute(httpGet);
 			res = httpRes.getStatusLine().getStatusCode();
 			if (res == 200) {
 				BufferedReader buffer = new BufferedReader(
@@ -189,10 +274,10 @@ public class MineActivity extends Activity implements OnClickListener {
 					str.append(s);
 				}
 				Log.i(Tag, str.toString());
-				if (str.equals(0)) {
-					result = false;
-				} else {
+				if (str.equals(1)) {
 					result = true;
+				} else {
+					result = false;
 				}
 			} else {
 				Log.i(Tag, "HttpGet Error");
@@ -203,8 +288,9 @@ public class MineActivity extends Activity implements OnClickListener {
 		return result;
 	}
 
-	public void getServerJsonDataWithNoType(String url) {
+	public boolean getServerJsonDataWithNoType(String url) {
 		int res = 0;
+		boolean result = false;
 		HttpClient client = new DefaultHttpClient();
 		StringBuilder str = new StringBuilder();
 		HttpGet httpGet = new HttpGet(url);
@@ -224,26 +310,35 @@ public class MineActivity extends Activity implements OnClickListener {
 				// "UTF-8");
 				// StringBuilder sb = new StringBuilder()
 				Log.i(Tag, str.toString());
-				try {
-					// JSONObject json = new
-					// JSONObject(str.toString()).getJSONObject("content");
-					JSONObject json = new JSONObject(str.toString());
-					String title = json.getString("title");
-					Log.i(Tag, title);
-					int id = json.getInt("id");
-					String value = json.getString("value");
-					Log.i(Tag, value);
-				} catch (JSONException e) {
-					Log.i(Tag, e.getLocalizedMessage());
-					// buffer.close();
-					e.printStackTrace();
+				if (str.toString().equals("0")) {
+					result = false;
+				} else {
+					try {
+						// JSONObject json = new
+						// JSONObject(str.toString()).getJSONObject("content");
+						JSONObject json = new JSONObject(str.toString());
+						int id = json.getInt("id");
+						String name = json.getString("name");
+						String passwd = json.getString("passwd");
+						int gender = json.getInt("gender");
+						String number = json.getString("phone");
+						Log.i(Tag, "name:" + name);
+						mName = name;
+					} catch (JSONException e) {
+						Log.i(Tag, e.getLocalizedMessage());
+						// buffer.close();
+						e.printStackTrace();
+					}
+					result = true;
 				}
 			} else {
 				Log.i(Tag, "HttpGet Error");
+				result = false;
 			}
 		} catch (Exception e) {
 			Log.i(Tag, "Exception");
 		}
+		return result;
 	}
 
 	private static final int SUCCESS = 1001;
@@ -254,6 +349,7 @@ public class MineActivity extends Activity implements OnClickListener {
 			case SUCCESS:
 				// startActivity
 				pDialog.dismiss();
+				saveState();
 				updateContentView();
 				break;
 			case FAILURE:
@@ -264,9 +360,32 @@ public class MineActivity extends Activity implements OnClickListener {
 		}
 	};
 
+	private void saveState() {
+		if (isPersonal == 0) {
+			Log.i(TAG, "----saveState----");
+			loginPre = getSharedPreferences(LOGIN, 0);
+			Editor editor = loginPre.edit();
+			editor.putInt(STATE, mState).putBoolean(ISREPASS,
+					mRePass.isChecked());
+			// .putBoolean(ISAUTOLOGIN, mAutoLogin.isChecked());
+			if (mRePass.isChecked()) {
+				editor.putString(NAME, mNameEdit.getText().toString());
+			} else {
+				editor.putString(NAME, "");
+			}
+			// if (mAutoLogin.isChecked()) {
+			// editor.putString(PASSWORD, mPassEdit.getText().toString());
+			// }
+			editor.commit();
+		}
+	}
+
 	private void updateContentView() {
 		// MineActivity.this.setContentView(layoutResID);
-
+		isPersonal = 1;
+		setContentView(R.layout.personal);
+		initPersonalViews();
+		pNameView.setText(mName);
 	}
 
 	private void showErrorDialog() {
@@ -281,5 +400,44 @@ public class MineActivity extends Activity implements OnClickListener {
 							}
 						}).create();
 		dialog.show();
+	}
+
+	class CheckLoginTask extends AsyncTask<String, Integer, String> {
+		boolean isSuccess = false;
+		String result = "0";
+
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			super.onProgressUpdate(progress);
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			if (result.equals("1")) {
+				mHandler.sendEmptyMessage(SUCCESS);
+			} else {
+				mHandler.sendEmptyMessage(FAILURE);
+			}
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String url = params[0];
+			Log.i(TAG, "url:" + url);
+			isSuccess = getServerJsonDataWithNoType(url);
+			if (isSuccess) {
+				result = "1";
+			} else {
+				result = "0";
+			}
+			return result;
+		}
+
 	}
 }

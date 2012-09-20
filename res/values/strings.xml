@@ -10,7 +10,7 @@
     <string name="star_birth">重要生日</string>
     <string name="all_birth">全部生日</string>
     <string name="empty">没有生日</string>
-    <string name="empty_star">没有重要的生日!</string>
+    <string name="empty_star">没有重要生日</string>
     <string name="more">更多</string>
     <string name="ringtype">提醒方式</string>
     <string name="ringtype_hint">请先设置生日</string>
@@ -68,7 +68,7 @@
     <string name="month">月</string>
     <string name="day">日</string>
     <string name="account">帐号:</string>
-    <string name="account_hint">手机号码/邮箱帐号</string>
+    <string name="account_hint">手机号码</string>
     <string name="password">密码:</string>
     <string name="other_login">其他方式登录:</string>
     <string name="new_user_reg">注册</string>
@@ -83,7 +83,7 @@
     <string name="login_title">检查登录</string>
     <string name="login_message">正在登录,请稍侯...</string>
     <string name="error_title">出错了^_^</string>
-    <string name="error_message">未找到该帐号，请检查您的输入！</string>
+    <string name="error_message">帐号密码输入有误或者网络请求发生错误，请检查！</string>
     <string name="about_detail_new">Copyright©2012 DStudio 梦想工作室 版权所有</string>
     <string name="client_name">我的生日管家 Android版</string>
     <string name="client_version">版本%1$s</string>
@@ -129,7 +129,7 @@
     <string name="gender">性别</string>
     <string name="default_gender">男</string>
     <string name="autologin">自动登录</string>
-    <string name="rememberpass">记住密码</string>
+    <string name="rememberpass">记住帐号</string>
     <string name="read">我已阅读</string>
     <string name="baby_eula">《360生日管家用户协议》</string>
     <string name="get_validation_code_hint">如果您在1分钟内未收到验证码，请重新获取</string>
@@ -149,4 +149,13 @@
     <string name="sync">同步(本地与云端保持一致)</string>
     <string name="search_search">查找</string>
     <string name="personal">我</string>
+    <string name="correct_phone">请输入手机号码</string>
+    <string name="val_code">请输入验证码</string>
+    <string name="nickname_hint">输入昵称</string>
+    <string name="register_success">注册成功</string>
+    <string name="error_register_message">注册失败,请检测网络以及各输入!</string>
+    <string name="error_already_register">手机号码已经注册过了！</string>
+    <string name="nickname">昵称:</string>
+    <string name="quit_login">退出登录</string>
+    <string name="birth_remind">今天过生日的好友</string>
 </resources>

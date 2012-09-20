@@ -47,13 +47,17 @@ public class AlarmDialog extends Activity {
 				(solarMonth + 1), solarDay);
 		String[] lunarStr = lunar.split("-");
 		Log.i("AlarmDialog", "solarYear:" + solarYear + " solarMonth:"
-				+ (solarMonth+1) + " solarDay:" + solarDay);
+				+ (solarMonth + 1) + " solarDay:" + solarDay);
 		Log.i("AlarmDialog", "lunar:" + lunar);
-		String solarwhere = " month = " + solarMonth +" and day = " + solarDay + " and islunar = 0";
-		String lunarwhere = " month = " + lunarStr[1] +" and day = " + lunarStr[2] + " and islunar = 1";
-		Cursor mCursor = dbHelper.queryAlarm(solarwhere+" or " + lunarwhere);
+		String solarwhere = " (month=" + (solarMonth + 1) + " and day = "
+				+ solarDay + " and islunar = 0)";
+		String lunarwhere = " (month=" + lunarStr[1] + " and day = "
+				+ lunarStr[2] + " and islunar = 1)";
+		Log.i("AlarmDialog", "sql:" + (solarwhere) + " or " + (lunarwhere));
+		Cursor mCursor = dbHelper.queryAlarm((solarwhere) + " or "
+				+ (lunarwhere));
 		count = mCursor.getCount();
-		mCursor.close();
+		Log.i("AlarmDialog", "count===" + count);
 		content.setText(String.valueOf(count));
 	}
 
