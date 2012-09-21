@@ -214,7 +214,6 @@ public class BirthActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mCursor.close();
 		mDbHelper.close();
 	}
 

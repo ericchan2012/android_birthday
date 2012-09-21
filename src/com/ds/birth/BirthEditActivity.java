@@ -1,8 +1,10 @@
 package com.ds.birth;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -10,6 +12,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -131,6 +135,13 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	public static final String TYPE = "type";
 	public static final String NAME = "name";
 	private String meName = "";
+
+	private static final File PHOTO_DIR = new File(
+			Environment.getExternalStorageDirectory() + "/DCIM/Camera");
+
+	private File mCurrentPhotoFile;
+	private static final int GET_PHOTO_WITH_GALLARY = 102;
+	private static final int GET_PHOTO_WITH_CAMERA = 101;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -1032,17 +1043,15 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					.setOnClickListener(new android.view.View.OnClickListener() {
 
 						public void onClick(View v) {
-							Intent intent = new Intent(
-									MediaStore.ACTION_IMAGE_CAPTURE);
-							// 存储卡可用 将照片存储在 sdcard
-							if (Utility.isHasSdcard()) {
-								intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-										.fromFile(new File(SDCARD_ROOT_PATH
-												+ SAVE_PATH_IN_SDCARD,
-												IMAGE_CAPTURE_NAME)));
+							String status = Environment
+									.getExternalStorageState();
+							if (status.equals(Environment.MEDIA_MOUNTED)) {
+								// doTakePhoto();
+								takePhoto();
+							} else {
+								showToast("没有SD卡");
 							}
-							startActivityForResult(intent,
-									GET_PHOTO_WITH_CAMERA);
+							MyDialog.this.dismiss();
 						}
 					});
 			gallaryBtn
@@ -1073,9 +1082,108 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private void showToast(String text) {
+		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+	}
+
+	Uri imageUri;
+
+	public void takePhoto() {
+		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		File photo = new File(Environment.getExternalStorageDirectory(),
+				"Pic.jpg");
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+		imageUri = Uri.fromFile(photo);
+		startActivityForResult(intent, GET_PHOTO_WITH_CAMERA);
+	}
+
+	protected void doTakePhoto() {
+		try {
+			PHOTO_DIR.mkdirs();
+			mCurrentPhotoFile = new File(PHOTO_DIR, getPhotoFileName());
+			Intent intent = getTakePickIntent(mCurrentPhotoFile);
+			startActivityForResult(intent, GET_PHOTO_WITH_CAMERA);
+		} catch (ActivityNotFoundException e) {
+		}
+	}
+
+	public static Intent getTakePickIntent(File f) {
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		// intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+		return intent;
+	}
+
+	private String getPhotoFileName() {
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"'IMG'_yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(date) + ".jpg";
+	}
+
 	public static Intent getPhotoPickIntent() {
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
+		return intent;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if (requestCode == GET_PHOTO_WITH_CAMERA) {
+				// doCropPhoto(mCurrentPhotoFile);
+//				if (data != null) {
+					// Uri uri = data.getData();
+//					data.getParcelableExtra("data");
+//					Log.i(TAG, "uri:" + uri.toString());
+					Uri selectedImage = imageUri;
+					Log.i(TAG, "uri:" + imageUri.toString());
+//					getContentResolver().notifyChange(selectedImage, null);
+//					ImageView imageView = (ImageView) findViewById(R.id.ImageView);
+//					ContentResolver cr = getContentResolver();
+//					Bitmap bitmap;
+//					try {
+//					bitmap = android.provider.MediaStore.Images.Media
+//					.getBitmap(cr, selectedImage);
+//
+//					imageView.setImageBitmap(bitmap);
+//					Toast.makeText(this, selectedImage.toString(),
+//					Toast.LENGTH_LONG).show();
+//					} catch (Exception e) {
+//					Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
+//					.show();
+//					Log.e("Camera", e.toString());
+//					}
+//					}
+//					}
+//				}
+			}
+			if (requestCode == GET_PHOTO_WITH_GALLARY) {
+				if (data != null) {
+					Uri uri = data.getData();
+					// Bitmap photo = data.getParcelableExtra("data");
+					Bitmap avatar = Utility.getBitmapFromUri(uri, this);
+					if (avatar != null) {
+						BitmapDrawable bd = new BitmapDrawable(avatar);
+						headerImage.setBackgroundDrawable(bd);
+					}
+				}
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	protected void doCropPhoto(File f) {
+		try {
+			// 启动gallery去剪辑这个照片
+			final Intent intent = getCropImageIntent(Uri.fromFile(f));
+			startActivityForResult(intent, GET_PHOTO_WITH_GALLARY);
+		} catch (Exception e) {
+		}
+	}
+
+	public static Intent getCropImageIntent(Uri photoUri) {
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(photoUri, "image/*");
 		intent.putExtra("crop", "true");
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
@@ -1085,38 +1193,4 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		return intent;
 	}
 
-	private static final int GET_PHOTO_WITH_GALLARY = 102;
-	private static final int GET_PHOTO_WITH_CAMERA = 101;
-	public static final String SDCARD_ROOT_PATH = android.os.Environment
-			.getExternalStorageDirectory().getAbsolutePath();// 路径
-	public static final String SAVE_PATH_IN_SDCARD = "/bi.data/"; // 图片及其他数据保存文件夹
-	public static final String IMAGE_CAPTURE_NAME = "cameraTmp.png"; // 照片名称
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			// if(requestCode == REQUEST_CODE_TAKE_PICTURE){//拍照返回
-			// //存储卡可用
-			// if(Utility.isHasSdcard()){
-			// getImage(SDCARD_ROOT_PATH+SAVE_PATH_IN_SDCARD+IMAGE_CAPTURE_NAME);
-			// }
-			// else{
-			// //存储卡不可用直接返回缩略图
-			// Bundle extras = data.getExtras();
-			// bitmap = (Bitmap) extras.get("data");
-			// img.setImageBitmap(bitmap);
-			// img.setVisibility(View.VISIBLE);
-			// hasShootPic = false;
-			// }
-			// }
-			if (requestCode == GET_PHOTO_WITH_GALLARY) {
-				if (data != null) {
-					Bitmap photo = data.getParcelableExtra("data");
-					BitmapDrawable bd=new BitmapDrawable(photo);
-					headerImage.setBackgroundDrawable(bd);
-				}
-			}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
 }

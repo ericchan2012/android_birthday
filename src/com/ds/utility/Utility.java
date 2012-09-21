@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -13,7 +14,9 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 public class Utility {
@@ -149,5 +152,17 @@ public class Utility {
 	    } else {  
 	       return false;  
 	    }  
+	}
+	
+	public static Bitmap getBitmapFromUri(Uri uri,Context context) {
+		try {
+			// 读取uri所在的图片
+			Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+					context.getContentResolver(), uri);
+			return bitmap;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
