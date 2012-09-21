@@ -29,6 +29,7 @@
 
                         <LinearLayout
                             android:id="@+id/setting"
+                            android:visibility="gone"
                             style="@style/more_row_layout" >
 
                             <TextView
@@ -82,6 +83,7 @@
 
                         <LinearLayout
                             android:id="@+id/appstore"
+                            android:visibility="gone"
                             style="@style/more_row_layout" >
 
                             <TextView

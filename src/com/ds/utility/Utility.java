@@ -13,6 +13,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Environment;
 import android.util.Log;
 
 public class Utility {
@@ -137,5 +138,16 @@ public class Utility {
 		// }
 
 		return age;
+	}
+	
+	
+	public static boolean isHasSdcard()  
+	{  
+	    String status = Environment.getExternalStorageState();  
+	    if (status.equals(Environment.MEDIA_MOUNTED)){  
+	       return true;  
+	    } else {  
+	       return false;  
+	    }  
 	}
 }

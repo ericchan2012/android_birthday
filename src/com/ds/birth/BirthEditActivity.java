@@ -1,5 +1,6 @@
 package com.ds.birth;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -15,7 +16,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -36,6 +41,7 @@ import com.ds.utility.BirthConstants;
 import com.ds.utility.ChineseCalendar;
 import com.ds.utility.Lunar;
 import com.ds.utility.Person;
+import com.ds.utility.Utility;
 import com.ds.widget.ArrayWheelAdapter;
 import com.ds.widget.OnWheelChangedListener;
 import com.ds.widget.WheelView;
@@ -398,14 +404,20 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			if (BirthEditActivity.this.getCurrentFocus() != null) {
 				hideSoftKeypad();
 			}
+			if (mBirthdayTextView.getText().toString().equals("")
+					|| mBirthdayTextView.getText().toString().length() == 0) {
+				Toast.makeText(this, R.string.save_birthday_hint,
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
 			updateData(mMode);
 			break;
 		case R.id.tv_birthday:
-			if(mMode == MODE_ADD){
+			if (mMode == MODE_ADD) {
 				defaultRingType = 0;
 				ringTypeText.setText(mRingTypeItem[0]);
-			}else{
-				switch(ringtype){
+			} else {
+				switch (ringtype) {
 				case 0:
 					defaultRingType = 0;
 					ringTypeText.setText(mRingTypeItem[0]);
@@ -518,12 +530,12 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					}
 
 				});
-//		dialog.setButton2(mRes.getString(R.string.cancel),
-//				new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.dismiss();
-//					}
-//				});
+		// dialog.setButton2(mRes.getString(R.string.cancel),
+		// new DialogInterface.OnClickListener() {
+		// public void onClick(DialogInterface dialog, int which) {
+		// dialog.dismiss();
+		// }
+		// });
 		dialog.setView(datePickerLayout);
 		dialog.show();
 	}
@@ -1020,14 +1032,27 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					.setOnClickListener(new android.view.View.OnClickListener() {
 
 						public void onClick(View v) {
-
+							Intent intent = new Intent(
+									MediaStore.ACTION_IMAGE_CAPTURE);
+							// 存储卡可用 将照片存储在 sdcard
+							if (Utility.isHasSdcard()) {
+								intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+										.fromFile(new File(SDCARD_ROOT_PATH
+												+ SAVE_PATH_IN_SDCARD,
+												IMAGE_CAPTURE_NAME)));
+							}
+							startActivityForResult(intent,
+									GET_PHOTO_WITH_CAMERA);
 						}
 					});
 			gallaryBtn
 					.setOnClickListener(new android.view.View.OnClickListener() {
 
 						public void onClick(View v) {
-
+							Intent intent = getPhotoPickIntent();
+							startActivityForResult(intent,
+									GET_PHOTO_WITH_GALLARY);
+							MyDialog.this.dismiss();
 						}
 					});
 			defaultBtn
@@ -1046,5 +1071,52 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					});
 
 		}
+	}
+
+	public static Intent getPhotoPickIntent() {
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+		intent.setType("image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		intent.putExtra("outputX", 80);
+		intent.putExtra("outputY", 80);
+		intent.putExtra("return-data", true);
+		return intent;
+	}
+
+	private static final int GET_PHOTO_WITH_GALLARY = 102;
+	private static final int GET_PHOTO_WITH_CAMERA = 101;
+	public static final String SDCARD_ROOT_PATH = android.os.Environment
+			.getExternalStorageDirectory().getAbsolutePath();// 路径
+	public static final String SAVE_PATH_IN_SDCARD = "/bi.data/"; // 图片及其他数据保存文件夹
+	public static final String IMAGE_CAPTURE_NAME = "cameraTmp.png"; // 照片名称
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			// if(requestCode == REQUEST_CODE_TAKE_PICTURE){//拍照返回
+			// //存储卡可用
+			// if(Utility.isHasSdcard()){
+			// getImage(SDCARD_ROOT_PATH+SAVE_PATH_IN_SDCARD+IMAGE_CAPTURE_NAME);
+			// }
+			// else{
+			// //存储卡不可用直接返回缩略图
+			// Bundle extras = data.getExtras();
+			// bitmap = (Bitmap) extras.get("data");
+			// img.setImageBitmap(bitmap);
+			// img.setVisibility(View.VISIBLE);
+			// hasShootPic = false;
+			// }
+			// }
+			if (requestCode == GET_PHOTO_WITH_GALLARY) {
+				if (data != null) {
+					Bitmap photo = data.getParcelableExtra("data");
+					BitmapDrawable bd=new BitmapDrawable(photo);
+					headerImage.setBackgroundDrawable(bd);
+				}
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 }

@@ -6,7 +6,7 @@
     <string name="import_title">导入</string>
     <string name="mine_title">个人中心</string>
     <string name="more_title">更多</string>
-    <string name="app_name">我的生日管家</string>
+    <string name="app_name">360生日管家</string>
     <string name="star_birth">重要生日</string>
     <string name="all_birth">全部生日</string>
     <string name="empty">没有生日</string>
@@ -139,6 +139,7 @@
     <string name="cant_get_regid">收不到?</string>
     <string name="register">注册帐号</string>
     <string name="edit_profile">个人设置</string>
+    <string name="pls_input_phone">请输入电话号码</string>
     <string name="privacy_set">隐私设置</string>
     <string name="following">关注</string>
     <string name="follower">粉丝</string>
@@ -158,4 +159,7 @@
     <string name="nickname">昵称:</string>
     <string name="quit_login">退出登录</string>
     <string name="birth_remind">今天过生日的好友</string>
+    <string name="family">亲情</string>
+    <string name="love">爱情</string>
+    <string name="friend">友情</string>
 </resources>

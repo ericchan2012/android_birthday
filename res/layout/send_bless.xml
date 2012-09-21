@@ -22,20 +22,39 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:layout_marginTop="10dip"
+                android:orientation="horizontal" >
 
-                <com.ds.widget.MyEditText
+                <TextView
+                    style="@style/login_reg_row_title_text"
+                    android:text="@string/phone" />
+
+                <EditText
                     android:id="@+id/phone"
-                    android:layout_width="fill_parent"
+                    android:layout_width="190dip"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dip"
-                    android:paddingLeft="10dip" />
+                    android:layout_marginRight="10dip"
+                    android:background="@drawable/input"
+                    android:hint="@string/pls_input_phone"
+                    android:paddingLeft="5.0dip"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColorHint="#ffdcdcdc" />
+
+                <Button
+                    android:id="@+id/selectcontact"
+                    android:layout_width="50dip"
+                    android:layout_height="50dip"
+                    android:layout_marginRight="5dip"
+                    android:padding="5dip"
+                    android:text="@string/selectcontact" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
                 android:orientation="vertical" >
 
                 <EditText
@@ -51,7 +70,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="40.0dip"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:visibility="gone" >
 
                     <TextView
                         android:id="@+id/sendsmstitle"
@@ -77,11 +97,7 @@
                         android:textOn="@null" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/selectcontact"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/selectcontact" />
+                <include layout="@layout/message" />
 
                 <TextView
                     android:id="@+id/selectsms"
@@ -93,7 +109,8 @@
                     android:gravity="center"
                     android:text="精选祝福短信"
                     android:textColor="@color/black"
-                    android:textSize="20.0sp" />
+                    android:textSize="20.0sp"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
