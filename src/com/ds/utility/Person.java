@@ -12,7 +12,15 @@ public class Person {
 	String note;
 	String phoneNumber;
 	int type;
+	String avater;
 	
+	public String getAvater() {
+		return avater;
+	}
+
+	public void setAvater(String avater) {
+		this.avater = avater;
+	}
 	
 
 	public int getType() {

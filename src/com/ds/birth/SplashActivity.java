@@ -35,7 +35,7 @@ public class SplashActivity extends Activity {
 			}
 		});
 
-		splashImage.setAnimation(alphaAnimation);
+		splashImage.setAnimation(alphaAnimation); 
 		splashImage.setVisibility(View.VISIBLE);
 	}
 }

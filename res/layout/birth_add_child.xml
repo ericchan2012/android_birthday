@@ -201,19 +201,32 @@
                 android:text="@string/gender"
                 android:textColor="#ff333333" />
 
-            <TextView
-                android:id="@+id/tv_gender"
+            <RadioGroup
+                android:id="@+id/gender_radio_group"
                 android:layout_width="150.0dip"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15.0dip"
                 android:layout_weight="1.0"
-                android:background="@null"
-                android:scrollHorizontally="true"
-                android:text="@string/default_gender"
-                android:textColor="#ff104984"
-                android:textColorHint="#ff104984"
-                android:textSize="14.0sp" />
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/male"
+                    android:textColor="#ff104984"
+                    android:textSize="14.0sp" />
+
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_marginLeft="15dip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ff104984"
+                    android:textSize="14.0sp" 
+                    android:text="@string/female" />
+            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="wrap_content"

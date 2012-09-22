@@ -29,7 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/relativeLayout1"
-        android:background="@drawable/alertbutton" />
+        android:background="@drawable/alertbutton"
+        android:text="@string/check"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/btn_delay"
@@ -39,6 +41,8 @@
         android:layout_alignBottom="@+id/btn_ok"
         android:layout_alignRight="@+id/relativeLayout1"
         android:layout_toRightOf="@+id/btn_ok"
-        android:background="@drawable/alertbutton2" />
+        android:background="@drawable/alertbutton2"
+        android:text="@string/cancel"
+        android:textSize="20sp" />
 
 </RelativeLayout>

@@ -54,8 +54,8 @@
     <string name="phone">手机:</string>
     <string name="send">发送</string>
     <string name="selectcontact">选择</string>
-    <string name="male">男</string>
-    <string name="female">女</string>
+    <string name="male">帅哥</string>
+    <string name="female">美女</string>
     <string name="importRenren">人人网好友</string>
     <string name="importKaxin">开心网好友</string>
     <string name="select_all">全选</string>
@@ -101,7 +101,7 @@
     <string name="delete_message">删除中，请稍侯...</string>
     <string name="add">添加</string>
     <string name="edit">编辑</string>
-    <string name="share_message_content">嗨，#我正使用腾讯手机管家#，不仅帮我拦截骚扰电话、垃圾短信，还帮我监控流量、查杀病毒，现在使用手机更安全放心了。永久免费的哦，推荐你试试http://msm.qq.com</string>
+    <string name="share_message_content">嗨，#我正使用360生日管家#，不仅帮我记住了所有亲朋好友的生日，还可以从人人网，开心网导入好友哦。永久免费的哦，推荐你试试http://msm.qq.com</string>
     <string name="micro_blog_account">帐　号</string>
     <string name="micro_blog_password">密　码</string>
     <string name="micro_blog_account_hint">支持微博帐号/QQ号</string>
@@ -162,4 +162,7 @@
     <string name="family">亲情</string>
     <string name="love">爱情</string>
     <string name="friend">友情</string>
+    <string name="open">已开启</string>
+    <string name="close">未开启</string>
+    <string name="check">查看</string>
 </resources>

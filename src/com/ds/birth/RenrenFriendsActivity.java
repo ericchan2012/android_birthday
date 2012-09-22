@@ -83,8 +83,7 @@ public class RenrenFriendsActivity extends Activity {
 			case GET_FRIENDS_SUCCESS:
 				adapter = new FriendsAdapater();
 				if (adapter.getCount() == 0) {
-					adapter = null;
-					friendsListView.setAdapter(adapter);
+					friendsListView.setAdapter(null);
 					empty.setVisibility(View.VISIBLE);
 					friendsListView.setEmptyView(empty);
 				} else {
@@ -417,7 +416,7 @@ public class RenrenFriendsActivity extends Activity {
 				if (cachedImage != null) {
 					userImage.setImageDrawable(cachedImage);
 				} else {// 如果没有图片，就以一个载入的图片代替显示
-					userImage.setImageResource(R.drawable.avatar_default);
+					userImage.setImageResource(R.drawable.common_head_withbg);
 				}
 				userCheck.setChecked(isSelected.get(position));
 			}

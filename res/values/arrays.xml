@@ -4,8 +4,8 @@
         <item>cn.ishengsheng.discount.ServiceModuleBound</item>
     </string-array>
     <string-array name="UMgenderList">
-        <item>男</item>
         <item>女</item>
+        <item>男</item>
     </string-array>
     <string-array name="selectDays">
         <item>生日当天提醒</item>

@@ -27,12 +27,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 public class SendBlessActivity extends Activity implements OnClickListener {
 	EditText myEditText;
@@ -44,23 +46,35 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 	private static final String DELIVERED_SMS_ACTION = "DELIVERED_SMS_ACTION";
 	private static final int GET_CONTACT = 0;
 	private static final String TAG = "SendBlessActivity";
-	
+
 	private android.support.v4.view.ViewPager mPager;
-	private List<View> listViews; 
+	private List<View> listViews;
 	private ImageView cursor;
 	private TextView t1, t2, t3;
 	private int offset = 0;
 	private int bmpW;
 	private int currIndex = 0;
+	private ListView mMsgListView;
+	private ListAdapter listAdapter;
+
+	private Button msg_fumu;
+	private Button msg_laopo;
+	private Button msg_laogong;
+	private Button msg_jiaren;
+	private Button msg_pengyou;
+	private Button msg_zhiyou;
+	private Button msg_lingdao;
+	private Button msg_tongshi;
+	private Button msg_tongxue;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.send_bless);
 		initViews();
-		InitImageView();
-		InitTextView();
-		InitViewPager();
+		// InitImageView();
+		// InitTextView();
+		// InitViewPager();
 	}
 
 	@Override
@@ -85,11 +99,104 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		backBtn = (Button) findViewById(R.id.backBtn);
 		backBtn.setOnClickListener(this);
 		backBtn.setVisibility(View.VISIBLE);
-		TextView title = (TextView)findViewById(R.id.title);
+		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(R.string.bless);
 		msgEditText = (EditText) findViewById(R.id.message);
 		selectContactBtn = (Button) findViewById(R.id.selectcontact);
 		selectContactBtn.setOnClickListener(this);
+
+		mMsgListView = (ListView) findViewById(R.id.msglistview);
+//		listAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_single_choice,"");
+		msg_fumu = (Button) findViewById(R.id.msg_fumu);
+		msg_fumu.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+
+		});
+		msg_laopo = (Button) findViewById(R.id.msg_laopo);
+		msg_laopo.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		msg_laogong = (Button) findViewById(R.id.msg_laogong);
+		msg_laogong.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		msg_jiaren = (Button) findViewById(R.id.msg_jiaren);
+		msg_jiaren.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		msg_pengyou = (Button) findViewById(R.id.msg_pengyou);
+		msg_pengyou.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		msg_zhiyou = (Button) findViewById(R.id.msg_zhiyou);
+		msg_zhiyou.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		msg_lingdao = (Button) findViewById(R.id.msg_lingdao);
+		msg_lingdao.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		msg_tongshi = (Button) findViewById(R.id.msg_tongshi);
+		msg_tongshi.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		msg_tongxue = (Button) findViewById(R.id.msg_tongxue);
+		msg_tongxue.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 	}
 
 	public void onClick(View v) {
@@ -241,8 +348,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 			// Toast.makeText(context, "对方接收成功", Toast.LENGTH_LONG).show();
 		}
 	};
-	
-	
+
 	private void InitTextView() {
 		t1 = (TextView) findViewById(R.id.text1);
 		t2 = (TextView) findViewById(R.id.text2);
@@ -272,7 +378,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenW = dm.widthPixels;
-		offset = (screenW / 3 - bmpW) / 2;	
+		offset = (screenW / 3 - bmpW) / 2;
 		Matrix matrix = new Matrix();
 		matrix.postTranslate(offset, 0);
 		cursor.setImageMatrix(matrix);
@@ -335,10 +441,12 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 			mPager.setCurrentItem(index);
 		}
 	};
+
 	public class MyOnPageChangeListener implements OnPageChangeListener {
 
-		int one = offset * 2 + bmpW;	
+		int one = offset * 2 + bmpW;
 		int two = one * 2;
+
 		public void onPageSelected(int arg0) {
 			Animation animation = null;
 			switch (arg0) {
@@ -365,7 +473,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 				break;
 			}
 			currIndex = arg0;
-			animation.setFillAfter(true);// True:�剧�����ㄧ�缁��浣�疆
+			animation.setFillAfter(true);
 			animation.setDuration(300);
 			cursor.startAnimation(animation);
 		}

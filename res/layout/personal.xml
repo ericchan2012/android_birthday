@@ -250,6 +250,7 @@
 
                             <LinearLayout
                                 android:id="@+id/sync"
+                                android:visibility="gone"
                                 style="@style/more_row_layout_ex" >
 
                                 <TextView

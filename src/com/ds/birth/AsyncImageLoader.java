@@ -48,7 +48,7 @@ public class AsyncImageLoader {
 			@Override
 			public void run() {
 				Drawable drawable = loadImageFromUrl(imageURL);
-				imageCache.put(imageURL, new SoftReference<Drawable>(drawable));
+				imageCache.put(imageId, new SoftReference<Drawable>(drawable));
 				Message message = handler.obtainMessage(0, drawable);
 				handler.sendMessage(message);
 			}
@@ -60,8 +60,8 @@ public class AsyncImageLoader {
 			final ImageCallback imageCallback) {
 
 		// 判断缓存中是否已经存在图片，如果存在则直接返回
-		if (imageCache.containsKey(id)) {
-			SoftReference<Drawable> softReference = imageCache.get(id);
+		if (imageCache.containsKey(String.valueOf(id))) {
+			SoftReference<Drawable> softReference = imageCache.get(String.valueOf(id));
 			Drawable drawable = softReference.get();
 			if (drawable != null) {
 				return drawable;
@@ -79,7 +79,7 @@ public class AsyncImageLoader {
 			@Override
 			public void run() {
 				Drawable drawable = loadImageFromUrl(imageUrl);
-				imageCache.put(imageUrl, new SoftReference<Drawable>(drawable));
+				imageCache.put(String.valueOf(id), new SoftReference<Drawable>(drawable));
 				Message message = handler.obtainMessage(0, drawable);
 				handler.sendMessage(message);
 			}
@@ -87,7 +87,7 @@ public class AsyncImageLoader {
 		return null;
 	}
 	
-	public Drawable loadDrawable(String id,final String imageUrl,
+	public Drawable loadDrawable(final String id,final String imageUrl,
 			final ImageCallback imageCallback) {
 
 		// 判断缓存中是否已经存在图片，如果存在则直接返回
@@ -110,8 +110,8 @@ public class AsyncImageLoader {
 			@Override
 			public void run() {
 				Drawable drawable = loadImageFromUrl(imageUrl);
-				imageCache.put(imageUrl, new SoftReference<Drawable>(drawable));
-				Message message = handler.obtainMessage(POST2, drawable);
+				imageCache.put(id, new SoftReference<Drawable>(drawable));
+				Message message = handler.obtainMessage(0, drawable);
 				handler.sendMessage(message);
 			}
 		}.start();
@@ -143,11 +143,29 @@ public class AsyncImageLoader {
 			@Override
 			public void run() {
 				Drawable drawable = loadImageFromUrl(imageURL);
-				imageCache.put(imageURL, new SoftReference<Drawable>(drawable));
+				imageCache.put(imageId, new SoftReference<Drawable>(drawable));
 				Message message = handler.obtainMessage(0, drawable);
 				handler.sendMessage(message);
 			}
 		}.start();
+		return null;
+	}
+	
+	public Drawable loadDraw(String imageId,final String url){
+		if(imageCache.containsKey(imageId)){
+			SoftReference<Drawable> softReference = imageCache.get(imageId);
+			Drawable drawable = softReference.get();
+			if (drawable != null) {
+				return drawable;
+			}
+		}else{
+			new Thread(){
+				public void run(){
+					Drawable drawable = loadImageFromUrl(url);
+					imageCache.put(url, new SoftReference<Drawable>(drawable));
+				}
+			}.start();
+		}
 		return null;
 	}
 

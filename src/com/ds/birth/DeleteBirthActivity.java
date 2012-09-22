@@ -7,7 +7,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,10 +32,11 @@ import android.widget.Toast;
 import com.ds.birth.AsyncImageLoader.ImageCallback;
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
+import com.ds.utility.Utility;
 
 public class DeleteBirthActivity extends Activity {
 	Cursor mCursor;
-	ProgressDialog mProgressDialog;
+	// ProgressDialog mProgressDialog;
 	ProgressDialog mDelDialog;
 	private static final int SUCCESS = 1001;
 	private static final int EMPTY = 1002;
@@ -144,7 +148,7 @@ public class DeleteBirthActivity extends Activity {
 					if (checkNum == mCursor.getCount()) {
 						isSelectAll = true;
 						selectAll.setText(R.string.deselect_all);
-					}else{
+					} else {
 						isSelectAll = false;
 						selectAll.setText(R.string.select_all);
 					}
@@ -166,8 +170,8 @@ public class DeleteBirthActivity extends Activity {
 	}
 
 	private void startQuery() {
-		mProgressDialog = ProgressDialog.show(DeleteBirthActivity.this,
-				"Loading...", "Please wait...", true, false);
+		// mProgressDialog = ProgressDialog.show(DeleteBirthActivity.this,
+		// "Loading...", "Please wait...", true, false);
 		Thread thread = new MyThread();
 		thread.start();
 	}
@@ -176,7 +180,7 @@ public class DeleteBirthActivity extends Activity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case SUCCESS:
-				mProgressDialog.dismiss();
+				// mProgressDialog.dismiss();
 				selectAll.setClickable(true);
 				adapter = new DeleteCursorAdapter(DeleteBirthActivity.this,
 						mCursor);
@@ -184,7 +188,7 @@ public class DeleteBirthActivity extends Activity {
 				break;
 
 			case EMPTY:
-				mProgressDialog.dismiss();
+				// mProgressDialog.dismiss();
 				selectAll.setClickable(false);
 				adapter = null;
 				mListView.setAdapter(adapter);
@@ -288,29 +292,57 @@ public class DeleteBirthActivity extends Activity {
 			userImage = (ImageView) convertView.findViewById(R.id.userimage);
 			userCheck = (CheckBox) convertView.findViewById(R.id.check);
 			if (cursor != null) {
-				convertView.setTag(cursor.getInt(DatabaseHelper.ID_INDEX));
-				userImage.setTag(cursor.getString(DatabaseHelper.AVATAR_INDEX));
-				userName.setText(cursor.getString(DatabaseHelper.NAME_INDEX));
-				// 异步加载图片并显示
-				Drawable cachedImage = asyncImageLoader.loadDrawable(
-						cursor.getInt(DatabaseHelper.ID_INDEX),
-						cursor.getString(DatabaseHelper.AVATAR_INDEX),
-						new ImageCallback() {
-							public void imageLoaded(Drawable imageDrawable,
-									String imageUrl) {
-								ImageView imageView = (ImageView) mListView
-										.findViewWithTag(imageUrl);
-								if (imageView != null) {
-									imageView.setImageDrawable(imageDrawable);
-								}
-							}
-						});
-				Log.i("DeleteBirthActivity","---delete birth----");
-				if (cachedImage != null) {
-					userImage.setImageDrawable(cachedImage);
-				} else {// 如果没有图片，就以一个载入的图片代替显示
-					userImage.setImageResource(R.drawable.common_head_withbg);
+				final int id = cursor.getInt(DatabaseHelper.ID_INDEX);
+				// convertView.setTag(cursor.getInt(DatabaseHelper.ID_INDEX));
+				// userImage.setTag(cursor.getString(DatabaseHelper.AVATAR_INDEX));
+				if (cursor.getString(DatabaseHelper.AVATAR_INDEX).startsWith(
+						"http")) {
+					// userImage.setTag(cursor.getString(DatabaseHelper.AVATAR_INDEX));
+					userImage.setTag(String.valueOf(id));
 				}
+				userName.setText(cursor.getString(DatabaseHelper.NAME_INDEX));
+
+				if (cursor.getString(DatabaseHelper.AVATAR_INDEX) == null
+						|| cursor.getString(DatabaseHelper.AVATAR_INDEX)
+								.length() == 0) {
+					Drawable drawable = context.getResources().getDrawable(
+							R.drawable.common_head_withbg);
+					userImage.setBackgroundDrawable(drawable);
+				} else {
+					if (cursor.getString(DatabaseHelper.AVATAR_INDEX)
+							.startsWith("http")) {
+						Drawable cachedImage = asyncImageLoader.loadDrawable(
+								String.valueOf(id),
+								cursor.getString(DatabaseHelper.AVATAR_INDEX),
+								new ImageCallback() {
+									public void imageLoaded(
+											Drawable imageDrawable,
+											String imageUrl) {
+										ImageView imageView = (ImageView) mListView
+												.findViewWithTag(String
+														.valueOf(id));
+										if (imageView != null) {
+											imageView
+													.setBackgroundDrawable(imageDrawable);
+										}
+										// userImage
+										// .setImageDrawable(imageDrawable);
+									}
+								});
+						userImage.setBackgroundDrawable(cachedImage);
+					} else {
+						String url = cursor
+								.getString(DatabaseHelper.AVATAR_INDEX);
+						Uri uri = Uri.parse(url);
+						Bitmap avatar = Utility.getBitmapFromUri(uri,
+								DeleteBirthActivity.this);
+						if (avatar != null) {
+							BitmapDrawable bd = new BitmapDrawable(avatar);
+							userImage.setBackgroundDrawable(bd);
+						}
+					}
+				}
+
 				userCheck.setChecked(isSelected.get(cursor
 						.getInt(DatabaseHelper.ID_INDEX)));
 			}

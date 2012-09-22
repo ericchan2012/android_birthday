@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/splash_open_up" />
+        android:src="@drawable/splash_open_up" />  
 
     <ImageView
         android:id="@+id/splash_open_candy"
@@ -20,7 +20,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="152.0dip"
-        android:background="@drawable/splash_open_candy" />
+        android:background="@drawable/candy" />
 
     <TextView
         android:id="@+id/splash_textview"

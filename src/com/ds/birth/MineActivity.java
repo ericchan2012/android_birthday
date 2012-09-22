@@ -1,7 +1,16 @@
 package com.ds.birth;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -32,6 +41,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +86,11 @@ public class MineActivity extends Activity implements OnClickListener {
 	private Button pEditButton;
 	private Button rightBtn;
 	private static final String TAG = "MineActivity";
+	private LinearLayout backup;
+	private LinearLayout recovery;
+
+	private static final String SERVER_URL = "";
+	private int mServerId = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +121,120 @@ public class MineActivity extends Activity implements OnClickListener {
 				onResume();
 			}
 		});
+
+		backup = (LinearLayout) findViewById(R.id.backup);
+		recovery = (LinearLayout) findViewById(R.id.recovery);
+		backup.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				backup();
+			}
+
+		});
+		recovery.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+	}
+
+	private void backup() {
+		File file = new File("/data/data/com.ds.birth/databases/birthday.db");
+		String url = "http://192.168.0.112:80/birthday/login.php?userId="
+				+ mServerId;
+		String filePaht = "/data/data/com.ds.birth/databases/birthday.db";
+		uploadFile(url,filePaht);
+	}
+
+	private void uploadFile(String uploadUrl,String srcPath) {
+		String end = "\r\n";
+		String twoHyphens = "--";
+		String boundary = "******";
+		try {
+			URL url = new URL(uploadUrl);
+			HttpURLConnection httpURLConnection = (HttpURLConnection) url
+					.openConnection();
+			// 设置每次传输的流大小，可以有效防止手机因为内存不足崩溃
+			// 此方法用于在预先不知道内容长度时启用没有进行内部缓冲的 HTTP 请求正文的流。
+			httpURLConnection.setChunkedStreamingMode(128 * 1024);// 128K
+			// 允许输入输出流
+			httpURLConnection.setDoInput(true);
+			httpURLConnection.setDoOutput(true);
+			httpURLConnection.setUseCaches(false);
+			// 使用POST方法
+			httpURLConnection.setRequestMethod("POST");
+			httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
+			httpURLConnection.setRequestProperty("Charset", "UTF-8");
+			httpURLConnection.setRequestProperty("Content-Type",
+					"multipart/form-data;boundary=" + boundary);
+
+			DataOutputStream dos = new DataOutputStream(
+					httpURLConnection.getOutputStream());
+			dos.writeBytes(twoHyphens + boundary + end);
+			dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\"; filename=\""
+					+ srcPath.substring(srcPath.lastIndexOf("/") + 1)
+					+ "\""
+					+ end);
+			dos.writeBytes(end);
+
+			FileInputStream fis = new FileInputStream(srcPath);
+			byte[] buffer = new byte[8192]; // 8k
+			int count = 0;
+			// 读取文件
+			while ((count = fis.read(buffer)) != -1) {
+				dos.write(buffer, 0, count);
+			}
+			fis.close();
+
+			dos.writeBytes(end);
+			dos.writeBytes(twoHyphens + boundary + twoHyphens + end);
+			dos.flush();
+
+			InputStream is = httpURLConnection.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is, "utf-8");
+			BufferedReader br = new BufferedReader(isr);
+			String result = br.readLine();
+
+			Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+			dos.close();
+			is.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			setTitle(e.getMessage());
+		}
+	}
+
+	public static void uploadFile(String murl, File file) {
+		try {
+			URL url = new URL(murl + "&file=" + URLEncoder.encode(file.getName()));
+			HttpURLConnection httpUrlConnection = (HttpURLConnection) url
+					.openConnection();
+			httpUrlConnection.setDoOutput(true);
+			httpUrlConnection.setDoInput(true);
+			httpUrlConnection.setRequestMethod("POST");
+			OutputStream os = httpUrlConnection.getOutputStream();
+			Thread.sleep(100);
+			BufferedInputStream fis = new BufferedInputStream(
+					new FileInputStream(file));
+
+			int bufSize = 0;
+			byte[] buffer = new byte[1024];
+			while ((bufSize = fis.read(buffer)) != -1) {
+				os.write(buffer, 0, bufSize);
+			}
+			fis.close();
+
+			String responMsg = httpUrlConnection.getResponseMessage();
+			Log.d(TAG, "responMsg =====" + responMsg);
+		} catch (Exception e) {
+		}
 	}
 
 	@Override
@@ -232,6 +361,7 @@ public class MineActivity extends Activity implements OnClickListener {
 			if (resultCode == RESULT_OK) {
 				Bundle extras = data.getExtras();
 				int serverId = extras.getInt(RegisterActivity.SERVER_ID);
+				mServerId = serverId;
 				String name = extras.getString(RegisterActivity.NAME);
 				setContentView(R.layout.personal);
 				isPersonal = 1;

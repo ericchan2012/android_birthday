@@ -13,6 +13,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,6 +38,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +74,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 
 	ImageView headerImage;
 	EditText nameEdit;
-	TextView genderText;
+	// TextView genderText;
 	TextView ringDaysText;
 	TextView ringTypeText;
 	CheckBox mStar;
@@ -142,6 +145,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	private File mCurrentPhotoFile;
 	private static final int GET_PHOTO_WITH_GALLARY = 102;
 	private static final int GET_PHOTO_WITH_CAMERA = 101;
+	String mAvatarUri;
+	RadioButton maleRadio;
+	RadioButton femaleRadio;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -256,6 +262,9 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						person.setRingtype(ringtype);
 						mType = mCursor.getInt(DatabaseHelper.TYPE_INDEX);
 						person.setType(mType);
+						mAvatarUri = mCursor
+								.getString(DatabaseHelper.AVATAR_INDEX);
+						person.setAvater(mAvatarUri);
 						updateEdit(person);
 					} while (mCursor.moveToNext());
 				}
@@ -264,6 +273,28 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	}
 
 	private void updateEdit(Person p) {
+		String avater = p.getAvater();
+		if (avater == null || avater.length() == 0) {
+			Drawable drawable = getResources().getDrawable(
+					R.drawable.common_head_withbg);
+			headerImage.setBackgroundDrawable(drawable);
+		} else {
+			if (avater.startsWith("http")) {
+				Drawable cachedImage = AsyncImageLoader
+						.loadImageFromUrl(avater);
+				headerImage.setBackgroundDrawable(cachedImage);
+			} else {
+				String url = avater;
+				Uri uri = Uri.parse(url);
+				Bitmap avatar = Utility.getBitmapFromUri(uri,
+						BirthEditActivity.this);
+				if (avatar != null) {
+					BitmapDrawable bd = new BitmapDrawable(avatar);
+					headerImage.setBackgroundDrawable(bd);
+				}
+			}
+		}
+
 		nameEdit.setText(p.getName());
 		if (p.getType() == 1) {
 			nameEdit.setClickable(false);
@@ -273,9 +304,11 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			mStar.setChecked(true);
 		}
 		if (p.getGender() == 1) {
-			genderText.setText(R.string.female);
+			// genderText.setText(R.string.female);
+			maleRadio.setChecked(true);
 		} else {
-			genderText.setText(R.string.male);
+			// genderText.setText(R.string.male);
+			femaleRadio.setChecked(true);
 		}
 		mBirthdayTextView.setText(p.getBirthDay());
 		if (p.getIsLunar() == 1) {
@@ -335,7 +368,10 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			nameEdit.setFocusable(false);
 			nameEdit.setClickable(false);
 		}
-		genderText = (TextView) findViewById(R.id.tv_gender);
+
+		maleRadio = (RadioButton) findViewById(R.id.male);
+		femaleRadio = (RadioButton) findViewById(R.id.female);
+		// genderText = (TextView) findViewById(R.id.tv_gender);
 		ringDaysText = (TextView) findViewById(R.id.tv_ringdays);
 		ringTypeText = (TextView) findViewById(R.id.tv_ringtype);
 		headerImage = (ImageView) findViewById(R.id.head);
@@ -348,7 +384,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		saveBtn.setVisibility(View.VISIBLE);
 		saveBtn.setText(R.string.save);
 		topLeftBtn.setOnClickListener(this);
-		genderText.setOnClickListener(this);
+		// genderText.setOnClickListener(this);
 		ringDaysText.setOnClickListener(this);
 		headerImage.setOnClickListener(this);
 		saveBtn.setOnClickListener(this);
@@ -381,15 +417,20 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 			break;
-		case R.id.tv_gender:
-			if (genderText.getText().equals(mGenderItems[0])) {
-				defaultSexSelect = 0;
-			} else {
-				defaultSexSelect = 1;
-			}
-			createOptionDialog(R.string.gender_title, mGenderItems,
-					R.id.tv_gender, defaultSexSelect);
-			break;
+		// case R.id.tv_gender:
+		// if (genderText.getText().equals(mGenderItems[0])) {
+		// defaultSexSelect = 0;
+		// } else {
+		// defaultSexSelect = 1;
+		// }
+		// if(maleRadio.isChecked()){
+		// defaultSexSelect = 1;
+		// }else if(femaleRadio.isChecked()){
+		// defaultSexSelect = 0;
+		// }
+		// createOptionDialog(R.string.gender_title, mGenderItems,
+		// R.id.tv_gender, defaultSexSelect);
+		// break;
 		case R.id.tv_ringdays:
 			mRingList.clear();
 			for (int i = 0; i < flags.length; i++) {
@@ -414,12 +455,6 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		case R.id.rightBtn:
 			if (BirthEditActivity.this.getCurrentFocus() != null) {
 				hideSoftKeypad();
-			}
-			if (mBirthdayTextView.getText().toString().equals("")
-					|| mBirthdayTextView.getText().toString().length() == 0) {
-				Toast.makeText(this, R.string.save_birthday_hint,
-						Toast.LENGTH_SHORT).show();
-				return;
 			}
 			updateData(mMode);
 			break;
@@ -756,11 +791,18 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		long id = -1;
 		int returnUpdateId = -1;
 		name = nameEdit.getText().toString();
-		if (name == null || name.equals("")) {
+		if (name == null || name.equals("") || name.length() == 0) {
 			// show dialog
 			Toast.makeText(this, R.string.pls_input_name, Toast.LENGTH_SHORT)
 					.show();
 			return;
+		} else {
+			if (mBirthdayTextView.getText().toString().equals("")
+					|| mBirthdayTextView.getText().toString().length() == 0) {
+				Toast.makeText(this, R.string.save_birthday_hint,
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
 		}
 		generateData();
 		if (mode == MODE_ADD) {
@@ -830,7 +872,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	}
 
 	private void generateData() {
-		gender = defaultSexSelect;
+		gender = maleRadio.isChecked() ? 1 : 0;
 		isStar = mStar.isChecked() ? 1 : 0;
 		birthday = mBirthdayTextView.getText().toString();
 		ringtype = defaultRingType;
@@ -850,6 +892,10 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		contentValues.put(DatabaseHelper.MONTH, settingMonth);
 		contentValues.put(DatabaseHelper.DAY, settingDay);
 		contentValues.put(DatabaseHelper.TYPE, mType);
+		if (mAvatarUri == null) {
+			mAvatarUri = "";
+		}
+		contentValues.put(DatabaseHelper.AVATAR, mAvatarUri);
 		if (null == note || note.equals("")) {
 			note = "";
 		}
@@ -962,7 +1008,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						switch (id) {
 						case R.id.tv_gender:
-							genderText.setText(items[defaultSexSelect]);
+							// genderText.setText(items[defaultSexSelect]);
 							break;
 						case R.id.tv_ringtype:
 							ringTypeText.setText(items[defaultRingType]);
@@ -1015,7 +1061,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		private Context mCon;
 		private Button takePicBtn;
 		private Button gallaryBtn;
-		private Button defaultBtn;
+		// private Button defaultBtn;
 		private Button cancelBtn;
 
 		public MyDialog(Context context) {
@@ -1037,7 +1083,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		private void initDialog() {
 			takePicBtn = (Button) findViewById(R.id.takepic_button);
 			gallaryBtn = (Button) findViewById(R.id.gallery_button);
-			defaultBtn = (Button) findViewById(R.id.default_button);
+			// defaultBtn = (Button) findViewById(R.id.default_button);
 			cancelBtn = (Button) findViewById(R.id.cancel_button);
 			takePicBtn
 					.setOnClickListener(new android.view.View.OnClickListener() {
@@ -1064,13 +1110,13 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 							MyDialog.this.dismiss();
 						}
 					});
-			defaultBtn
-					.setOnClickListener(new android.view.View.OnClickListener() {
-
-						public void onClick(View v) {
-
-						}
-					});
+			// defaultBtn
+			// .setOnClickListener(new android.view.View.OnClickListener() {
+			//
+			// public void onClick(View v) {
+			//
+			// }
+			// });
 			cancelBtn
 					.setOnClickListener(new android.view.View.OnClickListener() {
 
@@ -1091,7 +1137,8 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	public void takePhoto() {
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 		File photo = new File(Environment.getExternalStorageDirectory(),
-				"Pic.jpg");
+				getPhotoFileName());
+		Log.i(TAG, "getPhotoFileName():" + getPhotoFileName());
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
 		imageUri = Uri.fromFile(photo);
 		startActivityForResult(intent, GET_PHOTO_WITH_CAMERA);
@@ -1116,7 +1163,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 	private String getPhotoFileName() {
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"'IMG'_yyyy-MM-dd HH:mm:ss");
+				"'IMG'_yyyy-MM-dd_HH-mm-ss");
 		return dateFormat.format(date) + ".jpg";
 	}
 
@@ -1131,31 +1178,21 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == GET_PHOTO_WITH_CAMERA) {
 				// doCropPhoto(mCurrentPhotoFile);
-//				if (data != null) {
-					// Uri uri = data.getData();
-//					data.getParcelableExtra("data");
-//					Log.i(TAG, "uri:" + uri.toString());
-					Uri selectedImage = imageUri;
-					Log.i(TAG, "uri:" + imageUri.toString());
-//					getContentResolver().notifyChange(selectedImage, null);
-//					ImageView imageView = (ImageView) findViewById(R.id.ImageView);
-//					ContentResolver cr = getContentResolver();
-//					Bitmap bitmap;
-//					try {
-//					bitmap = android.provider.MediaStore.Images.Media
-//					.getBitmap(cr, selectedImage);
-//
-//					imageView.setImageBitmap(bitmap);
-//					Toast.makeText(this, selectedImage.toString(),
-//					Toast.LENGTH_LONG).show();
-//					} catch (Exception e) {
-//					Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
-//					.show();
-//					Log.e("Camera", e.toString());
-//					}
-//					}
-//					}
-//				}
+				Uri selectedImage = imageUri;
+				Log.i(TAG, "uri:" + imageUri.toString());
+				getContentResolver().notifyChange(selectedImage, null);
+				ContentResolver cr = getContentResolver();
+				Bitmap bitmap;
+				try {
+					bitmap = android.provider.MediaStore.Images.Media
+							.getBitmap(cr, selectedImage);
+					BitmapDrawable bd = new BitmapDrawable(bitmap);
+					headerImage.setBackgroundDrawable(bd);
+				} catch (Exception e) {
+					Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
+							.show();
+				}
+				mAvatarUri = selectedImage.toString();
 			}
 			if (requestCode == GET_PHOTO_WITH_GALLARY) {
 				if (data != null) {
@@ -1166,6 +1203,7 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 						BitmapDrawable bd = new BitmapDrawable(avatar);
 						headerImage.setBackgroundDrawable(bd);
 					}
+					mAvatarUri = uri.toString();
 				}
 			}
 		}
