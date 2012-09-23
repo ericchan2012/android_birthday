@@ -1,11 +1,22 @@
 package com.ds.feedback;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -16,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ds.birth.R;
+import com.ds.utility.Utility;
 
 public class FeedbackActivity extends Activity {
 
@@ -25,6 +37,7 @@ public class FeedbackActivity extends Activity {
 	private Button mRightBtn = null;
 	private Button mSubmitBtn = null;
 	private TextView titleView;
+	private static final String TAG = "FeedbackActivity";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +52,7 @@ public class FeedbackActivity extends Activity {
 	private void initView() {
 		mContactEdit = (EditText) findViewById(R.id.feedback_contact_edit);
 		mContentEdit = (EditText) findViewById(R.id.feedback_content_edit);
-		titleView = (TextView)findViewById(R.id.title);
+		titleView = (TextView) findViewById(R.id.title);
 		mLeftBtn = (Button) findViewById(R.id.backBtn);
 		mRightBtn = (Button) findViewById(R.id.rightBtn);
 		mRightBtn.setVisibility(View.VISIBLE);
@@ -69,36 +82,66 @@ public class FeedbackActivity extends Activity {
 				String content = mContentEdit.getText().toString().trim();
 				String contact = mContactEdit.getText().toString().trim();
 				if (content.equals("")) {
-					Toast.makeText(FeedbackActivity.this,
-							R.string.request_content, Toast.LENGTH_SHORT)
-							.show();
-					return;
+					showToast(R.string.request_content);
+				} else if (contact.equals("")) {
+					showToast(R.string.request_contact);
+				} else {
+					SendFeedbackTask task = new SendFeedbackTask(
+							FeedbackActivity.this);
+					task.execute(contact, content);
 				}
-				SendFeedbackTask task = new SendFeedbackTask(
-						FeedbackActivity.this, content, contact);
-				task.execute("");
-
 			}
 		});
+	}
+	public int insertFeedback(String url) {
+		int res = 0;
+		int result = -1;
+		HttpClient client = new DefaultHttpClient();
+		StringBuilder str = new StringBuilder();
+		HttpGet httpGet = new HttpGet(url);
+		try {
+			HttpResponse httpRes = client.execute(httpGet);
+			res = httpRes.getStatusLine().getStatusCode();
+			if (res == 200) {
+				BufferedReader buffer = new BufferedReader(
+						new InputStreamReader(httpRes.getEntity().getContent()));
+				for (String s = buffer.readLine(); s != null; s = buffer
+						.readLine()) {
+					str.append(s);
+				}
+				Log.i(TAG,"insertId:" + Integer.parseInt(str.toString().trim()));
+				if (Integer.parseInt(str.toString().trim()) > 0) {
+					result = Integer.parseInt(str.toString().trim());
+				} else {
+					result = -1;
+				}
+			} else {
+				result = -1;
+			}
+		} catch (Exception e) {
+		}
+		return result;
 	}
 
 	private class SendFeedbackTask extends AsyncTask<Object, Object, Object> {
 
-		private Context mContext = null;
-		private String mContact = "";
-		private String mContent = "";
 		private ProgressDialog mProgDialog = null;
+		private Context mContext;
 
-		public SendFeedbackTask(Context context, String content, String contact) {
+		public SendFeedbackTask(Context context) {
 			mContext = context;
-			mContent = content;
-			mContact = contact;
 		}
 
 		@Override
-		protected Object doInBackground(Object... arg0) {
-			return Integer.valueOf(new FeedbackAction(mContext)
-					.sendFeedbackMessage(mContent, mContact));
+		protected Object doInBackground(Object... param) {
+			Log.i("Feedback", "---doInBackground----");
+			String contact = (String) param[0];
+			String content = (String) param[1];
+			String url = Utility.FEEDBACK_URL + "&contact=" + contact
+					+ "&content=" + content;
+			int isSuccess = insertFeedback(url);
+			Log.i("Feedback", "isSuccess:" + isSuccess);
+			return isSuccess;
 		}
 
 		@Override
@@ -106,14 +149,13 @@ public class FeedbackActivity extends Activity {
 			if (mProgDialog != null) {
 				mProgDialog.dismiss();
 			}
-			int resultCode = ((Integer) result).intValue();
-			if (resultCode == 0) {
-				Toast.makeText(FeedbackActivity.this,
-						R.string.feedback_success, Toast.LENGTH_SHORT);
-				// FeedbackActivity.this.finish();
+			int resultCode = (Integer)result;
+			Log.i("Feedback", "resultCode:" + resultCode);
+			if (resultCode > 0) {
+				showToast(R.string.feedback_success);
+				FeedbackActivity.this.finish();
 			} else {
-				Toast.makeText(FeedbackActivity.this, R.string.feedback_failed,
-						Toast.LENGTH_SHORT);
+				showToast(R.string.feedback_failed);
 			}
 			return;
 		}
@@ -127,5 +169,9 @@ public class FeedbackActivity extends Activity {
 			mProgDialog.show();
 		}
 
+	}
+
+	private void showToast(int resid) {
+		Toast.makeText(FeedbackActivity.this, resid, Toast.LENGTH_SHORT).show();
 	}
 }

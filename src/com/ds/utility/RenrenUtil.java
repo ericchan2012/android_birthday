@@ -37,6 +37,7 @@ public class RenrenUtil {
 		}
 		return null;
 	}
+	
 
 	public static List<Renren> parseRenrenInfoFromJson(String renrenJsonData) {
 		List<Renren> renrenList = new ArrayList<Renren>();

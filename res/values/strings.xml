@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="no_feedback">没有反馈</string>
+    <string name="success">成功备份到/sdcard/birthday/下面</string>
+    <string name="recover_success">成功从/sdcard/birthday/中取出备份文件</string>
+	<string name="no_db_file">/sdcard/birthday/目录下没有备份文件</string>
     <string name="back">返回</string>
     <string name="birth_title">生日</string>
     <string name="import_title">导入</string>
@@ -165,4 +168,5 @@
     <string name="open">已开启</string>
     <string name="close">未开启</string>
     <string name="check">查看</string>
+    <string name="request_contact">请输入联系方式</string>
 </resources>

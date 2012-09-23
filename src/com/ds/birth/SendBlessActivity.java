@@ -67,7 +67,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 	private Button msg_tongshi;
 	private Button msg_tongxue;
 
-	@Override
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.send_bless);
@@ -77,7 +77,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		// InitViewPager();
 	}
 
-	@Override
+	
 	protected void onStop() {
 		super.onStop();
 		unregisterReceiver(sendMessage);
@@ -110,7 +110,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_fumu = (Button) findViewById(R.id.msg_fumu);
 		msg_fumu.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
@@ -120,7 +120,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_laopo = (Button) findViewById(R.id.msg_laopo);
 		msg_laopo.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
@@ -130,7 +130,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_laogong = (Button) findViewById(R.id.msg_laogong);
 		msg_laogong.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
@@ -140,7 +140,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_jiaren = (Button) findViewById(R.id.msg_jiaren);
 		msg_jiaren.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
@@ -150,7 +150,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_pengyou = (Button) findViewById(R.id.msg_pengyou);
 		msg_pengyou.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
@@ -160,7 +160,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_zhiyou = (Button) findViewById(R.id.msg_zhiyou);
 		msg_zhiyou.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
@@ -170,7 +170,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_lingdao = (Button) findViewById(R.id.msg_lingdao);
 		msg_lingdao.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
@@ -180,7 +180,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_tongshi = (Button) findViewById(R.id.msg_tongshi);
 		msg_tongshi.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
@@ -190,7 +190,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		msg_tongxue = (Button) findViewById(R.id.msg_tongxue);
 		msg_tongxue.setOnClickListener(new OnClickListener() {
 
-			@Override
+			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
@@ -223,7 +223,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	@Override
+	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
@@ -326,7 +326,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 
 	private BroadcastReceiver sendMessage = new BroadcastReceiver() {
 
-		@Override
+		
 		public void onReceive(Context context, Intent intent) {
 			// 判断短信是否发送成功
 			switch (getResultCode()) {
@@ -342,7 +342,7 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
-		@Override
+		
 		public void onReceive(Context context, Intent intent) {
 			// 表示对方成功收到短信
 			// Toast.makeText(context, "对方接收成功", Toast.LENGTH_LONG).show();
@@ -391,41 +391,41 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 			this.mListViews = mListViews;
 		}
 
-		@Override
+		
 		public void destroyItem(View arg0, int arg1, Object arg2) {
 			((ViewPager) arg0).removeView(mListViews.get(arg1));
 		}
 
-		@Override
+		
 		public void finishUpdate(View arg0) {
 		}
 
-		@Override
+		
 		public int getCount() {
 			return mListViews.size();
 		}
 
-		@Override
+		
 		public Object instantiateItem(View arg0, int arg1) {
 			((ViewPager) arg0).addView(mListViews.get(arg1), 0);
 			return mListViews.get(arg1);
 		}
 
-		@Override
+		
 		public boolean isViewFromObject(View arg0, Object arg1) {
 			return arg0 == (arg1);
 		}
 
-		@Override
+		
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
 		}
 
-		@Override
+		
 		public Parcelable saveState() {
 			return null;
 		}
 
-		@Override
+		
 		public void startUpdate(View arg0) {
 		}
 	}

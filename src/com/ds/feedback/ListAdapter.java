@@ -56,7 +56,7 @@ public class ListAdapter extends BaseAdapter {
 		}
 
 		holder.contentText.setText(item.mContent);
-		holder.timeText.setText(item.mDateTime);
+		holder.timeText.setText(item.mContact);
 
 		return convertView;
 	}

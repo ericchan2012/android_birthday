@@ -38,6 +38,13 @@ public class DbHelper {
 
 		return cur;
 	}
+	
+	public static Cursor queryExternal(SQLiteDatabase db){
+		Cursor cur = db.query(BIRTH_TABLE, DatabaseHelper.QUERY_ALL_PROJECTION,
+				" type = 0", null, null, null, null);
+
+		return cur;
+	}
 
 	public Cursor queryAlarm(String where) {
 		SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -75,7 +82,7 @@ public class DbHelper {
 		SQLiteDatabase db = databaseHelper.getWritableDatabase();
 		return db.delete(BIRTH_TABLE, "_id = " + id, null);
 	}
-
+	
 	public void open(Context context) {
 		databaseHelper = new DatabaseHelper(context);
 	}

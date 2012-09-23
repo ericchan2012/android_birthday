@@ -1,14 +1,18 @@
 package com.ds.birth;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -23,19 +27,23 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -48,6 +56,9 @@ import android.widget.Toast;
 import com.ds.db.DatabaseHelper;
 import com.ds.db.DbHelper;
 import com.ds.utility.BirthConstants;
+import com.ds.utility.FileUtils;
+import com.ds.utility.Person;
+import com.ds.utility.Utility;
 
 /**
  * 如果登录了，则显示个人资料信息，如果没有，则不显示，只显示登录框信息。
@@ -91,6 +102,10 @@ public class MineActivity extends Activity implements OnClickListener {
 
 	private static final String SERVER_URL = "";
 	private int mServerId = -1;
+	URL url;
+
+	private static final int BACKUP = 0;
+	private static final int RECOVERY = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,33 +141,227 @@ public class MineActivity extends Activity implements OnClickListener {
 		recovery = (LinearLayout) findViewById(R.id.recovery);
 		backup.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				backup();
+				if (Utility.isHasSdcard()) {
+					BackupRecoverTask task = new BackupRecoverTask();
+					task.execute(BACKUP);
+				} else {
+					Toast.makeText(MineActivity.this, "No sdcard",
+							Toast.LENGTH_SHORT).show();
+				}
 			}
 
 		});
 		recovery.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				if (Utility.isHasSdcard()) {
+					File file = new File("/sdcard/birthday/birthday.db");
+					if (!file.exists()) {
+						Toast.makeText(MineActivity.this, R.string.no_db_file,
+								Toast.LENGTH_SHORT).show();
+						return;
+					}
+					BackupRecoverTask task = new BackupRecoverTask();
+					task.execute(RECOVERY);
+				} else {
+					Toast.makeText(MineActivity.this, "No sdcard",
+							Toast.LENGTH_SHORT).show();
+				}
 			}
-
 		});
 	}
 
-	private void backup() {
-		File file = new File("/data/data/com.ds.birth/databases/birthday.db");
-		String url = "http://192.168.0.112:80/birthday/login.php?userId="
-				+ mServerId;
-		String filePaht = "/data/data/com.ds.birth/databases/birthday.db";
-		uploadFile(url,filePaht);
+	private void download() {
+		Log.i(TAG, "download mServerId:" + mServerId);
+		String url = Utility.DOWNLOAD_URI + mServerId;
+		int result = 0;
+		// int result = downFile(url, "/sdcard/download", "birthday.db_"
+		// + mServerId);
+		Log.i(TAG, "result:" + result);
+		SQLiteDatabase sqlitedatabase = openDatabase("/sdcard/birthday/birthday.db");
+		Cursor cursor = DbHelper.queryExternal(sqlitedatabase);
+		cursor.moveToFirst();
+		ContentValues contentValues = new ContentValues();
+		contentValues.clear();
+		do {
+			Person p = new Person();
+			int gender = cursor.getInt(DatabaseHelper.SEX_INDEX);
+			p.setGender(gender);
+			int isStar = cursor.getInt(DatabaseHelper.ISSTAR_INDEX);
+			p.setIsStar(isStar);
+			String birthday = cursor.getString(DatabaseHelper.BIRTHDAY_INDEX);
+			p.setBirthDay(birthday);
+			String name = cursor.getString(DatabaseHelper.NAME_INDEX);
+			p.setName(name);
+			int ringtype = cursor.getInt(DatabaseHelper.RINGTYPE_INDEX);
+			p.setRingtype(ringtype);
+			int isLunar = cursor.getInt(DatabaseHelper.ISLUNAR_INDEX);
+			p.setIsLunar(isLunar);
+			String phonenumber = cursor
+					.getString(DatabaseHelper.PHONE_NUMBER_INDEX);
+			p.setPhoneNumber(phonenumber);
+			int year = cursor.getInt(DatabaseHelper.YEAR_INDEX);
+			p.setYear(year);
+			int month = cursor.getInt(DatabaseHelper.MONTH_INDEX);
+			p.setMonth(month);
+			int day = cursor.getInt(DatabaseHelper.DAY_INDEX);
+			p.setDay(day);
+			generateData(contentValues, p);
+		} while (cursor.moveToNext());
+		// return result;
 	}
 
-	private void uploadFile(String uploadUrl,String srcPath) {
+	private void generateData(ContentValues contentValues, Person person) {
+		contentValues.clear();
+		contentValues.put(DatabaseHelper.NAME, person.getName());
+		contentValues.put(DatabaseHelper.SEX, person.getGender());
+		contentValues.put(DatabaseHelper.ISSTAR, person.getIsStar());
+		contentValues.put(DatabaseHelper.BIRTHDAY, person.getBirthDay());
+		contentValues.put(DatabaseHelper.RINGTYPE, person.getRingtype());
+		contentValues.put(DatabaseHelper.ISLUNAR, person.getIsLunar());
+		contentValues.put(DatabaseHelper.YEAR, person.getYear());
+		contentValues.put(DatabaseHelper.MONTH, person.getMonth());
+		contentValues.put(DatabaseHelper.DAY, person.getDay());
+		contentValues.put(DatabaseHelper.TYPE, 0);
+		contentValues.put(DatabaseHelper.PHONE_NUMBER, person.getPhoneNumber());
+		contentValues.put(DatabaseHelper.AVATAR, "");
+		dbHelper.insert(contentValues);
+	}
+
+	private SQLiteDatabase openDatabase(String path) {
+		SQLiteDatabase database = null;
+		database = SQLiteDatabase.openOrCreateDatabase(path, null);
+		return database;
+	}
+
+	public int downFile(String urlStr, String path, String fileName) {
+		InputStream inputStream = null;
+		try {
+			FileUtils fileUtils = new FileUtils();
+
+			if (fileUtils.isFileExist(path + fileName)) {
+				return 1;
+			} else {
+				inputStream = getInputStreamFromURL(urlStr);
+				File resultFile = fileUtils.write2SDFromInput(path, fileName,
+						inputStream);
+				if (resultFile == null) {
+					return -1;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+
+	public InputStream getInputStreamFromURL(String urlStr) {
+		HttpURLConnection urlConn = null;
+		InputStream inputStream = null;
+		try {
+			url = new URL(urlStr);
+			urlConn = (HttpURLConnection) url.openConnection();
+			inputStream = urlConn.getInputStream();
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return inputStream;
+	}
+
+	public void requestDownload(String url) {
+		int res = 0;
+		HttpClient client = new DefaultHttpClient();
+		StringBuilder str = new StringBuilder();
+		HttpGet httpGet = new HttpGet(url);
+		try {
+			HttpResponse httpRes = client.execute(httpGet);
+			res = httpRes.getStatusLine().getStatusCode();
+			if (res == 200) {
+				BufferedReader buffer = new BufferedReader(
+						new InputStreamReader(httpRes.getEntity().getContent()));
+				for (String s = buffer.readLine(); s != null; s = buffer
+						.readLine()) {
+					str.append(s);
+				}
+				Log.i(Tag, "requestDownload:" + str.toString());
+			} else {
+				Log.i(Tag, "HttpGet Error");
+			}
+		} catch (Exception e) {
+			Log.i(Tag, "Exception");
+		}
+	}
+
+	private void backup() {
+		String url = Utility.BACKUP_URI;
+		String filePath = "/data/data/com.ds.birth/databases/birthday.db";
+		File file = new File(filePath);
+		// uploadFile(url, filePaht);
+		File dir = new File("/sdcard/birthday/");
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		File targetFile = new File("/sdcard/birthday/", "birthday.db");
+		try {
+			copyFile(file, targetFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void copyFile(File sourceFile, File targetFile)
+			throws IOException {
+		// 新建文件输入流并对它进行缓冲
+		FileInputStream input = new FileInputStream(sourceFile);
+		BufferedInputStream inBuff = new BufferedInputStream(input);
+
+		// 新建文件输出流并对它进行缓冲
+		if (!targetFile.exists()) {
+			targetFile.createNewFile();
+		}
+		FileOutputStream output = new FileOutputStream(targetFile);
+		BufferedOutputStream outBuff = new BufferedOutputStream(output);
+
+		// 缓冲数组
+		byte[] b = new byte[1024 * 5];
+		int len;
+		while ((len = inBuff.read(b)) != -1) {
+			outBuff.write(b, 0, len);
+		}
+		// 刷新此缓冲的输出流
+		outBuff.flush();
+
+		// 关闭流
+		inBuff.close();
+		outBuff.close();
+		output.close();
+		input.close();
+	}
+
+	public void saveToSDCard(String filename, String content) throws Exception {
+		// 通过getExternalStorageDirectory方法获取SDCard的文件路径
+		File file = new File(Environment.getExternalStorageDirectory(),
+				filename);
+		// 获取输出流
+		FileOutputStream outStream = new FileOutputStream(file);
+		outStream.write(content.getBytes());
+		outStream.close();
+	}
+
+	private void uploadFile(String uploadUrl, String srcPath) {
 		String end = "\r\n";
 		String twoHyphens = "--";
 		String boundary = "******";
@@ -179,8 +388,8 @@ public class MineActivity extends Activity implements OnClickListener {
 			dos.writeBytes(twoHyphens + boundary + end);
 			dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\"; filename=\""
 					+ srcPath.substring(srcPath.lastIndexOf("/") + 1)
-					+ "\""
-					+ end);
+					+ "_"
+					+ mServerId + "\"" + end);
 			dos.writeBytes(end);
 
 			FileInputStream fis = new FileInputStream(srcPath);
@@ -213,7 +422,8 @@ public class MineActivity extends Activity implements OnClickListener {
 
 	public static void uploadFile(String murl, File file) {
 		try {
-			URL url = new URL(murl + "&file=" + URLEncoder.encode(file.getName()));
+			URL url = new URL(murl + "&file="
+					+ URLEncoder.encode(file.getName()));
 			HttpURLConnection httpUrlConnection = (HttpURLConnection) url
 					.openConnection();
 			httpUrlConnection.setDoOutput(true);
@@ -376,13 +586,8 @@ public class MineActivity extends Activity implements OnClickListener {
 	}
 
 	private void checkLogin(String name, String passwd) {
-		pDialog = ProgressDialog.show(this,
-				getResources().getString(R.string.login_title), getResources()
-						.getString(R.string.login_message));
-		pDialog.show();
 		// connect the server to check the account,
-		String url = "http://10.1.1.121:80/birthday/login.php?number=" + name
-				+ "&passwd=" + passwd;
+		String url = Utility.LOGIN_URI + "number=" + name + "&passwd=" + passwd;
 		CheckLoginTask task = new CheckLoginTask();
 		task.execute(url);
 	}
@@ -439,14 +644,15 @@ public class MineActivity extends Activity implements OnClickListener {
 				// EntityUtils.toString(httpRes.getEntity().getContent(),
 				// "UTF-8");
 				// StringBuilder sb = new StringBuilder()
-				Log.i(Tag, str.toString());
+				Log.i(Tag, "str:" + str.toString());
 				if (str.toString().equals("0")) {
 					result = false;
 				} else {
 					try {
+
 						// JSONObject json = new
 						// JSONObject(str.toString()).getJSONObject("content");
-						JSONObject json = new JSONObject(str.toString());
+						JSONObject json = new JSONObject(str.toString().trim());
 						int id = json.getInt("id");
 						String name = json.getString("name");
 						String passwd = json.getString("passwd");
@@ -454,6 +660,7 @@ public class MineActivity extends Activity implements OnClickListener {
 						String number = json.getString("phone");
 						Log.i(Tag, "name:" + name);
 						mName = name;
+						mServerId = id;
 					} catch (JSONException e) {
 						Log.i(Tag, e.getLocalizedMessage());
 						// buffer.close();
@@ -479,6 +686,7 @@ public class MineActivity extends Activity implements OnClickListener {
 			case SUCCESS:
 				// startActivity
 				pDialog.dismiss();
+				hideSoftKeypad();
 				saveState();
 				updateContentView();
 				break;
@@ -489,6 +697,12 @@ public class MineActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+
+	private void hideSoftKeypad() {
+		((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+				.hideSoftInputFromWindow(MineActivity.this.getCurrentFocus()
+						.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
 
 	private void saveState() {
 		if (isPersonal == 0) {
@@ -538,6 +752,10 @@ public class MineActivity extends Activity implements OnClickListener {
 
 		protected void onPreExecute() {
 			super.onPreExecute();
+			pDialog = ProgressDialog.show(MineActivity.this, getResources()
+					.getString(R.string.login_title),
+					getResources().getString(R.string.login_message));
+			pDialog.show();
 		}
 
 		@Override
@@ -559,12 +777,62 @@ public class MineActivity extends Activity implements OnClickListener {
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			String url = params[0];
+			Log.i(TAG, "---doInBackground---");
 			Log.i(TAG, "url:" + url);
 			isSuccess = getServerJsonDataWithNoType(url);
 			if (isSuccess) {
 				result = "1";
 			} else {
 				result = "0";
+			}
+			return result;
+		}
+
+	}
+
+	class BackupRecoverTask extends AsyncTask<Integer, Integer, Integer> {
+		boolean isSuccess = false;
+		int result;
+		int state;
+
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog = new ProgressDialog(MineActivity.this);
+			pDialog.setMessage(MineActivity.this.getString(R.string.waiting));
+			pDialog.setCancelable(true);
+			pDialog.show();
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			super.onProgressUpdate(progress);
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			super.onPostExecute(result);
+			if (pDialog != null) {
+				pDialog.dismiss();
+			}
+			if (state == BACKUP) {
+				Toast.makeText(MineActivity.this, R.string.success,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(MineActivity.this, R.string.recover_success,
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+
+		@Override
+		protected Integer doInBackground(Integer... params) {
+			// TODO Auto-generated method stub
+			state = params[0];
+			if (state == BACKUP) {
+				backup();
+				result = 1;
+			} else {
+				download();
+				result = 1;
 			}
 			return result;
 		}

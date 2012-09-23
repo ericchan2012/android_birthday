@@ -101,15 +101,14 @@
                                 <Button
                                     android:id="@+id/editProfile"
                                     style="@style/normal_edit_button_new"
-                                    android:text="@string/edit_profile"
-                                     />
+                                    android:text="@string/edit_profile" />
 
                                 <Button
                                     android:id="@+id/privacySetBtn"
                                     style="@style/normal_edit_button_new"
                                     android:layout_marginLeft="15.0dip"
-                                    android:visibility="invisible"
-                                    android:text="@string/privacy_set" />
+                                    android:text="@string/privacy_set"
+                                    android:visibility="invisible" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -246,12 +245,14 @@
                                     android:src="@drawable/tools_recover_logo" />
                             </LinearLayout>
 
-                            <ImageView style="@style/divider_line" />
+                            <ImageView
+                                style="@style/divider_line"
+                                android:visibility="gone" />
 
                             <LinearLayout
                                 android:id="@+id/sync"
-                                android:visibility="gone"
-                                style="@style/more_row_layout_ex" >
+                                style="@style/more_row_layout_ex"
+                                android:visibility="gone" >
 
                                 <TextView
                                     style="@style/more_row_ahead_text"

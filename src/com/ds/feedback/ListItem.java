@@ -4,6 +4,6 @@ public class ListItem {
 
 	public String mContent;
 
-	public String mDateTime;
+	public String mContact;
 
 }

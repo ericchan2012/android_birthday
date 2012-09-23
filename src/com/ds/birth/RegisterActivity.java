@@ -8,13 +8,18 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.ds.utility.Utility;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -88,37 +93,36 @@ public class RegisterActivity extends Activity implements OnClickListener {
 			showToast(R.string.password_hint);
 		} else {
 			mName = nickname;
-			checkRegister(phone, nickname, passwd);
+			// checkRegister(phone, nickname, passwd);
+			RegisterTask task = new RegisterTask();
+			task.execute(phone, nickname, passwd);
 		}
 	}
 
-	private void checkRegister(String phone, String name, String passwd) {
+	private int checkRegister(String phone, String name, String passwd) {
 		int id = -1;
-		pDialog = ProgressDialog.show(this,
-				getResources().getString(R.string.login_title), getResources()
-						.getString(R.string.login_message));
-		pDialog.show();
 		// connect the server to check the account,
-		String url = "http://10.1.1.121:80/birthday/register.php?name=" + name
-				+ "&passwd=" + passwd + "&number=" + phone;
+		String url = Utility.REGISTER_URI + "name=" + name + "&passwd="
+				+ passwd + "&number=" + phone;
 		id = serverCheckRegister(url);
-		if (id > 0) {
-			pDialog.dismiss();
-			Intent data = new Intent();
-			Bundle extras = new Bundle();
-			extras.putString(NAME, mName);
-			extras.putInt(SERVER_ID, serverId);
-			data.putExtras(extras);
-			setResult(Activity.RESULT_OK, data);
-			showToast(R.string.register_success);
-			finish();
-		} else if (id == 0) {
-			showErrorDialog(R.string.error_title,
-					R.string.error_already_register);
-		} else {
-			showErrorDialog(R.string.error_title,
-					R.string.error_register_message);
-		}
+		// if (id > 0) {
+		// pDialog.dismiss();
+		// Intent data = new Intent();
+		// Bundle extras = new Bundle();
+		// extras.putString(NAME, mName);
+		// extras.putInt(SERVER_ID, serverId);
+		// data.putExtras(extras);
+		// setResult(Activity.RESULT_OK, data);
+		// showToast(R.string.register_success);
+		// finish();
+		// } else if (id == 0) {
+		// showErrorDialog(R.string.error_title,
+		// R.string.error_already_register);
+		// } else {
+		// showErrorDialog(R.string.error_title,
+		// R.string.error_register_message);
+		// }
+		return id;
 	}
 
 	private void showErrorDialog(int title, int message) {
@@ -171,4 +175,77 @@ public class RegisterActivity extends Activity implements OnClickListener {
 	private void showToast(int strId) {
 		Toast.makeText(this, strId, Toast.LENGTH_SHORT).show();
 	}
+
+	class RegisterTask extends AsyncTask<String, Integer, String> {
+		int isSuccess = -1;
+		String result = "0";
+
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog = ProgressDialog.show(RegisterActivity.this, getResources()
+					.getString(R.string.login_title),
+					getResources().getString(R.string.login_message));
+			pDialog.show();
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			super.onProgressUpdate(progress);
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			if (result.equals("-1")) {
+				mHandler.sendEmptyMessage(ERROR1);
+			} else if (result.equals("0")) {
+				mHandler.sendEmptyMessage(ERROR2);
+			} else {
+				mHandler.sendEmptyMessage(SUCCESS);
+			}
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			String phone = params[0];
+			String nickname = params[1];
+			String passwd = params[2];
+			isSuccess = checkRegister(phone, nickname, passwd);
+			return String.valueOf(isSuccess);
+		}
+
+	}
+
+	private static final int ERROR1 = 1000;
+	private static final int ERROR2 = 1001;
+	private static final int SUCCESS = 1002;
+	private Handler mHandler = new Handler() {
+		public void handleMessage(Message message) {
+			switch (message.what) {
+			case SUCCESS:
+				// startActivity
+				pDialog.dismiss();
+				Intent data = new Intent();
+				Bundle extras = new Bundle();
+				extras.putString(NAME, mName);
+				extras.putInt(SERVER_ID, serverId);
+				data.putExtras(extras);
+				setResult(Activity.RESULT_OK, data);
+				showToast(R.string.register_success);
+				finish();
+				break;
+			case ERROR2:
+				pDialog.dismiss();
+				showErrorDialog(R.string.error_title,
+						R.string.error_already_register);
+				break;
+			case ERROR1:
+				pDialog.dismiss();
+				showErrorDialog(R.string.error_title,
+						R.string.error_register_message);
+				break;
+			}
+		}
+	};
 }

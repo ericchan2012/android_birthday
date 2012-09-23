@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <include layout="@layout/head_nav" />
-
+	
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
@@ -16,5 +16,10 @@
         android:cacheColorHint="@android:color/transparent"
         android:dividerHeight="10.0dp"
         android:divider="@color/background_color" />
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        />
 
 </LinearLayout>

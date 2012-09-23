@@ -13,7 +13,34 @@ public class Person {
 	String phoneNumber;
 	int type;
 	String avater;
-	
+	int year;
+	int month;
+	int day;
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	public int getDay() {
+		return day;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+
 	public String getAvater() {
 		return avater;
 	}
@@ -21,7 +48,6 @@ public class Person {
 	public void setAvater(String avater) {
 		this.avater = avater;
 	}
-	
 
 	public int getType() {
 		return type;

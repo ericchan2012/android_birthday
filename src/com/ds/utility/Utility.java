@@ -1,9 +1,21 @@
 package com.ds.utility;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,6 +32,16 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 public class Utility {
+
+	public static final String FEEDBACK_URL = "http://360birthday.sinaapp.com/feedback.php?type=1";
+	public static final String FEEDBACK_QUERY_URL = "http://360birthday.sinaapp.com/feedback.php?type=0";
+	public static final String DOWNLOAD_URI="http://360birthday.sinaapp.com/download.php?userid=";
+	
+	public static final String REGISTER_URI="http://360birthday.sinaapp.com/register.php?";
+	
+	public static final String BACKUP_URI="http://360birthday.sinaapp.com/receive_file.php";
+	
+	public static final String LOGIN_URI="http://360birthday.sinaapp.com/login.php?";
 
 	public static Bitmap toRoundCorner(Bitmap bitmap, int pixels) {
 
@@ -142,19 +164,17 @@ public class Utility {
 
 		return age;
 	}
-	
-	
-	public static boolean isHasSdcard()  
-	{  
-	    String status = Environment.getExternalStorageState();  
-	    if (status.equals(Environment.MEDIA_MOUNTED)){  
-	       return true;  
-	    } else {  
-	       return false;  
-	    }  
+
+	public static boolean isHasSdcard() {
+		String status = Environment.getExternalStorageState();
+		if (status.equals(Environment.MEDIA_MOUNTED)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-	
-	public static Bitmap getBitmapFromUri(Uri uri,Context context) {
+
+	public static Bitmap getBitmapFromUri(Uri uri, Context context) {
 		try {
 			// 读取uri所在的图片
 			Bitmap bitmap = MediaStore.Images.Media.getBitmap(
@@ -164,5 +184,62 @@ public class Utility {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static String getJSONData(String url)
+			throws ClientProtocolException, IOException {
+		String result = "";
+		HttpGet httpGet = new HttpGet(url);
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpResponse httpResponse = null;
+
+		try {
+			httpResponse = httpClient.execute(httpGet);
+			HttpEntity httpEntity = httpResponse.getEntity();
+			if (httpEntity != null) {
+				InputStream inputStream = httpEntity.getContent();
+				result = convertStreamToString(inputStream);
+
+			}
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			httpClient.getConnectionManager().shutdown();
+			httpResponse = null;
+		}
+		return result;
+
+	}
+
+	public static String convertStreamToString(InputStream is) {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(is, "GB2312"),// 防止模拟器上的乱码
+					512 * 1024);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "/n");
+			}
+		} catch (IOException e) {
+			Log.e("DataProvier convertStreamToString", e.getLocalizedMessage(),
+					e);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
 	}
 }
