@@ -164,6 +164,9 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 			public void onClick(View v) {
 				Intent intent = new Intent(BirthDetailActivity.this,
 						SendBlessActivity.class);
+				Bundle extras = new Bundle();
+				extras.putString("number", phoneNumView.getText().toString());
+				intent.putExtras(extras);
 				startActivity(intent);
 			}
 
@@ -415,28 +418,28 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		int age = 1;
 		if (nowYear == lunarYear) {
 			if (nowMonth > lunarMonth) {
-
+				nowYear = nowYear + 1;
+				age = age + 1;
 			} else if (nowMonth == lunarMonth) {
 				if (nowDay > lunarDay) {
 					nowYear = nowYear + 1;
 					age = age + 1;
 				}
 			} else {
-				nowYear = nowYear + 1;
-				age = age + 1;
+				
 			}
 		} else if (nowYear > lunarYear) {
 			age = nowYear - lunarYear;
 			if (nowMonth > lunarMonth) {
-
+				nowYear = nowYear + 1;
+				age = age + 1;
 			} else if (nowMonth == lunarMonth) {
 				if (nowDay > lunarDay) {
 					nowYear = nowYear + 1;
 					age = age + 1;
 				}
 			} else {
-				nowYear = nowYear + 1;
-				age = age + 1;
+				
 			}
 		} else {
 
@@ -463,33 +466,32 @@ public class BirthDetailActivity extends Activity implements OnClickListener {
 		int solarMonth = shared.getInt(MONTH, -1);
 		int solarDay = shared.getInt(DAY, -1);
 
-		Log.i(TAG, "lunarYear:" + solarYear + " lunarMonth:" + solarMonth
-				+ " lunarDay:" + solarDay);
+		Log.i(TAG, "solarYear:" + solarYear + " solarMonth:" + solarMonth
+				+ " solarDay:" + solarDay);
 		int age = 1;
 		if (nowYear == solarYear) {
 			if (nowMonth > solarMonth) {
-
+				nowYear = nowYear + 1;
+				age = age + 1;
 			} else if (nowMonth == solarMonth) {
 				if (nowDay > solarDay) {
 					nowYear = nowYear + 1;
 					age = age + 1;
 				}
 			} else {
-				nowYear = nowYear + 1;
-				age = age + 1;
+				
 			}
 		} else if (nowYear > solarYear) {
 			age = nowYear - solarYear;
 			if (nowMonth > solarMonth) {
-
+				nowYear = nowYear + 1;
+				age = age + 1;
 			} else if (nowMonth == solarMonth) {
 				if (nowDay > solarDay) {
 					nowYear = nowYear + 1;
 					age = age + 1;
 				}
 			} else {
-				nowYear = nowYear + 1;
-				age = age + 1;
 			}
 		} else {
 

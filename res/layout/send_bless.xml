@@ -100,6 +100,7 @@
 
                 <ScrollView
                     android:layout_width="fill_parent"
+                    android:visibility="gone"
                     android:layout_height="fill_parent" >
 
                     <include layout="@layout/select_sms" />

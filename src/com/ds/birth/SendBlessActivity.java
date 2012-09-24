@@ -66,6 +66,8 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 	private Button msg_lingdao;
 	private Button msg_tongshi;
 	private Button msg_tongxue;
+	
+	String phoneNumber;
 
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,13 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 	}
 
 	private void initViews() {
+		
 		myEditText = (EditText) findViewById(R.id.phone);
+		Bundle bundle = getIntent().getExtras();
+		String number = bundle.getString("number");
+		if(number!=null || number.length()!=0){
+			myEditText.setText(number);
+		}
 		sendBtn = (Button) findViewById(R.id.rightBtn);
 		sendBtn.setVisibility(View.VISIBLE);
 		sendBtn.setText(R.string.send);
@@ -208,11 +216,15 @@ public class SendBlessActivity extends Activity implements OnClickListener {
 			// send sms
 			String phoneNumber = myEditText.getText().toString();
 			String message = msgEditText.getText().toString();
-			if (myEditText.getText().toString().equals("")) {
-				Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
-			} else {
-				sendSMS(phoneNumber, message);
-			}
+//			if (myEditText.getText().toString().equals("")) {
+//				Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+//			} else {
+//				sendSMS(phoneNumber, message);
+//			}
+			Uri uri = Uri.parse("smsto:"+phoneNumber);
+			Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+			it.putExtra("sms_body", message);
+			startActivity(it);
 			break;
 		case R.id.selectcontact:
 			Intent intent = new Intent(Intent.ACTION_PICK,

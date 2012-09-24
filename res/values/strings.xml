@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="register_advantage">注册可以备份好友生日</string>
     <string name="no_feedback">没有反馈</string>
     <string name="success">成功备份到/sdcard/birthday/下面</string>
     <string name="recover_success">成功从/sdcard/birthday/中取出备份文件</string>

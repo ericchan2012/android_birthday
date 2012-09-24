@@ -317,7 +317,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/birth_detail_cloud" />
+            <include  layout="@layout/birth_detail_cloud" />
         </LinearLayout>
     </ScrollView>
 

@@ -931,9 +931,10 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 
 	private void setLunarAlarm(int month, int day, int id) {
 		Calendar c = Calendar.getInstance();
-		if (month < c.get(Calendar.MONTH)) {
+		Log.i(TAG,"month:"+month+" nowcalendar month :" + c.get(Calendar.MONTH));
+		if (month < (c.get(Calendar.MONTH)+1)) {
 			c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
-		} else if (month == c.get(Calendar.MONTH)) {
+		} else if (month == (c.get(Calendar.MONTH)+1)) {
 			if (day < c.get(Calendar.DAY_OF_MONTH)) {
 				c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
 			}
@@ -952,9 +953,10 @@ public class BirthEditActivity extends Activity implements OnClickListener {
 
 	private void setSolarAlarm(int month, int day, int id) {
 		Calendar c = Calendar.getInstance();
-		if (month < c.get(Calendar.MONTH)) {
+		Log.i(TAG,"solar month:"+month+" nowcalendar month :" + c.get(Calendar.MONTH));
+		if (month < (c.get(Calendar.MONTH)+1)) {
 			c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
-		} else if (month == c.get(Calendar.MONTH)) {
+		} else if (month == (c.get(Calendar.MONTH)+1)) {
 			if (day < c.get(Calendar.DAY_OF_MONTH)) {
 				c.set(Calendar.YEAR, c.get(Calendar.YEAR) + 1);
 			}

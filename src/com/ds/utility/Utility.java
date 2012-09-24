@@ -42,7 +42,9 @@ public class Utility {
 	public static final String BACKUP_URI="http://360birthday.sinaapp.com/receive_file.php";
 	
 	public static final String LOGIN_URI="http://360birthday.sinaapp.com/login.php?";
-
+	
+	public static final String UPDATE_URI = "http://360birthday.sinaapp.com/download.php";
+	public static final String GET_VERSION_URI = "http://360birthday.sinaapp.com/getversion.php";
 	public static Bitmap toRoundCorner(Bitmap bitmap, int pixels) {
 
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),

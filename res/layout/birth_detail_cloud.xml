@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/contact_detial_layout_bottom"
     android:layout_width="fill_parent"
+    android:visibility="gone"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/botm_layout_botm_margin"
     android:layout_marginTop="@dimen/botm_layout_margin"

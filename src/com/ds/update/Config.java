@@ -5,14 +5,15 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 import com.ds.birth.R;
+import com.ds.utility.Utility;
 
 public class Config {
 	private static final String TAG = "Config";
 
-	public static final String UPDATE_SERVER = "http://10.20.147.117/jtapp12/";
-	public static final String UPDATE_APKNAME = "jtapp-12-updateapksamples.apk";
+	public static final String UPDATE_SERVER = Utility.DOWNLOAD_URI;
+	public static final String UPDATE_APKNAME = "birthday.apk";
 	public static final String UPDATE_VERJSON = "ver.json";
-	public static final String UPDATE_SAVENAME = "updateapksamples.apk";
+	public static final String UPDATE_SAVENAME = "birthday.apk";
 
 	public static int getVerCode(Context context) {
 		int verCode = -1;

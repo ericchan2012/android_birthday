@@ -12,6 +12,12 @@
 
 
     <include layout="@layout/login" />
+    
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_marginTop="10dip"
+        android:text="@string/register_advantage"/>
 
     <!-- advertisements -->
 </LinearLayout>
